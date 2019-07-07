@@ -5,6 +5,8 @@
     <color name="colorPrimaryLight">#63CCFF</color>
     <color name="colorAccent">#ffffff</color>
 
+    <color name="colorPrimary2">#1565C0</color>
+
     <color name="cardStroke">#BDBDBD</color>
 
     <color name="grey3">#828282</color>
