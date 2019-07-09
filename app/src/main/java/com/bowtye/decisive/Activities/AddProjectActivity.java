@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.bowtye.decisive.R;
 
@@ -18,8 +19,8 @@ import butterknife.ButterKnife;
 
 public class AddProjectActivity extends AppCompatActivity {
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.toolbar_title) TextView mToolbarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +48,12 @@ public class AddProjectActivity extends AppCompatActivity {
     }
 
     private void prepareAppBar() {
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Add Project");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        mToolbarTitle.setText("Add Project");
 
     }
 }

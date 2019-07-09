@@ -3,14 +3,15 @@
     <color name="colorPrimary">#039BE5</color>
     <color name="colorPrimaryDark">#006DB3</color>
     <color name="colorPrimaryLight">#63CCFF</color>
-    <color name="colorAccent">#ffffff</color>
+    <color name="colorAccent">#039BE5</color>
 
     <color name="colorPrimary2">#1565C0</color>
 
     <color name="cardStroke">#BDBDBD</color>
 
     <color name="grey3">#828282</color>
-
+    <color name="grey4">#bdbdbd</color>
+    <color name="grey6">#F2F2F2</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
 </resources>
