@@ -5,11 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.MainActivity">
+    android:fitsSystemWindows="true"
+    tools:menu="@menu/add_project"
+    tools:context=".Activities.AddProjectActivity">
 
     <include layout="@layout/toolbar"/>
 
-    <include layout="@layout/content_main" />
+    <include layout="@layout/content_add_project"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
