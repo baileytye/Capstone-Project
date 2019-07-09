@@ -1,18 +1,17 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorHint">@color/grey3</item>
 
         <item name="android:windowActivityTransitions">true</item>
-        <!-- specify enter and exit transitions -->
-        <item name="android:windowEnterTransition">@transition/explode</item>
-        <item name="android:windowExitTransition">@transition/explode</item>
     </style>
 
     <!--AppbarLayout Style-->
@@ -23,15 +22,12 @@
     </style>
 
     <!--Toolbar Style-->
-    <style name="MyToolbarStyle" parent="@style/Widget.AppCompat.ActionBar.Solid">
-        <item name="android:colorControlNormal">@color/white</item>
+    <style name="MyToolbarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="android:background">@drawable/toolbar</item>
         <item name="elevation">4dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
-    </style>
-
-    <style name="TitleToolbarStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
     </style>
 
     <!--Floating Action Button Style-->
@@ -41,6 +37,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">bottom|end</item>
         <item name="android:layout_margin">@dimen/fab_margin</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="rippleColor">@color/grey4</item>
         <item name="android:tint">@color/grey3</item>
     </style>
 
@@ -53,10 +51,15 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <!--Card Item Heading-->
+    <style name="CardItemHeadingTextStyle" parent="@style/TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <!--Card Sub Heading Text Style-->
     <style name="CardSubHeadingTextStyle" parent="@style/TextAppearance.AppCompat.Subhead">
         <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 

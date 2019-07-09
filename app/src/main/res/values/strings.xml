@@ -22,5 +22,24 @@
 
     <!--Labels-->
     <string name="label_choices">Choices:</string>
+    <string name="label_type">Type:</string>
+    <string name="label_importance">Importance:</string>
+    <string name="label_expected">Expected:</string>
+
+    <string name="hint_requirement_name">Give this requirement a name!</string>
+
+    <!--Requirement Arrays-->
+    <string-array name="type_array">
+        <item>Number</item>
+        <item>Star Rating</item>
+        <item>Checkbox</item>
+        <item>Above/Below Avg</item>
+    </string-array>
+
+    <string-array name="importance_array">
+        <item>High</item>
+        <item>Normal</item>
+        <item>Low</item>
+    </string-array>
 
 </resources>
