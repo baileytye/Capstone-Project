@@ -1,10 +1,15 @@
-package com.bowtye.decisive;
+package com.bowtye.decisive.Activities;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.bowtye.decisive.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.View;
 
 import androidx.core.view.GravityCompat;
@@ -20,22 +25,38 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.view.Window;
+
+import java.util.Objects;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        activity = this;
+        ButterKnife.bind(this);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(getApplicationContext(), AddProjectActivity.class);
+
+                Transition transition =
+                        TransitionInflater.from(getApplicationContext()).
+                                inflateTransition(R.transition.explode);
+
+                getWindow().setExitTransition(transition);
+                getWindow().setEnterTransition(transition);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -87,5 +108,12 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    private void prepareAppBar() {
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+
     }
 }

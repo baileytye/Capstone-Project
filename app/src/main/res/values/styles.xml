@@ -1,18 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:textColor">@color/black</item>
-    </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">@transition/explode</item>
+        <item name="android:windowExitTransition">@transition/explode</item>
     </style>
 
     <!--AppbarLayout Style-->
@@ -24,10 +24,14 @@
 
     <!--Toolbar Style-->
     <style name="MyToolbarStyle" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="android:colorControlNormal">@color/white</item>
         <item name="android:background">@drawable/toolbar</item>
         <item name="elevation">4dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
+    </style>
+
+    <style name="TitleToolbarStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
     </style>
 
     <!--Floating Action Button Style-->
