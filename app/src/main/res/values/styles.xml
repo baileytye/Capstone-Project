@@ -62,5 +62,9 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <!--Divider Theme-->
+    <style name="DividerStyle">
+        <item name="android:height">1dp</item>
+    </style>
 
 </resources>

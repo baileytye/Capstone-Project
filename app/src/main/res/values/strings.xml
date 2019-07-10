@@ -25,8 +25,17 @@
     <string name="label_type">Type:</string>
     <string name="label_importance">Importance:</string>
     <string name="label_expected">Expected:</string>
+    <string name="label_has_price">Has price:</string>
+    <string name="label_empty_requirements">Add some requirements below</string>
 
     <string name="hint_requirement_name">Give this requirement a name!</string>
+    <string name="hint_notes">Notes</string>
+    <string name="hint_expected">Expected</string>
+    <string name="hint_project_name">Give this project a name!</string>
+
+    <string name="button_advanced">Advanced</string>
+    <string name="button_remove">Remove</string>
+
 
     <!--Requirement Arrays-->
     <string-array name="type_array">
