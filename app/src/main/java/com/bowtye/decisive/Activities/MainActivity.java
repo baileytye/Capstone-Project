@@ -102,6 +102,12 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(getApplicationContext(), ProjectDetails.class);
+
+            Transition transition = new Slide(Gravity.START);
+
+            getWindow().setExitTransition(transition);
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
             return true;
         }
 

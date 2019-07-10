@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.AddProjectActivity">
+        <activity android:name=".Activities.ProjectDetails"></activity>
+        <activity android:name=".Activities.AddProjectActivity"
+            android:windowSoftInputMode="adjustResize">
         </activity>
         <activity
             android:name=".Activities.MainActivity"
