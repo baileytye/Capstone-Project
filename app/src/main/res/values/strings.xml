@@ -31,11 +31,10 @@
     <string name="hint_requirement_name">Give this requirement a name!</string>
     <string name="hint_notes">Notes</string>
     <string name="hint_expected">Expected</string>
-    <string name="hint_project_name">Give this project a name!</string>
+    <string name="hint_project_name">Project Name</string>
 
     <string name="button_advanced">Advanced</string>
     <string name="button_remove">Remove</string>
-
 
     <!--Requirement Arrays-->
     <string-array name="type_array">
@@ -49,6 +48,15 @@
         <item>High</item>
         <item>Normal</item>
         <item>Low</item>
+        <item>Custom</item>
+        <item>Exclude</item>
+    </string-array>
+
+    <string-array name="dummy_requirements" >
+        <item>Requirement 1</item>
+        <item>Requirement 2</item>
+        <item>Requirement 3</item>
+        <item>Requirement 4</item>
     </string-array>
 
 </resources>

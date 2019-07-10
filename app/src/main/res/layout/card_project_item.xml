@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:backgroundTint="@color/white"
+    app:cardCornerRadius="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/card_background"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_item_card_header"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:background="@color/colorPrimaryLight"
+            android:scaleType="centerCrop"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/tv_item_card_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:text="Item Name"
+            android:textAppearance="@style/CardHeadingTextStyle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_item_card_header" />
+
+        <TextView
+            android:id="@+id/tv_item_card_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="24dp"
+            android:text="$100 000"
+            android:textAppearance="@style/CardHeadingTextStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_item_card_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/tv_item_card_title"
+            app:layout_constraintTop_toTopOf="@+id/tv_item_card_title" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_item_card_title" />
+
+        <ListView
+            android:id="@+id/lv_requirements"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/card_padding"
+            android:layout_marginEnd="@dimen/card_padding"
+            android:entries="@array/dummy_requirements"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider">
+
+        </ListView>
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lv_requirements" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/card_padding"
+            android:layout_marginTop="@dimen/card_heading_separation"
+            android:text="Current Rating:"
+            android:textAppearance="@style/CardSubHeadingTextStyle"
+            app:layout_constraintStart_toStartOf="@+id/lv_requirements"
+            app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+        <Button
+            android:id="@+id/bt_rule_out"
+            style="@style/MyButtonStyle"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="@dimen/card_padding"
+            android:backgroundTint="@color/red500"
+            android:text="Rule Out"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/iv_rating_ring" />
+
+        <Button
+            android:id="@+id/bt_details"
+            style="@style/MyButtonStyle"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="Details"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_rule_out"
+            app:layout_constraintEnd_toEndOf="@+id/tv_item_card_price"
+            app:layout_constraintTop_toTopOf="@+id/bt_rule_out" />
+
+        <ImageView
+            android:id="@+id/iv_rating_ring"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ring"
+            android:backgroundTint="@color/green500"
+            app:layout_constraintBottom_toBottomOf="@+id/textView2"
+            app:layout_constraintEnd_toEndOf="@+id/bt_details"
+            app:layout_constraintStart_toStartOf="@+id/bt_details"
+            app:layout_constraintTop_toTopOf="@+id/textView2" />
+
+        <TextView
+            android:id="@+id/tv_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100"
+            android:textAlignment="center"
+            android:textAppearance="@style/CardSubHeadingTextStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_rating_ring"
+            app:layout_constraintEnd_toEndOf="@+id/iv_rating_ring"
+            app:layout_constraintStart_toStartOf="@+id/iv_rating_ring"
+            app:layout_constraintTop_toTopOf="@+id/iv_rating_ring" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
