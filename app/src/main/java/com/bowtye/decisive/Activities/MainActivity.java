@@ -5,15 +5,16 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.bowtye.decisive.Adapters.MainAdapter;
 import com.bowtye.decisive.BuildConfig;
+import com.bowtye.decisive.POJOs.Option;
+import com.bowtye.decisive.POJOs.Project;
+import com.bowtye.decisive.POJOs.Requirement;
 import com.bowtye.decisive.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import android.transition.Explode;
-import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.view.Gravity;
 import android.view.View;
 
@@ -28,10 +29,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -46,8 +54,11 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.fab) FloatingActionButton mFab;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
     @BindView(R.id.nav_view) NavigationView mNavigationView;
+    @BindView(R.id.rv_main) RecyclerView mRecyclerView;
 
     Activity activity;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private MainAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +72,7 @@ public class MainActivity extends AppCompatActivity
         activity = this;
         ButterKnife.bind(this);
 
-        prepareAppBar();
+        prepareViews();
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +135,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void prepareAppBar() {
+    private void prepareViews() {
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         mToolbarTitle.setText(R.string.app_name);
@@ -134,5 +145,31 @@ public class MainActivity extends AppCompatActivity
         mDrawer.addDrawerListener(toggle);
         toggle.syncState();
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        Requirement r1 = new Requirement("Requirement 1",
+                Requirement.Type.number, Requirement.Importance.normal, 0,
+                "", 0, false, 0);
+        Requirement r2 = new Requirement("Requirement 2",
+                Requirement.Type.number, Requirement.Importance.normal, 0,
+                "", 0, false, 0);
+        Requirement r3 = new Requirement("Requirement 3",
+                Requirement.Type.number, Requirement.Importance.normal, 0,
+                "", 0, false, 0);
+
+        List<Requirement> requirements = new ArrayList<>(Arrays.asList(r1,r2,r3));
+
+        Option option1 = new Option("Option 1", 100000,0,false,requirements,"",null);
+
+        Project p = new Project(requirements, Collections.singletonList(option1), "Project Test", true);
+
+        List<Project> projects = Collections.singletonList(p);
+
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new MainAdapter(projects);
+        mRecyclerView.setAdapter(mAdapter);
+
+        Timber.d("Number of projects: " + projects.size());
     }
 }
