@@ -88,11 +88,11 @@ public class Requirement {
         this.value = value;
     }
 
-    enum Type{
+    public enum Type{
         number, starRating, checkbox, averaging
     }
 
-    enum Importance{
+    public enum Importance{
         high, normal, low
     }
 }

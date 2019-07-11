@@ -11,4 +11,6 @@
     <dimen name="card_heading_separation">20dp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="recycler_margin">8dp</dimen>
 </resources>
