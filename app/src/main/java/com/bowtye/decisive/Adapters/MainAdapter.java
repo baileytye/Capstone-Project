@@ -18,13 +18,16 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder>{
 
     int mProjectCount;
     List<Project> mProjects;
+    final private ProjectItemClickListener mClickListener;
 
-    public MainAdapter(List<Project> projects){
+    public MainAdapter(List<Project> projects, ProjectItemClickListener clickListener){
+        mClickListener = clickListener;
         mProjects = projects;
         mProjectCount = mProjects.size();
     }
@@ -47,7 +50,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         return mProjectCount;
     }
 
-    class MainViewHolder extends RecyclerView.ViewHolder{
+    class MainViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.iv_project_card_header) ImageView mProjectImageView;
         @BindView(R.id.tv_project_card_title) TextView mProjectTitle;
@@ -56,12 +59,23 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         MainViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Timber.d("Project clicked: " + getAdapterPosition());
+            mClickListener.onProjectItemClicked(getAdapterPosition());
         }
 
         void bind(Project p){
-            mProjectImageView.setImageDrawable(new ColorDrawable(Color.CYAN));
+            mProjectImageView.setImageDrawable(new ColorDrawable(Color.rgb(0x03, 0x9B, 0xE5)));
             mProjectTitle.setText(p.getName());
             mChoicesTextView.setText(String.valueOf(p.getRequirements().size()));
         }
+    }
+
+    public interface ProjectItemClickListener{
+        void onProjectItemClicked(int position);
     }
 }

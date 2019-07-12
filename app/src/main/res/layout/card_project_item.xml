@@ -25,6 +25,7 @@
             android:scaleType="centerCrop"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
@@ -35,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
-            android:text="Item Name"
+            android:text="@string/placeholder_item_name"
             android:textAppearance="@style/CardHeadingTextStyle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_item_card_header" />
@@ -44,38 +45,37 @@
             android:id="@+id/tv_item_card_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="24dp"
-            android:text="$100 000"
-            android:textAppearance="@style/CardHeadingTextStyle"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_item_card_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/tv_item_card_title"
-            app:layout_constraintTop_toTopOf="@+id/tv_item_card_title" />
+            android:layout_marginTop="8dp"
+            android:text="@string/placeholder_price"
+            android:textAppearance="@style/CardSubHeadingTextStyle"
+            app:layout_constraintStart_toStartOf="@+id/tv_item_card_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_card_title" />
 
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:background="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_item_card_title" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_card_price" />
 
-        <ListView
-            android:id="@+id/lv_requirements"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_requirements"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/card_padding"
             android:layout_marginEnd="@dimen/card_padding"
-            android:entries="@array/dummy_requirements"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:paddingEnd="@dimen/recycler_margin"
+            android:paddingStart="@dimen/recycler_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider">
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            tools:listitem="@layout/list_item_requirement" />
 
-        </ListView>
 
         <View
             android:id="@+id/divider2"
@@ -84,67 +84,61 @@
             android:background="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lv_requirements" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/card_padding"
-            android:layout_marginTop="@dimen/card_heading_separation"
-            android:text="Current Rating:"
-            android:textAppearance="@style/CardSubHeadingTextStyle"
-            app:layout_constraintStart_toStartOf="@+id/lv_requirements"
-            app:layout_constraintTop_toBottomOf="@+id/divider2" />
+            app:layout_constraintTop_toBottomOf="@id/rv_requirements" />
 
         <Button
             android:id="@+id/bt_rule_out"
             style="@style/MyButtonStyle"
             android:layout_width="150dp"
             android:layout_height="40dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/card_padding"
+            android:layout_marginTop="@dimen/card_heading_separation"
             android:layout_marginBottom="@dimen/card_padding"
             android:backgroundTint="@color/red500"
-            android:text="Rule Out"
+            android:text="@string/button_rule_out"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/iv_rating_ring" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_requirements" />
 
         <Button
             android:id="@+id/bt_details"
             style="@style/MyButtonStyle"
             android:layout_width="150dp"
             android:layout_height="40dp"
+            android:layout_marginEnd="@dimen/card_padding"
             android:backgroundTint="@color/colorPrimary"
-            android:text="Details"
+            android:text="@string/button_details"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/bt_rule_out"
-            app:layout_constraintEnd_toEndOf="@+id/tv_item_card_price"
-            app:layout_constraintTop_toTopOf="@+id/bt_rule_out" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/bt_rule_out"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <ImageView
-            android:id="@+id/iv_rating_ring"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ring"
-            android:backgroundTint="@color/green500"
-            app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        <RatingBar
+            android:id="@+id/rb_rating"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="80dp"
+            android:layout_height="16dp"
+            android:layout_marginEnd="8dp"
+            android:numStars="5"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_rating"
             app:layout_constraintEnd_toEndOf="@+id/bt_details"
-            app:layout_constraintStart_toStartOf="@+id/bt_details"
-            app:layout_constraintTop_toTopOf="@+id/textView2" />
+            app:layout_constraintTop_toTopOf="@+id/tv_rating" />
 
         <TextView
             android:id="@+id/tv_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="100"
-            android:textAlignment="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="4.78"
             android:textAppearance="@style/CardSubHeadingTextStyle"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_rating_ring"
-            app:layout_constraintEnd_toEndOf="@+id/iv_rating_ring"
-            app:layout_constraintStart_toStartOf="@+id/iv_rating_ring"
-            app:layout_constraintTop_toTopOf="@+id/iv_rating_ring" />
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_item_card_price"
+            app:layout_constraintEnd_toStartOf="@+id/rb_rating"
+            app:layout_constraintStart_toStartOf="@+id/bt_details"
+            app:layout_constraintTop_toTopOf="@+id/tv_item_card_price" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
