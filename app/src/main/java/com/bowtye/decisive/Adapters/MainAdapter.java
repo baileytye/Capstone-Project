@@ -11,14 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bowtye.decisive.POJOs.Project;
+import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.R;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder>{
 
