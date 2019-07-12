@@ -7,9 +7,9 @@ import android.os.Bundle;
 
 import com.bowtye.decisive.Adapters.MainAdapter;
 import com.bowtye.decisive.BuildConfig;
-import com.bowtye.decisive.POJOs.Option;
-import com.bowtye.decisive.POJOs.Project;
-import com.bowtye.decisive.POJOs.Requirement;
+import com.bowtye.decisive.Models.Option;
+import com.bowtye.decisive.Models.Project;
+import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -35,7 +35,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,6 +48,8 @@ import timber.log.Timber;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String EXTRA_PROJECT = "extra_project";
+
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.toolbar_title) TextView mToolbarTitle;
     @BindView(R.id.fab) FloatingActionButton mFab;
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity
     Activity activity;
     private RecyclerView.LayoutManager mLayoutManager;
     private MainAdapter mAdapter;
+
+    Project p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +117,7 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(getApplicationContext(), ProjectDetails.class);
+            intent.putExtra(EXTRA_PROJECT, p);
 
             Transition transition = new Slide(Gravity.START);
 
@@ -160,7 +164,7 @@ public class MainActivity extends AppCompatActivity
 
         Option option1 = new Option("Option 1", 100000,0,false,requirements,"",null);
 
-        Project p = new Project(requirements, Collections.singletonList(option1), "Project Test", true);
+        p = new Project(requirements, Collections.singletonList(option1), "Project Test", true);
 
         List<Project> projects = Collections.singletonList(p);
 

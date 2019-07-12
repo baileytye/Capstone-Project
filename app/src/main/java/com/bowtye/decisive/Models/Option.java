@@ -1,8 +1,12 @@
-package com.bowtye.decisive.POJOs;
+package com.bowtye.decisive.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class Option {
+public class Option implements Parcelable {
 
     private String name;
     private double price;
@@ -78,4 +82,45 @@ public class Option {
     public void setImagePaths(List<String> imagePaths) {
         this.imagePaths = imagePaths;
     }
+
+    private Option(Parcel in){
+        name = in.readString();
+        price = in.readDouble();
+        rating = in.readDouble();
+        ruledOut = in.readInt() == 1;
+        requirements = new ArrayList<>();
+        in.readList(requirements, Requirement.class.getClassLoader());
+        notes = in.readString();
+        imagePaths = in.createStringArrayList();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeDouble(price);
+        parcel.writeDouble(rating);
+        parcel.writeInt(ruledOut ? 1 : 0);
+        parcel.writeList(requirements);
+        parcel.writeString(notes);
+        parcel.writeList(imagePaths);
+    }
+
+    public static final Parcelable.Creator<Option> CREATOR =
+            new Parcelable.Creator<Option>(){
+
+                @Override
+                public Option createFromParcel(Parcel parcel) {
+                    return new Option(parcel);
+                }
+
+                @Override
+                public Option[] newArray(int i) {
+                    return new Option[i];
+                }
+            };
 }

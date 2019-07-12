@@ -1,7 +1,10 @@
-package com.bowtye.decisive.POJOs;
+package com.bowtye.decisive.Models;
 
 
-public class Requirement {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Requirement implements Parcelable {
 
     private String name;
     private Type type;
@@ -87,6 +90,48 @@ public class Requirement {
     public void setValue(double value) {
         this.value = value;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    private Requirement(Parcel in){
+        name = in.readString();
+        type = Type.values()[in.readInt()];
+        importance = Importance.values()[in.readInt()];
+        expected = in.readDouble();
+        notes = in.readString();
+        weight = in.readDouble();
+        excludeFromTotal = in.readInt() == 1;
+        value = in.readDouble();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeInt(type.ordinal());
+        parcel.writeInt(importance.ordinal());
+        parcel.writeDouble(expected);
+        parcel.writeString(notes);
+        parcel.writeDouble(weight);
+        parcel.writeInt(excludeFromTotal ? 1 : 0);
+        parcel.writeDouble(value);
+    }
+
+    public static final Parcelable.Creator<Requirement> CREATOR =
+            new Parcelable.Creator<Requirement>(){
+
+                @Override
+                public Requirement createFromParcel(Parcel parcel) {
+                    return new Requirement(parcel);
+                }
+
+                @Override
+                public Requirement[] newArray(int i) {
+                    return new Requirement[i];
+                }
+            };
 
     public enum Type{
         number, starRating, checkbox, averaging
