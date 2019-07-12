@@ -4,10 +4,32 @@ package com.bowtye.decisive.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.bowtye.decisive.Database.Converters;
+
+import static androidx.room.ForeignKey.CASCADE;
+
+@Entity(tableName = "requirement",
+        foreignKeys = @ForeignKey(entity = Project.class,
+                parentColumns = "id",
+                childColumns = "projectId",
+                onDelete = CASCADE ))
 public class Requirement implements Parcelable {
 
+    @PrimaryKey (autoGenerate = true)
+    private int reqId;
+    private int projectId;
     private String name;
+
+    @TypeConverters(Converters.class)
     private Type type;
+
+    @TypeConverters(Converters.class)
     private Importance importance;
     private double expected;
     private String notes;
@@ -15,6 +37,7 @@ public class Requirement implements Parcelable {
     private Boolean excludeFromTotal;
     private double value;
 
+    @Ignore
     public Requirement(String name, Type type, Importance importance, double expected,
                        String notes, double weight, Boolean excludeFromTotal, double value) {
         this.name = name;
@@ -25,6 +48,36 @@ public class Requirement implements Parcelable {
         this.weight = weight;
         this.excludeFromTotal = excludeFromTotal;
         this.value = value;
+    }
+
+    public Requirement(int reqId, int projectId, String name, Type type, Importance importance, double expected,
+                       String notes, double weight, Boolean excludeFromTotal, double value) {
+        this.reqId = reqId;
+        this.projectId = projectId;
+        this.name = name;
+        this.type = type;
+        this.importance = importance;
+        this.expected = expected;
+        this.notes = notes;
+        this.weight = weight;
+        this.excludeFromTotal = excludeFromTotal;
+        this.value = value;
+    }
+
+    public int getReqId() {
+        return reqId;
+    }
+
+    public void setReqId(int reqId) {
+        this.reqId = reqId;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public String getName() {
@@ -96,7 +149,10 @@ public class Requirement implements Parcelable {
         return 0;
     }
 
+    @Ignore
     private Requirement(Parcel in){
+        reqId = in.readInt();
+        projectId = in.readInt();
         name = in.readString();
         type = Type.values()[in.readInt()];
         importance = Importance.values()[in.readInt()];
@@ -109,6 +165,8 @@ public class Requirement implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(reqId);
+        parcel.writeInt(projectId);
         parcel.writeString(name);
         parcel.writeInt(type.ordinal());
         parcel.writeInt(importance.ordinal());
