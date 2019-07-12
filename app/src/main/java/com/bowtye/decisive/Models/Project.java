@@ -3,21 +3,48 @@ package com.bowtye.decisive.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Entity(tableName = "project")
 public class Project implements Parcelable {
 
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
+    @Ignore
     private List<Requirement> requirements;
+    @Ignore
     private List<Option> options;
+
     private String name;
     private Boolean hasPrice;
 
+    public Project(int id, String name, Boolean hasPrice) {
+        this.id = id;
+        this.name = name;
+        this.hasPrice = hasPrice;
+    }
+
+    @Ignore
     public Project(List<Requirement> requirements, List<Option> options, String name, Boolean hasPrice) {
         this.requirements = requirements;
         this.options = options;
         this.name = name;
         this.hasPrice = hasPrice;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public List<Requirement> getRequirements() {
@@ -52,6 +79,7 @@ public class Project implements Parcelable {
         this.hasPrice = hasPrice;
     }
 
+    @Ignore
     private Project(Parcel in){
         requirements = new ArrayList<>();
         options = new ArrayList<>();

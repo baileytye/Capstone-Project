@@ -77,14 +77,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
         @Override
         public void onClick(View view) {
-            Timber.d("Project clicked: " + getAdapterPosition());
+            Timber.d("Project clicked: %d",getAdapterPosition());
             mClickListener.onProjectItemClicked(getAdapterPosition());
         }
 
         void bind(Project p){
             mProjectImageView.setImageDrawable(new ColorDrawable(Color.rgb(0x03, 0x9B, 0xE5)));
             mProjectTitle.setText(p.getName());
-            mChoicesTextView.setText(String.valueOf(p.getRequirements().size()));
+  //          mChoicesTextView.setText(String.valueOf(p.getRequirements().size()));
         }
     }
 

@@ -7,9 +7,7 @@ import android.os.Bundle;
 
 import com.bowtye.decisive.Adapters.MainAdapter;
 import com.bowtye.decisive.BuildConfig;
-import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
-import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ViewModels.MainViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -17,7 +15,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.view.Gravity;
-import android.view.View;
 
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -37,9 +34,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,7 +54,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.rv_main) RecyclerView mRecyclerView;
 
-    Activity activity;
+    private Activity activity;
     private RecyclerView.LayoutManager mLayoutManager;
     private MainAdapter mAdapter;
     private MainViewModel mViewModel;
@@ -82,16 +76,13 @@ public class MainActivity extends AppCompatActivity
         prepareViewModel();
         prepareViews();
 
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AddProjectActivity.class);
+        mFab.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), AddProjectActivity.class);
 
-                Transition transition = new Slide(Gravity.TOP);
+            Transition transition = new Slide(Gravity.TOP);
 
-                getWindow().setExitTransition(transition);
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
-            }
+            getWindow().setExitTransition(transition);
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
         });
     }
 
@@ -120,8 +111,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-
+        if (id == R.id.action_clear) {
+            mViewModel.clearProjects();
             return true;
         }
 
@@ -166,7 +157,7 @@ public class MainActivity extends AppCompatActivity
         mAdapter = new MainAdapter(null, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        Timber.d("Number of projects: " + ((mProjects != null) ? mProjects.size() : 0));
+        Timber.d("Number of projects: %d",((mProjects != null) ? mProjects.size() : 0));
     }
 
     void prepareViewModel(){
