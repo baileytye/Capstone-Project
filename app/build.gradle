@@ -29,6 +29,7 @@ dependencies {
     def butterknife_version = "10.1.0"
     def timber_version = "4.7.1"
     def play_services_version = "17.0.0"
+    def lifecycle_version = "2.0.0"
 
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
@@ -39,6 +40,8 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timber_version"
 
     implementation "com.google.android.gms:play-services-auth:$play_services_version"
+
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

@@ -12,5 +12,6 @@
 
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="recycler_margin">8dp</dimen>
+    <dimen name="recycler_margin">4dp</dimen>
+    <dimen name="card_margin_edges">4dp</dimen>
 </resources>

@@ -29,7 +29,20 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     public MainAdapter(List<Project> projects, ProjectItemClickListener clickListener){
         mClickListener = clickListener;
         mProjects = projects;
-        mProjectCount = mProjects.size();
+        if(mProjects != null) {
+            mProjectCount = mProjects.size();
+        } else {
+            mProjectCount = 0;
+        }
+    }
+
+    public void setProjects(List<Project> projects){
+        mProjects = projects;
+        if(mProjects != null) {
+            mProjectCount = mProjects.size();
+        } else {
+            mProjectCount = 0;
+        }
     }
 
 

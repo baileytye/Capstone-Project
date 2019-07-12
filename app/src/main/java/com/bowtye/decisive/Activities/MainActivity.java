@@ -11,6 +11,7 @@ import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
+import com.bowtye.decisive.ViewModels.MainViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.transition.Slide;
@@ -29,6 +30,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity
     Activity activity;
     private RecyclerView.LayoutManager mLayoutManager;
     private MainAdapter mAdapter;
+    private MainViewModel mViewModel;
 
     private List<Project> mProjects;
 
@@ -76,6 +79,7 @@ public class MainActivity extends AppCompatActivity
         activity = this;
         ButterKnife.bind(this);
 
+        prepareViewModel();
         prepareViews();
 
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -156,31 +160,22 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        Requirement r1 = new Requirement("Requirement 1",
-                Requirement.Type.number, Requirement.Importance.normal, 0,
-                "", 0, false, 0);
-        Requirement r2 = new Requirement("Requirement 2",
-                Requirement.Type.number, Requirement.Importance.normal, 0,
-                "", 0, false, 0);
-        Requirement r3 = new Requirement("Requirement 3",
-                Requirement.Type.number, Requirement.Importance.normal, 0,
-                "", 0, false, 0);
-
-        List<Requirement> requirements = new ArrayList<>(Arrays.asList(r1,r2,r3));
-
-        Option option1 = new Option("Option 1", 100000,0,false,requirements,"",null);
-
-        Project p = new Project(requirements, Collections.singletonList(option1), "Project Test", true);
-
-        mProjects = Collections.singletonList(p);
-
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MainAdapter(mProjects, this);
+        mAdapter = new MainAdapter(null, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        Timber.d("Number of projects: " + mProjects.size());
+        Timber.d("Number of projects: " + ((mProjects != null) ? mProjects.size() : 0));
+    }
+
+    void prepareViewModel(){
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mViewModel.getProjects().observe(this, mProjects ->{
+            this.mProjects = mProjects;
+            mAdapter.setProjects(mProjects);
+            mAdapter.notifyDataSetChanged();
+        });
     }
 
 
