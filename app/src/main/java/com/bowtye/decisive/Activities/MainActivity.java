@@ -46,7 +46,8 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        MainAdapter.ProjectItemClickListener {
 
     public static final String EXTRA_PROJECT = "extra_project";
 
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView.LayoutManager mLayoutManager;
     private MainAdapter mAdapter;
 
-    Project p;
+    private List<Project> mProjects;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,13 +117,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(getApplicationContext(), ProjectDetails.class);
-            intent.putExtra(EXTRA_PROJECT, p);
 
-            Transition transition = new Slide(Gravity.START);
-
-            getWindow().setExitTransition(transition);
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
             return true;
         }
 
@@ -136,6 +131,17 @@ public class MainActivity extends AppCompatActivity
 
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onProjectItemClicked(int position) {
+        Intent intent = new Intent(getApplicationContext(), ProjectDetails.class);
+        intent.putExtra(EXTRA_PROJECT, mProjects.get(position));
+
+        Transition transition = new Slide(Gravity.START);
+
+        getWindow().setExitTransition(transition);
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
     }
 
 
@@ -164,16 +170,18 @@ public class MainActivity extends AppCompatActivity
 
         Option option1 = new Option("Option 1", 100000,0,false,requirements,"",null);
 
-        p = new Project(requirements, Collections.singletonList(option1), "Project Test", true);
+        Project p = new Project(requirements, Collections.singletonList(option1), "Project Test", true);
 
-        List<Project> projects = Collections.singletonList(p);
+        mProjects = Collections.singletonList(p);
 
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MainAdapter(projects);
+        mAdapter = new MainAdapter(mProjects, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        Timber.d("Number of projects: " + projects.size());
+        Timber.d("Number of projects: " + mProjects.size());
     }
+
+
 }
