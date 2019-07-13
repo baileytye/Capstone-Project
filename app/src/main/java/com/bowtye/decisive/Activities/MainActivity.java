@@ -16,6 +16,7 @@ import android.transition.Slide;
 import android.transition.Transition;
 import android.view.Gravity;
 
+import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
@@ -45,14 +46,22 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MainAdapter.ProjectItemClickListener {
 
-    public static final String EXTRA_PROJECT = "extra_project";
+    public static final String EXTRA_PROJECT_ID = "extra_project_id";
+    public static final String EXTRA_NEW_PROJECT = "extra_new_project";
+    public static final int ADD_PROJECT_REQUEST_CODE = 3423;
 
-    @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.toolbar_title) TextView mToolbarTitle;
-    @BindView(R.id.fab) FloatingActionButton mFab;
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
-    @BindView(R.id.nav_view) NavigationView mNavigationView;
-    @BindView(R.id.rv_main) RecyclerView mRecyclerView;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.toolbar_title)
+    TextView mToolbarTitle;
+    @BindView(R.id.fab)
+    FloatingActionButton mFab;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawer;
+    @BindView(R.id.nav_view)
+    NavigationView mNavigationView;
+    @BindView(R.id.rv_main)
+    RecyclerView mRecyclerView;
 
     private Activity activity;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -66,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
 
@@ -75,15 +84,6 @@ public class MainActivity extends AppCompatActivity
 
         prepareViewModel();
         prepareViews();
-
-        mFab.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), AddProjectActivity.class);
-
-            Transition transition = new Slide(Gravity.TOP);
-
-            getWindow().setExitTransition(transition);
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
-        });
     }
 
     @Override
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onProjectItemClicked(int position) {
         Intent intent = new Intent(getApplicationContext(), ProjectDetails.class);
-        intent.putExtra(EXTRA_PROJECT, mProjects.get(position));
+        intent.putExtra(EXTRA_PROJECT_ID, mProjects.get(position).getId());
 
         Transition transition = new Slide(Gravity.START);
 
@@ -139,6 +139,12 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if ((requestCode == ADD_PROJECT_REQUEST_CODE) && (resultCode == RESULT_OK)) {
+            mViewModel.insertDummyProject();
+        }
+    }
 
     private void prepareViews() {
         setSupportActionBar(mToolbar);
@@ -157,15 +163,29 @@ public class MainActivity extends AppCompatActivity
         mAdapter = new MainAdapter(null, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        Timber.d("Number of projects: %d",((mProjects != null) ? mProjects.size() : 0));
+        mFab.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), AddProjectActivity.class);
+
+            Transition transition = new Slide(Gravity.TOP);
+
+            getWindow().setExitTransition(transition);
+            startActivityForResult(intent, ADD_PROJECT_REQUEST_CODE, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+        });
+
+        Timber.d("Number of projects: %d", ((mProjects != null) ? mProjects.size() : 0));
     }
 
-    void prepareViewModel(){
+    void prepareViewModel() {
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        mViewModel.getProjects().observe(this, mProjects ->{
-            this.mProjects = mProjects;
-            mAdapter.setProjects(mProjects);
+        mViewModel.getProjects().observe(this, mProjects -> {
+            Timber.d("Livedata updated");
+            this.mProjects = mViewModel.updateProjects();
+            mAdapter.setProjects(this.mProjects);
             mAdapter.notifyDataSetChanged();
+            if(mProjects.size() > 0) {
+                Timber.d("Number of requirements loaded: %d", ((this.mProjects.get(0).getRequirements() != null) ? this.mProjects.get(0).getRequirements().size() : 0));
+                Timber.d("Number of options loaded: %d", ((this.mProjects.get(0).getOptions() != null) ? this.mProjects.get(0).getOptions().size() : 0));
+            }
         });
     }
 

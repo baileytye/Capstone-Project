@@ -3,28 +3,84 @@ package com.bowtye.decisive.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.bowtye.decisive.Database.Converters;
+
 import java.util.List;
 
+import static androidx.room.ForeignKey.CASCADE;
+
+@Entity(tableName = "option",
+        foreignKeys = @ForeignKey(entity = Project.class,
+        parentColumns = "id",
+        childColumns = "projectId",
+        onDelete = CASCADE ))
+@TypeConverters(Converters.class)
 public class Option implements Parcelable {
 
+    @PrimaryKey(autoGenerate = true)
+    private int optionId;
+    private int projectId;
     private String name;
     private double price;
     private double rating;
     private Boolean ruledOut;
-    private List<Requirement> requirements;
+    private List<Double> requirementValues;
     private String notes;
     private List<String> imagePaths;
 
+    @Ignore
     public Option(String name, double price, double rating, Boolean ruledOut,
-                  List<Requirement> requirements, String notes, List<String> imagePaths) {
+                  List<Double> requirementValues, String notes, List<String> imagePaths) {
         this.name = name;
         this.price = price;
         this.rating = rating;
         this.ruledOut = ruledOut;
-        this.requirements = requirements;
+        this.requirementValues = requirementValues;
         this.notes = notes;
         this.imagePaths = imagePaths;
+    }
+
+    public Option(int optionId, int projectId, String name, double price, double rating, Boolean ruledOut,
+                  List<Double> requirementValues, String notes, List<String> imagePaths) {
+        this.optionId = optionId;
+        this.projectId = projectId;
+        this.name = name;
+        this.price = price;
+        this.rating = rating;
+        this.ruledOut = ruledOut;
+        this.requirementValues = requirementValues;
+        this.notes = notes;
+        this.imagePaths = imagePaths;
+    }
+
+    public int getOptionId() {
+        return optionId;
+    }
+
+    public void setOptionId(int optionId) {
+        this.optionId = optionId;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
+
+    public List<Double> getRequirementValues() {
+        return requirementValues;
+    }
+
+    public void setRequirementValues(List<Double> requirementValues) {
+        this.requirementValues = requirementValues;
     }
 
     public String getName() {
@@ -59,14 +115,6 @@ public class Option implements Parcelable {
         this.ruledOut = ruledOut;
     }
 
-    public List<Requirement> getRequirements() {
-        return requirements;
-    }
-
-    public void setRequirements(List<Requirement> requirements) {
-        this.requirements = requirements;
-    }
-
     public String getNotes() {
         return notes;
     }
@@ -83,13 +131,13 @@ public class Option implements Parcelable {
         this.imagePaths = imagePaths;
     }
 
+    @Ignore
     private Option(Parcel in){
         name = in.readString();
         price = in.readDouble();
         rating = in.readDouble();
         ruledOut = in.readInt() == 1;
-        requirements = new ArrayList<>();
-        in.readList(requirements, Requirement.class.getClassLoader());
+        in.readList(requirementValues, Double.class.getClassLoader());
         notes = in.readString();
         imagePaths = in.createStringArrayList();
     }
@@ -105,7 +153,7 @@ public class Option implements Parcelable {
         parcel.writeDouble(price);
         parcel.writeDouble(rating);
         parcel.writeInt(ruledOut ? 1 : 0);
-        parcel.writeList(requirements);
+        parcel.writeList(requirementValues);
         parcel.writeString(notes);
         parcel.writeList(imagePaths);
     }
