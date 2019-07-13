@@ -28,6 +28,6 @@ public interface ProjectsDao {
     void deleteProject(Project project);
 
     @Query("SELECT * FROM project WHERE id = :id")
-    Project loadProjectById(int id);
+    LiveData<Project> loadProjectById(int id);
 
 }

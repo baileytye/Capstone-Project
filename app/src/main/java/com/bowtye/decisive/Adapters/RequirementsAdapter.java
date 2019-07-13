@@ -21,7 +21,7 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
     int mRequirementCount;
     List<Requirement> mRequirements;
 
-    RequirementsAdapter(List<Requirement> requirements){
+    RequirementsAdapter(List<Requirement> requirements) {
         mRequirements = requirements;
         mRequirementCount = mRequirements.size();
     }
@@ -43,17 +43,19 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
         return mRequirementCount;
     }
 
-    class RequirementViewHolder extends RecyclerView.ViewHolder{
+    class RequirementViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_requirement_name) TextView mRequirementNameTextView;
-        @BindView(R.id.tv_requirement_value) TextView mRequirementValueTextView;
+        @BindView(R.id.tv_requirement_name)
+        TextView mRequirementNameTextView;
+        @BindView(R.id.tv_requirement_value)
+        TextView mRequirementValueTextView;
 
         RequirementViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-        void bind(Requirement requirement){
+        void bind(Requirement requirement) {
             mRequirementNameTextView.setText(requirement.getName());
             mRequirementValueTextView.setText(String.valueOf(requirement.getValue()));
         }

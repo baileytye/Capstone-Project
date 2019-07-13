@@ -20,25 +20,25 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder>{
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {
 
     int mProjectCount;
     List<Project> mProjects;
     final private ProjectItemClickListener mClickListener;
 
-    public MainAdapter(List<Project> projects, ProjectItemClickListener clickListener){
+    public MainAdapter(List<Project> projects, ProjectItemClickListener clickListener) {
         mClickListener = clickListener;
         mProjects = projects;
-        if(mProjects != null) {
+        if (mProjects != null) {
             mProjectCount = mProjects.size();
         } else {
             mProjectCount = 0;
         }
     }
 
-    public void setProjects(List<Project> projects){
+    public void setProjects(List<Project> projects) {
         mProjects = projects;
-        if(mProjects != null) {
+        if (mProjects != null) {
             mProjectCount = mProjects.size();
         } else {
             mProjectCount = 0;
@@ -63,11 +63,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         return mProjectCount;
     }
 
-    class MainViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class MainViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.iv_project_card_header) ImageView mProjectImageView;
-        @BindView(R.id.tv_project_card_title) TextView mProjectTitle;
-        @BindView(R.id.tv_project_choices) TextView mChoicesTextView;
+        @BindView(R.id.iv_project_card_header)
+        ImageView mProjectImageView;
+        @BindView(R.id.tv_project_card_title)
+        TextView mProjectTitle;
+        @BindView(R.id.tv_project_choices)
+        TextView mChoicesTextView;
 
         MainViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,18 +80,18 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
         @Override
         public void onClick(View view) {
-            Timber.d("Project clicked: %d",getAdapterPosition());
+            Timber.d("Project clicked: %d", getAdapterPosition());
             mClickListener.onProjectItemClicked(getAdapterPosition());
         }
 
-        void bind(Project p){
+        void bind(Project p) {
             mProjectImageView.setImageDrawable(new ColorDrawable(Color.rgb(0x03, 0x9B, 0xE5)));
             mProjectTitle.setText(p.getName());
-  //          mChoicesTextView.setText(String.valueOf(p.getRequirements().size()));
+            mChoicesTextView.setText((p.getOptions() == null) ? "0" : String.valueOf(p.getOptions().size()));
         }
     }
 
-    public interface ProjectItemClickListener{
+    public interface ProjectItemClickListener {
         void onProjectItemClicked(int position);
     }
 }

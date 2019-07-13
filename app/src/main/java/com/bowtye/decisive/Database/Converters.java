@@ -4,6 +4,12 @@ import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
 import com.bowtye.decisive.Models.Requirement;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Converters {
 
@@ -25,5 +31,29 @@ public class Converters {
     @TypeConverter
     public static int toInt(Requirement.Importance importance){
         return importance.ordinal();
+    }
+
+    @TypeConverter
+    public static List<String> fromString(String value){
+        Type listType = new TypeToken<List<String>>() {}.getType();
+        return new Gson().fromJson(value, listType);
+    }
+
+    @TypeConverter
+    public static String fromList(List<String> list){
+        Gson gson = new Gson();
+        return gson.toJson(list);
+    }
+
+    @TypeConverter
+    public static List<Double> fromStringDouble(String value){
+        Type listType = new TypeToken<List<Double>>() {}.getType();
+        return new Gson().fromJson(value, listType);
+    }
+
+    @TypeConverter
+    public static String fromListDouble(List<Double> list){
+        Gson gson = new Gson();
+        return gson.toJson(list);
     }
 }

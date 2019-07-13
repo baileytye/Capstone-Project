@@ -25,12 +25,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder>{
+public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder> {
 
     int mOptionsCount;
     Project mProject;
 
-    public DetailsAdapter(Project project){
+    public DetailsAdapter(Project project) {
         mProject = project;
         mOptionsCount = project.getOptions().size();
     }
@@ -53,13 +53,22 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
         return mOptionsCount;
     }
 
-    class DetailsViewHolder extends RecyclerView.ViewHolder{
+    public void setProject(Project p){
+        mProject = p;
+    }
 
-        @BindView(R.id.tv_item_card_title) TextView mItemTitleTextView;
-        @BindView(R.id.iv_item_card_header) ImageView mItemHeaderImageView;
-        @BindView(R.id.tv_item_card_price) TextView mItemPriceTextView;
-        @BindView(R.id.rv_requirements) RecyclerView mRequirementsRecyclerView;
-        @BindView(R.id.tv_rating) TextView mRatingTextView;
+    class DetailsViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.tv_item_card_title)
+        TextView mItemTitleTextView;
+        @BindView(R.id.iv_item_card_header)
+        ImageView mItemHeaderImageView;
+        @BindView(R.id.tv_item_card_price)
+        TextView mItemPriceTextView;
+        @BindView(R.id.rv_requirements)
+        RecyclerView mRequirementsRecyclerView;
+        @BindView(R.id.tv_rating)
+        TextView mRatingTextView;
 
         DetailsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,7 +81,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             mRequirementsRecyclerView.setAdapter(adapter);
         }
 
-        void bind(Option o){
+        void bind(Option o) {
             mItemHeaderImageView.setImageDrawable(new ColorDrawable(Color.rgb(0x00, 0x6D, 0xB3)));
             mItemTitleTextView.setText(o.getName());
         }

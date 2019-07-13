@@ -25,7 +25,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public MainViewModel(@NonNull Application application){
         super(application);
-        mRepo = new ProjectRepository(application);
+        mRepo = ProjectRepository.getInstance(application);
         insertDummyProject();
     }
 
@@ -38,7 +38,7 @@ public class MainViewModel extends AndroidViewModel {
         return mProjects;
     }
 
-    private void insertDummyProject(){
+    public void insertDummyProject(){
         Requirement r1 = new Requirement("Requirement 1",
                 Requirement.Type.number, Requirement.Importance.normal, 0,
                 "", 0, false, 0);
@@ -51,7 +51,9 @@ public class MainViewModel extends AndroidViewModel {
 
         List<Requirement> requirements = new ArrayList<>(Arrays.asList(r1,r2,r3));
 
-        Option option1 = new Option("Option 1", 100000,0,false,requirements,"",null);
+        List<Double> requirementValues = new ArrayList<>(Arrays.asList(1.0, 2.0, 3.0));
+
+        Option option1 = new Option("Option 1", 100000,0,false,requirementValues,"",null);
 
         Project p = new Project(requirements, Collections.singletonList(option1), "Project Test", true);
 
@@ -60,6 +62,10 @@ public class MainViewModel extends AndroidViewModel {
 
     private void loadProjects(){
         mProjects = mRepo.getProjects();
+    }
+
+    public List<Project> updateProjects(){
+        return mRepo.updateProjects();
     }
 
     public void clearProjects(){

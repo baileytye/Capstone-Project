@@ -6,13 +6,14 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.Requirement;
 
 import timber.log.Timber;
 
 
-@Database(entities = {Project.class, Requirement.class}, version = 1, exportSchema = false)
+@Database(entities = {Project.class, Requirement.class, Option.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final Object LOCK = new Object();
@@ -34,4 +35,5 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ProjectsDao projectsDao();
     public abstract RequirementsDao requirementsDao();
+    public abstract OptionsDao optionsDao();
 }
