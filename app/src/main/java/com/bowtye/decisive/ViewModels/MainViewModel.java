@@ -64,10 +64,6 @@ public class MainViewModel extends AndroidViewModel {
         mProjects = mRepo.getProjects();
     }
 
-    public List<Project> updateProjects(){
-        return mRepo.updateProjects();
-    }
-
     public void clearProjects(){
         mRepo.clearTable();
     }

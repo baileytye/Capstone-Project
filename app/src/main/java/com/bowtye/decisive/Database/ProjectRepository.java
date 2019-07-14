@@ -1,18 +1,18 @@
 package com.bowtye.decisive.Database;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.Requirement;
 
 import java.util.List;
-import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -25,6 +25,7 @@ public class ProjectRepository {
     private static ProjectRepository instance;
 
     private LiveData<List<Project>> projects;
+    private LiveData<Project> selectedProject;
 
     public static ProjectRepository getInstance(Application application) {
         if(instance == null) {
@@ -37,6 +38,7 @@ public class ProjectRepository {
         return instance;
     }
 
+    @SuppressLint("StaticFieldLeak")
     private ProjectRepository(Application application){
         AppDatabase database = AppDatabase.getInstance(application.getApplicationContext());
         projectsDao = database.projectsDao();
@@ -44,6 +46,27 @@ public class ProjectRepository {
         optionsDao = database.optionsDao();
 
         projects = projectsDao.loadProjects();
+        projects = Transformations.switchMap(projects, (List<Project> input) -> {
+            final MutableLiveData<List<Project>> projectsMutable = new MutableLiveData<>();
+            new AsyncTask<List<Project>, Void, List<Project>>(){
+
+                @Override
+                protected List<Project> doInBackground(List<Project>... lists) {
+                    for(int i = 0; i < lists[0].size(); i++){
+                        lists[0].get(i).setOptions(optionsDao.loadOptionsWithProjectId(lists[0].get(i).getId()));
+                        lists[0].get(i).setRequirements(requirementsDao.loadRequirementsWithProjectId(lists[0].get(i).getId()));
+                    }
+                    return lists[0];
+                }
+
+                @Override
+                protected void onPostExecute(List<Project> projects) {
+                    super.onPostExecute(projects);
+                    projectsMutable.postValue(projects);
+                }
+            }.execute(input);
+            return projectsMutable;
+        });
     }
 
     public LiveData<List<Project>> getProjects(){
@@ -51,21 +74,28 @@ public class ProjectRepository {
         return projects;
     }
 
-    public List<Project> updateProjects(){
-        List<Project> temp = projects.getValue();
-        for (int i = 0; i < Objects.requireNonNull(temp).size(); i++) {
-            temp.get(i).setRequirements(requirementsDao.loadRequirementsWithProjectId(temp.get(i).getId()).getValue());
-            temp.get(i).setOptions(optionsDao.loadOptionsWithProjectId(temp.get(i).getId()).getValue());
-        }
-//        Timber.d("Requirements: %d", temp.get(0).getRequirements().size());
-        return temp;
-    }
+    public LiveData<Project> updateSelectedProject(int id){
+        selectedProject = projectsDao.loadProjectById(id);
+        selectedProject = Transformations.switchMap(selectedProject, input -> {
+            final MutableLiveData<Project> projectMutable = new MutableLiveData<>();
+            new AsyncTask<Project, Void, Project> (){
 
-    public LiveData<Project> getProjectById(int id){
-        LiveData<Project> data = projectsDao.loadProjectById(id);
-        Objects.requireNonNull(data.getValue()).setOptions(optionsDao.loadOptionsWithProjectId(id).getValue());
-        data.getValue().setRequirements(requirementsDao.loadRequirementsWithProjectId(id).getValue());
-        return data;
+                @Override
+                protected Project doInBackground(Project... projects) {
+                    projects[0].setOptions(optionsDao.loadOptionsWithProjectId(projects[0].getId()));
+                    projects[0].setRequirements(requirementsDao.loadRequirementsWithProjectId(projects[0].getId()));
+                    return projects[0];
+                }
+
+                @Override
+                protected void onPostExecute(Project project) {
+                    super.onPostExecute(project);
+                    projectMutable.postValue(project);
+                }
+            }.execute(input);
+            return projectMutable;
+        });
+        return selectedProject;
     }
 
     public void insert(final Project project){

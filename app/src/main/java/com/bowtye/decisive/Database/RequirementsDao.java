@@ -18,7 +18,7 @@ public interface RequirementsDao {
     LiveData<List<Requirement>> loadRequirements();
 
     @Query("SELECT * FROM requirement WHERE projectId = :selectId ORDER BY reqId")
-    LiveData<List<Requirement>> loadRequirementsWithProjectId(int selectId);
+    List<Requirement> loadRequirementsWithProjectId(int selectId);
 
     @Query("DELETE FROM requirement")
     void deleteAll();

@@ -2,7 +2,6 @@ package com.bowtye.decisive.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,7 +15,6 @@ import com.bowtye.decisive.Adapters.DetailsAdapter;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ViewModels.DetailsViewModel;
-import com.bowtye.decisive.ViewModels.MainViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,6 +22,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 import static com.bowtye.decisive.Activities.MainActivity.EXTRA_PROJECT_ID;
 
@@ -72,7 +71,6 @@ public class ProjectDetails extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        mToolbarTitle.setText(mProject.getName());
 
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
@@ -87,6 +85,11 @@ public class ProjectDetails extends AppCompatActivity {
             this.mProject = mProject;
             mAdapter.setProject(mProject);
             mAdapter.notifyDataSetChanged();
+            mToolbarTitle.setText(mProject.getName());
+            if(mProject.getOptions() != null && mProject.getRequirements() != null) {
+                Timber.d("Number of requirements loaded: %d", ((this.mProject.getRequirements() != null) ? this.mProject.getRequirements().size() : 0));
+                Timber.d("Number of options loaded: %d", ((this.mProject.getOptions() != null) ? this.mProject.getOptions().size() : 0));
+            }
         });
     }
 }

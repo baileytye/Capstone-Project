@@ -32,9 +32,12 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
 
     public DetailsAdapter(Project project) {
         mProject = project;
-        mOptionsCount = project.getOptions().size();
+        if(project != null ) {
+            mOptionsCount = project.getOptions().size();
+        } else {
+            mOptionsCount = 0;
+        }
     }
-
 
     @NonNull
     @Override
@@ -55,6 +58,11 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
 
     public void setProject(Project p){
         mProject = p;
+        if(mProject.getOptions() != null) {
+            mOptionsCount = mProject.getOptions().size();
+        } else {
+            mOptionsCount = 0;
+        }
     }
 
     class DetailsViewHolder extends RecyclerView.ViewHolder {
