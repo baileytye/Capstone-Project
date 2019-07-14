@@ -19,7 +19,7 @@ public class DetailsViewModel extends AndroidViewModel {
     }
 
     private void loadProject(int id){
-        mProject = mRepo.getProjectById(id);
+        mProject = mRepo.updateSelectedProject(id);
     }
 
     public LiveData<Project> getProject(int id){

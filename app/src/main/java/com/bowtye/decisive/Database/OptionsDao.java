@@ -19,7 +19,7 @@ public interface OptionsDao {
     LiveData<List<Option>> loadOptions();
 
     @Query("SELECT * FROM option WHERE projectId = :selectId ORDER BY optionId")
-    LiveData<List<Option>> loadOptionsWithProjectId(int selectId);
+    List<Option> loadOptionsWithProjectId(int selectId);
 
     @Query("DELETE FROM option")
     void deleteAll();

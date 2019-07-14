@@ -178,8 +178,8 @@ public class MainActivity extends AppCompatActivity
     void prepareViewModel() {
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         mViewModel.getProjects().observe(this, mProjects -> {
+            this.mProjects = mProjects;
             Timber.d("Livedata updated");
-            this.mProjects = mViewModel.updateProjects();
             mAdapter.setProjects(this.mProjects);
             mAdapter.notifyDataSetChanged();
             if(mProjects.size() > 0) {
