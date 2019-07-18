@@ -9,9 +9,9 @@
     tools:menu="@menu/add_project"
     tools:context=".Activities.AddProjectActivity">
 
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar_add_project"/>
 
-    <include layout="@layout/content_add_project"/>
+    <include layout="@layout/content_add_project" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
