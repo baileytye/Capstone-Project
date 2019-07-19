@@ -58,6 +58,14 @@
         <item>Exclude</item>
     </string-array>
 
+    <string-array name="averages">
+        <item>Far Above Average</item>
+        <item>Above Average</item>
+        <item>Average</item>
+        <item>Below Average</item>
+        <item>Far Below Average</item>
+    </string-array>
+
     <string-array name="dummy_requirements" >
         <item>Requirement 1</item>
         <item>Requirement 2</item>

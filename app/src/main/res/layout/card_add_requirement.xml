@@ -89,7 +89,7 @@
             android:id="@+id/label_expected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/card_heading_separation"
+            android:layout_marginTop="24dp"
             android:text="@string/label_expected"
             android:textAppearance="@style/CardItemHeadingTextStyle"
             app:layout_constraintStart_toStartOf="@+id/label_importance"
@@ -160,6 +160,40 @@
             app:layout_constraintEnd_toStartOf="@+id/ib_save_edit_requirement"
             app:layout_constraintStart_toEndOf="@+id/ib_delete_requirement"
             app:layout_constraintTop_toTopOf="@+id/ib_save_edit_requirement" />
+
+        <RatingBar
+            android:id="@+id/rb_star_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/label_expected"
+            app:layout_constraintEnd_toEndOf="@+id/sp_importance"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/label_expected"
+            app:layout_constraintTop_toTopOf="@+id/label_expected" />
+
+        <CheckBox
+            android:id="@+id/cb_expected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/label_expected"
+            app:layout_constraintEnd_toEndOf="@+id/sp_importance"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/label_expected"
+            app:layout_constraintTop_toTopOf="@+id/label_expected" />
+
+        <Spinner
+            android:id="@+id/sp_expected_averages"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:entries="@array/averages"
+            app:layout_constraintBottom_toBottomOf="@+id/label_expected"
+            app:layout_constraintEnd_toEndOf="@+id/sp_importance"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/label_expected"
+            app:layout_constraintTop_toTopOf="@+id/label_expected" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

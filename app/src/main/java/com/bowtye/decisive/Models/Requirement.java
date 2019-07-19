@@ -34,24 +34,22 @@ public class Requirement implements Parcelable {
     private double expected;
     private String notes;
     private double weight;
-    private Boolean excludeFromTotal;
     private double value;
 
     @Ignore
     public Requirement(String name, Type type, Importance importance, double expected,
-                       String notes, double weight, Boolean excludeFromTotal, double value) {
+                       String notes, double weight, double value) {
         this.name = name;
         this.type = type;
         this.importance = importance;
         this.expected = expected;
         this.notes = notes;
         this.weight = weight;
-        this.excludeFromTotal = excludeFromTotal;
         this.value = value;
     }
 
     public Requirement(int reqId, int projectId, String name, Type type, Importance importance, double expected,
-                       String notes, double weight, Boolean excludeFromTotal, double value) {
+                       String notes, double weight, double value) {
         this.reqId = reqId;
         this.projectId = projectId;
         this.name = name;
@@ -60,7 +58,6 @@ public class Requirement implements Parcelable {
         this.expected = expected;
         this.notes = notes;
         this.weight = weight;
-        this.excludeFromTotal = excludeFromTotal;
         this.value = value;
     }
 
@@ -128,14 +125,6 @@ public class Requirement implements Parcelable {
         this.weight = weight;
     }
 
-    public Boolean getExcludeFromTotal() {
-        return excludeFromTotal;
-    }
-
-    public void setExcludeFromTotal(Boolean excludeFromTotal) {
-        this.excludeFromTotal = excludeFromTotal;
-    }
-
     public double getValue() {
         return value;
     }
@@ -159,7 +148,6 @@ public class Requirement implements Parcelable {
         expected = in.readDouble();
         notes = in.readString();
         weight = in.readDouble();
-        excludeFromTotal = in.readInt() == 1;
         value = in.readDouble();
     }
 
@@ -173,7 +161,6 @@ public class Requirement implements Parcelable {
         parcel.writeDouble(expected);
         parcel.writeString(notes);
         parcel.writeDouble(weight);
-        parcel.writeInt(excludeFromTotal ? 1 : 0);
         parcel.writeDouble(value);
     }
 
@@ -196,6 +183,6 @@ public class Requirement implements Parcelable {
     }
 
     public enum Importance{
-        high, normal, low
+        high, normal, low, custom, exclude
     }
 }
