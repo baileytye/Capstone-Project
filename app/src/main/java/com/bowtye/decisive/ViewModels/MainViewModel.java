@@ -38,6 +38,10 @@ public class MainViewModel extends AndroidViewModel {
         return mProjects;
     }
 
+    public void insertProject(Project p){
+        mRepo.insert(p);
+    }
+
     public void insertDummyProject(){
         Requirement r1 = new Requirement("Requirement 1",
                 Requirement.Type.number, Requirement.Importance.normal, 0,
