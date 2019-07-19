@@ -45,13 +45,13 @@ public class MainViewModel extends AndroidViewModel {
     public void insertDummyProject(){
         Requirement r1 = new Requirement("Requirement 1",
                 Requirement.Type.number, Requirement.Importance.normal, 0,
-                "", 0, false, 0);
+                "", 0, 0);
         Requirement r2 = new Requirement("Requirement 2",
                 Requirement.Type.number, Requirement.Importance.normal, 0,
-                "", 0, false, 0);
+                "", 0, 0);
         Requirement r3 = new Requirement("Requirement 3",
                 Requirement.Type.number, Requirement.Importance.normal, 0,
-                "", 0, false, 0);
+                "", 0, 0);
 
         List<Requirement> requirements = new ArrayList<>(Arrays.asList(r1,r2,r3));
 
