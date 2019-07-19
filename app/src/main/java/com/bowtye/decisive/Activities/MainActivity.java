@@ -142,7 +142,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if ((requestCode == ADD_PROJECT_REQUEST_CODE) && (resultCode == RESULT_OK)) {
-            mViewModel.insertDummyProject();
+            if(data!= null && data.hasExtra(EXTRA_NEW_PROJECT)){
+                Project p = data.getParcelableExtra(EXTRA_NEW_PROJECT);
+                mViewModel.insertProject(p);
+                Timber.d("Project: %s inserted into the database", (p != null) ? p.getName() : "NULL");
+            }
         }
     }
 

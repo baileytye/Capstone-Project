@@ -26,20 +26,21 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-                <EditText
-                    android:textAppearance="@style/CardHeadingTextStyle"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:background="@null"
-                    android:hint="Project Name"
-                    android:textColor="@color/white"
-                    android:textColorHint="@drawable/selector_title"
-                    android:textCursorDrawable="@null" />
+            <EditText
+                android:id="@+id/et_project_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="center"
+                android:hint="Project Name"
+                android:paddingLeft="8dp"
+                android:paddingTop="4dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="4dp"
+                android:textAppearance="@style/CardHeadingTextStyle"
+                android:textColor="@color/white"
+                android:textColorHint="@drawable/selector_title"
+                android:textCursorDrawable="@null" />
 
         </androidx.appcompat.widget.Toolbar>
 
