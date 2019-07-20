@@ -226,7 +226,9 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
                 mRequirements.get(getAdapterPosition()).setName(name);
                 mRequirements.get(getAdapterPosition()).setImportance(getImportance());
                 mRequirements.get(getAdapterPosition()).setNotes(Objects.requireNonNull(mNotesTextInput.getText()).toString());
-                mRequirements.get(getAdapterPosition()).setType(getType());
+                Requirement.Type type = getType();
+                mRequirements.get(getAdapterPosition()).setType(type);
+                mRequirements.get(getAdapterPosition()).setExpected(getExpectedValue(type));
 
                 setSavedState();
             }
@@ -297,6 +299,30 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
                     return Requirement.Type.averaging;
             }
             return Requirement.Type.number;
+        }
+
+        double getExpectedValue(Requirement.Type type){
+            switch(type) {
+                case checkbox:
+                    return (mExpectedCheckBox.isChecked()) ? 1.0 : 0;
+                case averaging:
+                    switch(mExpectedAverages.getSelectedItem().toString()){
+                        case "Far Above Average":
+                            return Requirement.FAR_ABOVE_AVERAGE;
+                        case "Above Average":
+                            return Requirement.ABOVE_AVERAGE;
+                        case "Average":
+                            return Requirement.AVERAGE;
+                        case "Below Average":
+                            return Requirement.BELOW_AVERAGE ;
+                        case "Far Below Average":
+                            return Requirement.FAR_BELOW_AVERAGE;
+                    }
+                case starRating:
+                    return mExpectedRatingBar.getRating();
+                default:
+                    return Double.parseDouble(mExpectedValueEditText.getText().toString());
+            }
         }
     }
 }

@@ -21,6 +21,12 @@ import static androidx.room.ForeignKey.CASCADE;
                 onDelete = CASCADE ))
 public class Requirement implements Parcelable {
 
+    public static final double FAR_BELOW_AVERAGE = -2.0;
+    public static final double BELOW_AVERAGE = -1.0;
+    public static final double AVERAGE = 0;
+    public static final double ABOVE_AVERAGE = 1.0;
+    public static final double FAR_ABOVE_AVERAGE = 2.0;
+
     @PrimaryKey (autoGenerate = true)
     private int reqId;
     private int projectId;
