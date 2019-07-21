@@ -16,6 +16,21 @@
         android:paddingBottom="@dimen/card_padding">
 
         <EditText
+            android:id="@+id/et_weight"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="Weight"
+            android:inputType="number"
+            android:paddingStart="@dimen/card_notes_padding"
+            android:paddingEnd="@dimen/card_notes_padding"
+            app:layout_constraintBottom_toBottomOf="@+id/label_weight"
+            app:layout_constraintEnd_toEndOf="@+id/sp_importance"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/label_weight"
+            app:layout_constraintTop_toTopOf="@+id/label_weight" />
+
+        <EditText
             android:id="@+id/et_requirement_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,21 +101,32 @@
             app:layout_constraintTop_toTopOf="@+id/label_importance" />
 
         <TextView
+            android:id="@+id/label_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/card_heading_separation"
+            android:text="Weight:"
+            android:textAppearance="@style/CardItemHeadingTextStyle"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="@+id/label_importance"
+            app:layout_constraintTop_toBottomOf="@+id/label_importance" />
+
+        <TextView
             android:id="@+id/label_expected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="28dp"
             android:text="@string/label_expected"
             android:textAppearance="@style/CardItemHeadingTextStyle"
             app:layout_constraintStart_toStartOf="@+id/label_importance"
-            app:layout_constraintTop_toBottomOf="@+id/label_importance" />
+            app:layout_constraintTop_toBottomOf="@+id/label_weight" />
 
         <EditText
             android:id="@+id/et_expected"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:hint="@string/hint_expected"
-            android:inputType="textPersonName"
+            android:inputType="number"
             android:paddingStart="@dimen/card_notes_padding"
             android:paddingEnd="@dimen/card_notes_padding"
             app:layout_constraintBottom_toBottomOf="@+id/label_expected"
@@ -166,7 +192,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:numStars="5"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/label_expected"
             app:layout_constraintEnd_toEndOf="@+id/sp_importance"
             app:layout_constraintHorizontal_bias="1.0"
@@ -178,6 +204,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/label_expected"
             app:layout_constraintEnd_toEndOf="@+id/sp_importance"
             app:layout_constraintHorizontal_bias="1.0"
@@ -189,11 +216,13 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:entries="@array/averages"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/label_expected"
             app:layout_constraintEnd_toEndOf="@+id/sp_importance"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/label_expected"
-            app:layout_constraintTop_toTopOf="@+id/label_expected" />
+            app:layout_constraintTop_toTopOf="@+id/label_expected"
+            app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

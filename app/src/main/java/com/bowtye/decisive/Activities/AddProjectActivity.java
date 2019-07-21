@@ -1,5 +1,6 @@
 package com.bowtye.decisive.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +30,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 import static com.bowtye.decisive.Activities.MainActivity.EXTRA_NEW_PROJECT;
 
@@ -37,6 +40,8 @@ public class AddProjectActivity extends AppCompatActivity {
     public static final int VALIDATION_SAVE_REQ_ERROR = -1;
     public static final int VALIDATION_NAME_ERROR = -2;
 
+    public static final String EXTRA_PROJECT = "extra_project";
+
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.et_project_name)
@@ -45,6 +50,8 @@ public class AddProjectActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     @BindView(R.id.fab)
     FloatingActionButton mFab;
+    @BindView(R.id.label_empty_requirements)
+    TextView mEmptyRequirementsLabel;
 
     private RecyclerView.LayoutManager mLayoutManager;
     private AddProjectAdapter mAdapter;
@@ -56,7 +63,28 @@ public class AddProjectActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_project);
         ButterKnife.bind(this);
 
+        mProject = new Project(null, null, "", true);
+
+        if(savedInstanceState != null){
+            if(savedInstanceState.containsKey(EXTRA_PROJECT)){
+                mProject = savedInstanceState.getParcelable(EXTRA_PROJECT);
+            }
+        }
         prepareViews();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkIfEmpty();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Timber.d("Saved project with %d requirements", (mAdapter.getRequirements() == null) ? 0 : mAdapter.getRequirements().size());
+        mProject.setRequirements(mAdapter.getRequirements());
+        outState.putParcelable(EXTRA_PROJECT, mProject);
     }
 
     @Override
@@ -106,12 +134,26 @@ public class AddProjectActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new AddProjectAdapter(this);
+        mAdapter = new AddProjectAdapter(this, (mProject == null) ? null : mProject.getRequirements());
         mRecyclerView.setAdapter(mAdapter);
+
+        checkIfEmpty();
 
         mFab.setOnClickListener(view ->{
             mAdapter.addRequirementCard();
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mEmptyRequirementsLabel.setVisibility(View.INVISIBLE);
         });
+    }
+
+    public void checkIfEmpty(){
+        if(mAdapter.getItemCount() == 0){
+            mRecyclerView.setVisibility(View.INVISIBLE);
+            mEmptyRequirementsLabel.setVisibility(View.VISIBLE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mEmptyRequirementsLabel.setVisibility(View.INVISIBLE);
+        }
     }
 
     /**
@@ -125,7 +167,7 @@ public class AddProjectActivity extends AppCompatActivity {
             return VALIDATION_NAME_ERROR;
         }
 
-        mProject = new Project(null, null, name, true);
+        mProject.setName(name);
 
         for(int i = 0 ; i < mAdapter.getItemCount(); i++){
             AddProjectAdapter.AddRequirementViewHolder holder = (AddProjectAdapter.AddRequirementViewHolder)
