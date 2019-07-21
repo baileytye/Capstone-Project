@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.rv_main)
     RecyclerView mRecyclerView;
 
-    private Activity activity;
     private RecyclerView.LayoutManager mLayoutManager;
     private MainAdapter mAdapter;
     private MainViewModel mViewModel;
@@ -79,7 +78,6 @@ public class MainActivity extends AppCompatActivity
             Timber.plant(new Timber.DebugTree());
         }
 
-        activity = this;
         ButterKnife.bind(this);
 
         prepareViewModel();
@@ -136,7 +134,12 @@ public class MainActivity extends AppCompatActivity
         Transition transition = new Slide(Gravity.START);
 
         getWindow().setExitTransition(transition);
-        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+    }
+
+    @Override
+    public void onProjectDeleteMenuClicked(int position) {
+        mViewModel.deleteProject(mProjects.get(position));
     }
 
     @Override
@@ -173,7 +176,7 @@ public class MainActivity extends AppCompatActivity
             Transition transition = new Slide(Gravity.TOP);
 
             getWindow().setExitTransition(transition);
-            startActivityForResult(intent, ADD_PROJECT_REQUEST_CODE, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+            startActivityForResult(intent, ADD_PROJECT_REQUEST_CODE, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
         });
 
         Timber.d("Number of projects: %d", ((mProjects != null) ? mProjects.size() : 0));

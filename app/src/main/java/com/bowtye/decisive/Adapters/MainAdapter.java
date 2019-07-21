@@ -2,11 +2,14 @@ package com.bowtye.decisive.Adapters;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,7 +66,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         return mProjectCount;
     }
 
-    class MainViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MainViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
         @BindView(R.id.iv_project_card_header)
         ImageView mProjectImageView;
@@ -76,6 +79,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
+            itemView.setOnCreateContextMenuListener(this);
         }
 
         @Override
@@ -89,9 +93,25 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             mProjectTitle.setText(p.getName());
             mChoicesTextView.setText((p.getOptions() == null) ? "0" : String.valueOf(p.getOptions().size()));
         }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+            contextMenu.setHeaderTitle(mProjects.get(getAdapterPosition()).getName());
+            MenuItem deleteActionItem = contextMenu.add("Delete");
+            deleteActionItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    mClickListener.onProjectDeleteMenuClicked(getAdapterPosition());
+                    return false;
+                }
+            });
+
+        }
+
     }
 
     public interface ProjectItemClickListener {
         void onProjectItemClicked(int position);
+        void onProjectDeleteMenuClicked(int position);
     }
 }

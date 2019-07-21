@@ -67,7 +67,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
                 mRequirements.get(mRequirements.size() - 1).getName().toString());
     }
 
-    public void removeAt(int position){
+    private void removeAt(int position){
         mRequirements.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mRequirements.size() - 1);
@@ -84,12 +84,13 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
         return mRequirements.size();
     }
 
-
-
     public List<Requirement> getRequirements(){
         return mRequirements;
     }
 
+    /**
+     * Viewholder of an add requirement card
+     */
     public class AddRequirementViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.et_requirement_name)

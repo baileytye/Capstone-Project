@@ -102,6 +102,10 @@ public class ProjectRepository {
         new InsertAsyncTask().execute(project);
     }
 
+    public void delete(final Project project){
+        new DeleteAsyncTask().execute(project);
+    }
+
     public void clearTable(){
         new ClearAsyncTask().execute();
     }
@@ -133,6 +137,16 @@ public class ProjectRepository {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             Timber.d("Project inserted into database");
+        }
+    }
+
+    private static class DeleteAsyncTask extends AsyncTask<Project, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Project... projects) {
+            projectsDao.deleteProject(projects[0]);
+            Timber.d("Deleted project: %s", projects[0].getName());
+            return null;
         }
     }
 

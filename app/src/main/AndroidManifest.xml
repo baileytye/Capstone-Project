@@ -9,11 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.ProjectDetails"></activity>
-        <activity android:name=".Activities.AddProjectActivity"
+        <activity
+            android:name=".Activities.AddOption"
+            android:label="@string/title_activity_add_option"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activities.ProjectDetails" />
+        <activity
+            android:name=".Activities.AddProjectActivity"
             android:configChanges="orientation"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".Activities.MainActivity"
             android:label="@string/app_name">

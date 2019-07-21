@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Decisive</string>
+    <string name="title_activity_add_option">Add Option</string>
 
     <!--Navigation Drawer Strings-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -66,11 +67,12 @@
         <item>Far Below Average</item>
     </string-array>
 
-    <string-array name="dummy_requirements" >
+    <string-array name="dummy_requirements">
         <item>Requirement 1</item>
         <item>Requirement 2</item>
         <item>Requirement 3</item>
         <item>Requirement 4</item>
     </string-array>
+
 
 </resources>
