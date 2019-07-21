@@ -27,6 +27,11 @@ public class Requirement implements Parcelable {
     public static final double ABOVE_AVERAGE = 1.0;
     public static final double FAR_ABOVE_AVERAGE = 2.0;
 
+    public static final double WEIGHT_HIGH = 1.5;
+    public static final double WEIGHT_NORMAL = 1;
+    public static final double WEIGHT_LOW = 0.5;
+    public static final double WEIGHT_EXCLUDE = 0;
+
     @PrimaryKey (autoGenerate = true)
     private int reqId;
     private int projectId;

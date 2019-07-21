@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.ProjectDetails"></activity>
         <activity android:name=".Activities.AddProjectActivity"
+            android:configChanges="orientation"
             android:windowSoftInputMode="adjustResize">
         </activity>
         <activity

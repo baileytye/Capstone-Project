@@ -12,10 +12,14 @@
         android:id="@+id/rv_main"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="@dimen/recycler_margin"
+        android:layout_marginLeft="@dimen/recycler_margin"
+        android:layout_marginRight="@dimen/recycler_margin"
+        android:paddingTop="@dimen/recycler_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/card_project" />
+        tools:listitem="@layout/card_project"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
