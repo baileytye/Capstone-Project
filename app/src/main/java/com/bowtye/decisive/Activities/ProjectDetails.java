@@ -6,8 +6,12 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -15,6 +19,7 @@ import com.bowtye.decisive.Adapters.DetailsAdapter;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ViewModels.DetailsViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,9 +33,15 @@ import static com.bowtye.decisive.Activities.MainActivity.EXTRA_PROJECT_ID;
 
 public class ProjectDetails extends AppCompatActivity {
 
-    @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.toolbar_title) TextView mToolbarTitle;
-    @BindView(R.id.rv_details) RecyclerView mRecyclerView;
+    private static final int ADD_OPTION_REQUEST_CODE = 877;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.toolbar_title)
+    TextView mToolbarTitle;
+    @BindView(R.id.rv_details)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.fab)
+    FloatingActionButton mFab;
 
     private RecyclerView.LayoutManager mLayoutManager;
     private DetailsAdapter mAdapter;
@@ -77,6 +88,15 @@ public class ProjectDetails extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new DetailsAdapter(mProject);
         mRecyclerView.setAdapter(mAdapter);
+
+        mFab.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), AddOption.class);
+
+            Transition transition = new Slide(Gravity.TOP);
+
+            getWindow().setExitTransition(transition);
+            startActivityForResult(intent, ADD_OPTION_REQUEST_CODE, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        });
     }
 
     private void prepareViewModel(){

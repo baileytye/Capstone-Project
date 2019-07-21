@@ -26,7 +26,6 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel(@NonNull Application application){
         super(application);
         mRepo = ProjectRepository.getInstance(application);
-        insertDummyProject();
     }
 
 
@@ -70,5 +69,9 @@ public class MainViewModel extends AndroidViewModel {
 
     public void clearProjects(){
         mRepo.clearTable();
+    }
+
+    public void deleteProject(Project p){
+        mRepo.delete(p);
     }
 }
