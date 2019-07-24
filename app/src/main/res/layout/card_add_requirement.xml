@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/card_background"
+        android:background="@drawable/bg_card"
         android:paddingBottom="@dimen/card_padding">
 
         <EditText
@@ -140,7 +140,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@drawable/card_background"
+            android:background="@drawable/bg_card"
             android:padding="@dimen/card_notes_padding"
             app:layout_constraintEnd_toEndOf="@+id/et_expected"
             app:layout_constraintStart_toStartOf="@+id/label_expected"
