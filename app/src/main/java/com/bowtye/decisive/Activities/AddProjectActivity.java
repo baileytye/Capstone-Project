@@ -1,25 +1,21 @@
 package com.bowtye.decisive.Activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bowtye.decisive.Adapters.AddProjectAdapter;
-import com.bowtye.decisive.Adapters.DetailsAdapter;
+import com.bowtye.decisive.Helpers.DialogHelper;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -110,10 +106,12 @@ public class AddProjectActivity extends AppCompatActivity {
                         finishAfterTransition();
                         break;
                     case VALIDATION_NAME_ERROR:
-                        showErrorDialog("Save Project", "Please give this project a name");
+                        DialogHelper.showErrorDialog("Save Project",
+                                "Please give this project a name", this);
                         break;
                     case VALIDATION_SAVE_REQ_ERROR:
-                        showErrorDialog("Save Project", "Please save all requirements");
+                        DialogHelper.showErrorDialog("Save Project",
+                                "Please save all requirements", this);
                         break;
                 }
             return true;
@@ -180,20 +178,5 @@ public class AddProjectActivity extends AppCompatActivity {
         mProject.setRequirements(mAdapter.getRequirements());
 
         return VALIDATION_OK;
-    }
-
-    /**
-     * Displays error dialog
-     * @param title title of dialog
-     * @param message message of dialog
-     */
-    private void showErrorDialog(String title, String message){
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .show();
     }
 }

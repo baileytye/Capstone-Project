@@ -11,6 +11,7 @@ import androidx.room.TypeConverters;
 
 import com.bowtye.decisive.Database.Converters;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static androidx.room.ForeignKey.CASCADE;
@@ -131,44 +132,46 @@ public class Option implements Parcelable {
         this.imagePaths = imagePaths;
     }
 
-    @Ignore
-    private Option(Parcel in){
-        name = in.readString();
-        price = in.readDouble();
-        rating = in.readDouble();
-        ruledOut = in.readInt() == 1;
-        in.readList(requirementValues, Double.class.getClassLoader());
-        notes = in.readString();
-        imagePaths = in.createStringArrayList();
-    }
-
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(name);
-        parcel.writeDouble(price);
-        parcel.writeDouble(rating);
-        parcel.writeInt(ruledOut ? 1 : 0);
-        parcel.writeList(requirementValues);
-        parcel.writeString(notes);
-        parcel.writeList(imagePaths);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.optionId);
+        dest.writeInt(this.projectId);
+        dest.writeString(this.name);
+        dest.writeDouble(this.price);
+        dest.writeDouble(this.rating);
+        dest.writeValue(this.ruledOut);
+        dest.writeList(this.requirementValues);
+        dest.writeString(this.notes);
+        dest.writeStringList(this.imagePaths);
     }
 
-    public static final Parcelable.Creator<Option> CREATOR =
-            new Parcelable.Creator<Option>(){
+    protected Option(Parcel in) {
+        this.optionId = in.readInt();
+        this.projectId = in.readInt();
+        this.name = in.readString();
+        this.price = in.readDouble();
+        this.rating = in.readDouble();
+        this.ruledOut = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.requirementValues = new ArrayList<Double>();
+        in.readList(this.requirementValues, Double.class.getClassLoader());
+        this.notes = in.readString();
+        this.imagePaths = in.createStringArrayList();
+    }
 
-                @Override
-                public Option createFromParcel(Parcel parcel) {
-                    return new Option(parcel);
-                }
+    public static final Creator<Option> CREATOR = new Creator<Option>() {
+        @Override
+        public Option createFromParcel(Parcel source) {
+            return new Option(source);
+        }
 
-                @Override
-                public Option[] newArray(int i) {
-                    return new Option[i];
-                }
-            };
+        @Override
+        public Option[] newArray(int size) {
+            return new Option[size];
+        }
+    };
 }

@@ -79,33 +79,32 @@ public class Project implements Parcelable {
         this.hasPrice = hasPrice;
     }
 
-    @Ignore
-    private Project(Parcel in){
-        requirements = new ArrayList<>();
-        options = new ArrayList<>();
-        in.readList(requirements, Requirement.class.getClassLoader());
-        in.readList(options, Option.class.getClassLoader());
-        name = in.readString();
-        hasPrice = in.readInt() == 1;
-    }
-
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeList(requirements);
-        parcel.writeList(options);
-        parcel.writeString(name);
-        parcel.writeInt(hasPrice ? 1 : 0);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeTypedList(this.requirements);
+        dest.writeTypedList(this.options);
+        dest.writeString(this.name);
+        dest.writeValue(this.hasPrice);
+    }
+
+    protected Project(Parcel in) {
+        this.id = in.readInt();
+        this.requirements = in.createTypedArrayList(Requirement.CREATOR);
+        this.options = in.createTypedArrayList(Option.CREATOR);
+        this.name = in.readString();
+        this.hasPrice = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }
 
     public static final Creator<Project> CREATOR = new Creator<Project>() {
         @Override
-        public Project createFromParcel(Parcel in) {
-            return new Project(in);
+        public Project createFromParcel(Parcel source) {
+            return new Project(source);
         }
 
         @Override

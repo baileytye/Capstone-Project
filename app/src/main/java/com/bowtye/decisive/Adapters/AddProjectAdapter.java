@@ -295,6 +295,9 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
 
             mTypeSpinner.setEnabled(false);
             mImportanceSpinner.setEnabled(false);
+            mExpectedRatingBar.setEnabled(false);
+            mExpectedAverages.setEnabled(false);
+            mExpectedCheckBox.setEnabled(false);
 
             mIsSaved = true;
         }
@@ -317,6 +320,9 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
 
             mTypeSpinner.setEnabled(true);
             mImportanceSpinner.setEnabled(true);
+            mExpectedRatingBar.setEnabled(true);
+            mExpectedAverages.setEnabled(true);
+            mExpectedCheckBox.setEnabled(true);
 
             mIsSaved = false;
         }
@@ -370,18 +376,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
                 case checkbox:
                     return (mExpectedCheckBox.isChecked()) ? 1.0 : 0;
                 case averaging:
-                    switch(mExpectedAverages.getSelectedItem().toString()){
-                        case "Far Above Average":
-                            return Requirement.FAR_ABOVE_AVERAGE;
-                        case "Above Average":
-                            return Requirement.ABOVE_AVERAGE;
-                        case "Average":
-                            return Requirement.AVERAGE;
-                        case "Below Average":
-                            return Requirement.BELOW_AVERAGE ;
-                        case "Far Below Average":
-                            return Requirement.FAR_BELOW_AVERAGE;
-                    }
+                    return Requirement.getAveragingValue(mExpectedAverages.getSelectedItem().toString());
                 case starRating:
                     return mExpectedRatingBar.getRating();
                 default:
