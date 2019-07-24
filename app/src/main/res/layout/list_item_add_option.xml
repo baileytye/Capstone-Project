@@ -10,7 +10,7 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:text="Requirement:"
-        android:textAppearance="@style/CardHeadingTextStyle" />
+        android:textAppearance="@style/CardItemHeadingTextStyle" />
 
     <FrameLayout
         android:layout_width="wrap_content"
