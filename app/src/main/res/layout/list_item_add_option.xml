@@ -26,7 +26,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="Value"
-            android:inputType="textPersonName" />
+            android:inputType="number" />
 
         <CheckBox
             android:id="@+id/cb_requirement_value"
