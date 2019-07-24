@@ -98,12 +98,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
             contextMenu.setHeaderTitle(mProjects.get(getAdapterPosition()).getName());
             MenuItem deleteActionItem = contextMenu.add("Delete");
-            deleteActionItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    mClickListener.onProjectDeleteMenuClicked(getAdapterPosition());
-                    return false;
-                }
+            deleteActionItem.setOnMenuItemClickListener(menuItem -> {
+                mClickListener.onProjectDeleteMenuClicked(getAdapterPosition());
+                return true;
+            });
+            MenuItem editActionItem = contextMenu.add("Edit");
+            editActionItem.setOnMenuItemClickListener(menuItem -> {
+                mClickListener.onProjectEditMenuCLicked(getAdapterPosition());
+                return true;
             });
 
         }
@@ -113,5 +115,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     public interface ProjectItemClickListener {
         void onProjectItemClicked(int position);
         void onProjectDeleteMenuClicked(int position);
+        void onProjectEditMenuCLicked(int position);
     }
 }

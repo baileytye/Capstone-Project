@@ -1,6 +1,5 @@
 package com.bowtye.decisive.Activities;
 
-import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,6 +48,7 @@ public class MainActivity extends AppCompatActivity
     public static final String EXTRA_PROJECT_ID = "extra_project_id";
     public static final String EXTRA_NEW_PROJECT = "extra_new_project";
     public static final int ADD_PROJECT_REQUEST_CODE = 3423;
+    private static final String EXTRA_EDIT_PROJECT = "extra_edit_project";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -143,6 +143,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onProjectEditMenuCLicked(int position) {
+       startAddProjectActivity(position);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if ((requestCode == ADD_PROJECT_REQUEST_CODE) && (resultCode == RESULT_OK)) {
             if(data!= null && data.hasExtra(EXTRA_NEW_PROJECT)){
@@ -171,12 +176,7 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setAdapter(mAdapter);
 
         mFab.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), AddProjectActivity.class);
-
-            Transition transition = new Slide(Gravity.TOP);
-
-            getWindow().setExitTransition(transition);
-            startActivityForResult(intent, ADD_PROJECT_REQUEST_CODE, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            startAddProjectActivity(-1);
         });
 
         Timber.d("Number of projects: %d", ((mProjects != null) ? mProjects.size() : 0));
@@ -190,10 +190,26 @@ public class MainActivity extends AppCompatActivity
             mAdapter.setProjects(this.mProjects);
             mAdapter.notifyDataSetChanged();
             if(mProjects.size() > 0) {
-                Timber.d("Number of requirements loaded: %d", ((this.mProjects.get(0).getRequirements() != null) ? this.mProjects.get(0).getRequirements().size() : 0));
-                Timber.d("Number of options loaded: %d", ((this.mProjects.get(0).getOptions() != null) ? this.mProjects.get(0).getOptions().size() : 0));
+                Timber.d("Number of requirements loaded: %d",
+                        ((this.mProjects.get(0).getRequirements() != null)
+                                ? this.mProjects.get(0).getRequirements().size() : 0));
+                Timber.d("Number of options loaded: %d",
+                        ((this.mProjects.get(0).getOptions() != null)
+                                ? this.mProjects.get(0).getOptions().size() : 0));
             }
         });
+    }
+
+    void startAddProjectActivity(int position){
+        Intent intent = new Intent(getApplicationContext(), AddProjectActivity.class);
+        if(position >= 0){
+            intent.putExtra(EXTRA_EDIT_PROJECT, mProjects.get(position));
+        }
+        Transition transition = new Slide(Gravity.TOP);
+
+        getWindow().setExitTransition(transition);
+        startActivityForResult(intent, ADD_PROJECT_REQUEST_CODE,
+                ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 
 

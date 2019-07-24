@@ -72,6 +72,22 @@ public class Requirement implements Parcelable {
         this.value = value;
     }
 
+    public static double getAveragingValue(String type){
+        switch(type){
+            case "Far Above Average":
+                return FAR_ABOVE_AVERAGE;
+            case "Above Average":
+                return ABOVE_AVERAGE;
+            case "Average":
+                return AVERAGE;
+            case "Below Average":
+                return BELOW_AVERAGE ;
+            case "Far Below Average":
+                return FAR_BELOW_AVERAGE;
+        }
+        return AVERAGE;
+    }
+
     public int getReqId() {
         return reqId;
     }
@@ -144,51 +160,6 @@ public class Requirement implements Parcelable {
         this.value = value;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Ignore
-    private Requirement(Parcel in){
-        reqId = in.readInt();
-        projectId = in.readInt();
-        name = in.readString();
-        type = Type.values()[in.readInt()];
-        importance = Importance.values()[in.readInt()];
-        expected = in.readDouble();
-        notes = in.readString();
-        weight = in.readDouble();
-        value = in.readDouble();
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(reqId);
-        parcel.writeInt(projectId);
-        parcel.writeString(name);
-        parcel.writeInt(type.ordinal());
-        parcel.writeInt(importance.ordinal());
-        parcel.writeDouble(expected);
-        parcel.writeString(notes);
-        parcel.writeDouble(weight);
-        parcel.writeDouble(value);
-    }
-
-    public static final Parcelable.Creator<Requirement> CREATOR =
-            new Parcelable.Creator<Requirement>(){
-
-                @Override
-                public Requirement createFromParcel(Parcel parcel) {
-                    return new Requirement(parcel);
-                }
-
-                @Override
-                public Requirement[] newArray(int i) {
-                    return new Requirement[i];
-                }
-            };
-
     public enum Type{
         number, starRating, checkbox, averaging
     }
@@ -196,4 +167,48 @@ public class Requirement implements Parcelable {
     public enum Importance{
         high, normal, low, custom, exclude
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.reqId);
+        dest.writeInt(this.projectId);
+        dest.writeString(this.name);
+        dest.writeInt(this.type == null ? -1 : this.type.ordinal());
+        dest.writeInt(this.importance == null ? -1 : this.importance.ordinal());
+        dest.writeDouble(this.expected);
+        dest.writeString(this.notes);
+        dest.writeDouble(this.weight);
+        dest.writeDouble(this.value);
+    }
+
+    protected Requirement(Parcel in) {
+        this.reqId = in.readInt();
+        this.projectId = in.readInt();
+        this.name = in.readString();
+        int tmpType = in.readInt();
+        this.type = tmpType == -1 ? null : Type.values()[tmpType];
+        int tmpImportance = in.readInt();
+        this.importance = tmpImportance == -1 ? null : Importance.values()[tmpImportance];
+        this.expected = in.readDouble();
+        this.notes = in.readString();
+        this.weight = in.readDouble();
+        this.value = in.readDouble();
+    }
+
+    public static final Creator<Requirement> CREATOR = new Creator<Requirement>() {
+        @Override
+        public Requirement createFromParcel(Parcel source) {
+            return new Requirement(source);
+        }
+
+        @Override
+        public Requirement[] newArray(int size) {
+            return new Requirement[size];
+        }
+    };
 }

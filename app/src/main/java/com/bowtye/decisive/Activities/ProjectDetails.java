@@ -1,5 +1,6 @@
 package com.bowtye.decisive.Activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.bowtye.decisive.Adapters.DetailsAdapter;
+import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ViewModels.DetailsViewModel;
@@ -23,6 +25,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -34,6 +37,9 @@ import static com.bowtye.decisive.Activities.MainActivity.EXTRA_PROJECT_ID;
 public class ProjectDetails extends AppCompatActivity {
 
     private static final int ADD_OPTION_REQUEST_CODE = 877;
+    private static final String EXTRA_PROJECT = "extra_project";
+    public static final String EXTRA_NEW_OPTION = "extra_new_option";
+
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.toolbar_title)
@@ -77,6 +83,21 @@ public class ProjectDetails extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if ((requestCode == ADD_OPTION_REQUEST_CODE) && (resultCode == RESULT_OK)) {
+            if(data!= null && data.hasExtra(EXTRA_NEW_OPTION)){
+                Option o = data.getParcelableExtra(EXTRA_NEW_OPTION);
+                if(mProject.getOptions() == null){
+                    mProject.setOptions(new ArrayList<>());
+                }
+                mProject.getOptions().add(o);
+                mViewModel.insertOption(mProject);
+                Timber.d("Project: %s inserted into the database", (o != null) ? o.getName() : "NULL");
+            }
+        }
+    }
+
     private void prepareViews() {
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -91,6 +112,7 @@ public class ProjectDetails extends AppCompatActivity {
 
         mFab.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), AddOption.class);
+            intent.putExtra(EXTRA_PROJECT, mProject);
 
             Transition transition = new Slide(Gravity.TOP);
 

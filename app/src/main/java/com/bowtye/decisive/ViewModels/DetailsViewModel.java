@@ -29,6 +29,8 @@ public class DetailsViewModel extends AndroidViewModel {
         return mProject;
     }
 
-
+    public void insertOption(Project p){
+        mRepo.insert(p);
+    }
 
 }
