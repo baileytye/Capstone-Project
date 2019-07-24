@@ -1,14 +1,11 @@
 package com.bowtye.decisive.Adapters;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,18 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
-import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder> {
 
-    int mOptionsCount;
-    Project mProject;
+    private int mOptionsCount;
+    private Project mProject;
 
     public DetailsAdapter(Project project) {
         mProject = project;
@@ -42,7 +36,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
     @NonNull
     @Override
     public DetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_project_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_option, parent, false);
         return new DetailsViewHolder(v);
     }
 
@@ -81,17 +75,19 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
         DetailsViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
-            mRequirementsRecyclerView.setHasFixedSize(true);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(itemView.getContext());
-            mRequirementsRecyclerView.setLayoutManager(layoutManager);
-            RequirementsAdapter adapter = new RequirementsAdapter(mProject.getRequirements());
-            mRequirementsRecyclerView.setAdapter(adapter);
         }
 
         void bind(Option o) {
             mItemHeaderImageView.setImageDrawable(new ColorDrawable(Color.rgb(0x00, 0x6D, 0xB3)));
             mItemTitleTextView.setText(o.getName());
+            mItemPriceTextView.setText(String.valueOf(o.getPrice()));
+
+            mRequirementsRecyclerView.setHasFixedSize(true);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(itemView.getContext());
+            mRequirementsRecyclerView.setLayoutManager(layoutManager);
+            RequirementsAdapter adapter = new RequirementsAdapter(mProject.getRequirements(),
+                    o.getRequirementValues());
+            mRequirementsRecyclerView.setAdapter(adapter);
         }
 
     }

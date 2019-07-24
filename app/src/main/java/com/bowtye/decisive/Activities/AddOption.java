@@ -9,7 +9,6 @@ import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
-import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -133,13 +132,9 @@ public class AddOption extends AppCompatActivity {
         mAdapter = new AddOptionAdapter(mRequirements);
         mRecyclerView.setAdapter(mAdapter);
 
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        mFab.setOnClickListener(view -> Snackbar.make(view,
+                "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
     }
 
     private int validateAndSave(){
