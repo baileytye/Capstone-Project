@@ -160,6 +160,45 @@ public class Requirement implements Parcelable {
         this.value = value;
     }
 
+    public static Type getTypeFromString(String typeString) {
+        switch (typeString) {
+            case "Number":
+                return Type.number;
+            case "Star Rating":
+                return Type.starRating;
+            case "Checkbox":
+                return Type.checkbox;
+            case "Above/Below Avg":
+                return Type.averaging;
+        }
+        return Requirement.Type.number;
+    }
+
+    public void setImportanceAndWeightFromString(String importanceString, double customWeight){
+        switch (importanceString) {
+            case "High":
+                importance =  Importance.high;
+                weight = WEIGHT_HIGH;
+                break;
+            case "Normal":
+                importance =  Importance.normal;
+                weight = WEIGHT_NORMAL;
+                break;
+            case "Low":
+                importance =  Importance.low;
+                weight = WEIGHT_LOW;
+                break;
+            case "Custom":
+                importance =  Importance.custom;
+                weight = customWeight;
+                break;
+            case "Exclude":
+                importance =  Importance.exclude;
+                weight = WEIGHT_EXCLUDE;
+                break;
+        }
+    }
+
     public enum Type {
         number, starRating, checkbox, averaging
     }
@@ -173,6 +212,7 @@ public class Requirement implements Parcelable {
         return 0;
     }
 
+    @Ignore
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.reqId);
@@ -186,6 +226,7 @@ public class Requirement implements Parcelable {
         dest.writeDouble(this.value);
     }
 
+    @Ignore
     protected Requirement(Parcel in) {
         this.reqId = in.readInt();
         this.projectId = in.readInt();

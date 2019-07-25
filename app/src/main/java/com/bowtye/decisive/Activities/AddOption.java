@@ -11,7 +11,7 @@ import android.os.Bundle;
 import com.bowtye.decisive.Adapters.AddOptionAdapter;
 import com.bowtye.decisive.BuildConfig;
 import com.bowtye.decisive.Fragments.BottomSheetFragment;
-import com.bowtye.decisive.Helpers.DialogHelper;
+import com.bowtye.decisive.Helpers.ViewHelper;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.Requirement;
@@ -38,10 +38,12 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -124,11 +126,11 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
             case R.id.action_save:
                 switch (validateAndSave()) {
                     case VALIDATION_NAME_ERROR:
-                        DialogHelper.showErrorDialog("Save Option",
+                        ViewHelper.showErrorDialog("Save Option",
                                 "Please give this option a name", this);
                         break;
                     case VALIDATION_HOLDER_ERROR:
-                        DialogHelper.showErrorDialog("Save Option",
+                        ViewHelper.showErrorDialog("Save Option",
                                 "Please fill the requirement values", this);
                         break;
                     case VALIDATION_OK:
@@ -286,7 +288,8 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = SimpleDateFormat.getDateInstance(DateFormat.DEFAULT, Locale.ENGLISH).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DCIM), "Camera");
