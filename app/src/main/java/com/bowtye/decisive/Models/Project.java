@@ -84,6 +84,7 @@ public class Project implements Parcelable {
         return 0;
     }
 
+    @Ignore
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
@@ -93,6 +94,7 @@ public class Project implements Parcelable {
         dest.writeValue(this.hasPrice);
     }
 
+    @Ignore
     protected Project(Parcel in) {
         this.id = in.readInt();
         this.requirements = in.createTypedArrayList(Requirement.CREATOR);

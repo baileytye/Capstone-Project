@@ -137,6 +137,7 @@ public class Option implements Parcelable {
         return 0;
     }
 
+    @Ignore
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.optionId);
@@ -150,6 +151,7 @@ public class Option implements Parcelable {
         dest.writeStringList(this.imagePaths);
     }
 
+    @Ignore
     protected Option(Parcel in) {
         this.optionId = in.readInt();
         this.projectId = in.readInt();

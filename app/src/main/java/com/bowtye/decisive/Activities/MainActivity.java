@@ -47,8 +47,10 @@ public class MainActivity extends AppCompatActivity
 
     public static final String EXTRA_PROJECT_ID = "extra_project_id";
     public static final String EXTRA_NEW_PROJECT = "extra_new_project";
+    public static final String EXTRA_EDIT_PROJECT = "extra_edit_project";
+
     public static final int ADD_PROJECT_REQUEST_CODE = 3423;
-    private static final String EXTRA_EDIT_PROJECT = "extra_edit_project";
+
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;

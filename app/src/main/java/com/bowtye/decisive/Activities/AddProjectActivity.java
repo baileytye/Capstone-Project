@@ -14,19 +14,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bowtye.decisive.Adapters.AddProjectAdapter;
-import com.bowtye.decisive.Helpers.DialogHelper;
+import com.bowtye.decisive.Helpers.ViewHelper;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static com.bowtye.decisive.Activities.MainActivity.EXTRA_EDIT_PROJECT;
 import static com.bowtye.decisive.Activities.MainActivity.EXTRA_NEW_PROJECT;
 
 public class AddProjectActivity extends AppCompatActivity {
@@ -58,11 +60,18 @@ public class AddProjectActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_project);
         ButterKnife.bind(this);
 
-        mProject = new Project(null, null, "", true);
+        mProject = new Project(new ArrayList<>(), new ArrayList<>(), "", true);
+        Intent intent = getIntent();
 
         if(savedInstanceState != null){
             if(savedInstanceState.containsKey(EXTRA_PROJECT)){
                 mProject = savedInstanceState.getParcelable(EXTRA_PROJECT);
+            }
+        }
+
+        if(intent != null){
+            if(intent.hasExtra(EXTRA_EDIT_PROJECT)){
+                mProject = intent.getParcelableExtra(EXTRA_EDIT_PROJECT);
             }
         }
         prepareViews();
@@ -105,11 +114,11 @@ public class AddProjectActivity extends AppCompatActivity {
                         finishAfterTransition();
                         break;
                     case VALIDATION_NAME_ERROR:
-                        DialogHelper.showErrorDialog("Save Project",
+                        ViewHelper.showErrorDialog("Save Project",
                                 "Please give this project a name", this);
                         break;
                     case VALIDATION_SAVE_REQ_ERROR:
-                        DialogHelper.showErrorDialog("Save Project",
+                        ViewHelper.showErrorDialog("Save Project",
                                 "Please save all requirements", this);
                         break;
                 }
@@ -127,6 +136,8 @@ public class AddProjectActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        mProjectNameEditText.setText(mProject.getName());
 
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);

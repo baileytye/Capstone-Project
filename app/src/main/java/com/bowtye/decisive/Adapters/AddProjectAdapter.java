@@ -20,6 +20,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bowtye.decisive.Helpers.ViewHelper;
 import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -111,7 +112,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
         @BindView(R.id.cb_expected)
         CheckBox mExpectedCheckBox;
         @BindView(R.id.sp_expected_averages)
-        Spinner mExpectedAverages;
+        Spinner mExpectedAveragesSpinner;
         @BindView(R.id.et_expected)
         EditText mExpectedValueEditText;
 
@@ -133,10 +134,13 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
         AnimatedVectorDrawable saveDrawable;
         AnimatedVectorDrawable editDrawable;
 
+        View mItemView;
+
 
         AddRequirementViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            mItemView = itemView;
         }
 
         public boolean getIsSaved() {
@@ -146,23 +150,17 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
         /**
          * Binds data to requirement card
          *
-         * @param r requirement to bind
+         * @param requirement requirement to bind
          */
-        void bind(Requirement r) {
-            Timber.d("Item binding, name: %s", r.getName());
+        void bind(Requirement requirement) {
+            Timber.d("Item binding, name: %s", requirement.getName());
 
             mIsSaved = false;
             saveDrawable = (AnimatedVectorDrawable) mContext.getDrawable(R.drawable.anim_check_to_edit);
             editDrawable = (AnimatedVectorDrawable) mContext.getDrawable(R.drawable.anim_edit_to_check);
             mSaveEditButton.setImageDrawable(saveDrawable);
 
-            mRequirementNameEditText.setText(r.getName());
-            mRequirementNameEditText.setError(null);
-            mWeightEditText.setError(null);
-            mNotesTextInput.setText(r.getNotes());
-            mExpectedValueEditText.setText("");
-            mImportanceSpinner.setSelection(0);
-            mTypeSpinner.setSelection(0);
+            setInitialValues(requirement);
 
             mImportanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -189,25 +187,25 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
                             mExpectedValueEditText.setVisibility(View.VISIBLE);
                             mExpectedRatingBar.setVisibility(View.INVISIBLE);
                             mExpectedCheckBox.setVisibility(View.INVISIBLE);
-                            mExpectedAverages.setVisibility(View.INVISIBLE);
+                            mExpectedAveragesSpinner.setVisibility(View.INVISIBLE);
                             break;
                         case "Star Rating":
                             mExpectedValueEditText.setVisibility(View.INVISIBLE);
                             mExpectedRatingBar.setVisibility(View.VISIBLE);
                             mExpectedCheckBox.setVisibility(View.INVISIBLE);
-                            mExpectedAverages.setVisibility(View.INVISIBLE);
+                            mExpectedAveragesSpinner.setVisibility(View.INVISIBLE);
                             break;
                         case "Checkbox":
                             mExpectedValueEditText.setVisibility(View.INVISIBLE);
                             mExpectedRatingBar.setVisibility(View.INVISIBLE);
                             mExpectedCheckBox.setVisibility(View.VISIBLE);
-                            mExpectedAverages.setVisibility(View.INVISIBLE);
+                            mExpectedAveragesSpinner.setVisibility(View.INVISIBLE);
                             break;
                         case "Above/Below Avg":
                             mExpectedValueEditText.setVisibility(View.INVISIBLE);
                             mExpectedRatingBar.setVisibility(View.INVISIBLE);
                             mExpectedCheckBox.setVisibility(View.INVISIBLE);
-                            mExpectedAverages.setVisibility(View.VISIBLE);
+                            mExpectedAveragesSpinner.setVisibility(View.VISIBLE);
                             break;
                     }
                 }
@@ -239,6 +237,23 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
 
                 }
             });
+        }
+
+
+        void setInitialValues(Requirement requirement){
+
+            mRequirementNameEditText.setText(requirement.getName());
+            mRequirementNameEditText.setError(null);
+
+            mTypeSpinner.setSelection(requirement.getType().ordinal());
+            mImportanceSpinner.setSelection(requirement.getImportance().ordinal());
+
+            setExpectedValue(requirement);
+
+            mWeightEditText.setText(String.valueOf(requirement.getWeight()));
+            mWeightEditText.setError(null);
+
+            mNotesTextInput.setText(requirement.getNotes());
         }
 
         /**
@@ -280,6 +295,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
 
             mKeyListenerExpected = mExpectedValueEditText.getKeyListener();
             mExpectedValueEditText.setKeyListener(null);
+            mExpectedValueEditText.setEnabled(false);
 
             mKeyListenerNotes = mNotesTextInput.getKeyListener();
             mNotesTextInput.setKeyListener(null);
@@ -293,10 +309,11 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
             mTypeSpinner.setEnabled(false);
             mImportanceSpinner.setEnabled(false);
             mExpectedRatingBar.setEnabled(false);
-            mExpectedAverages.setEnabled(false);
+            mExpectedAveragesSpinner.setEnabled(false);
             mExpectedCheckBox.setEnabled(false);
 
             mIsSaved = true;
+            ViewHelper.hideKeyboardFrom(mContext, mItemView);
         }
 
         /**
@@ -312,56 +329,18 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
             mNotesTextInput.setKeyListener(mKeyListenerNotes);
             mWeightEditText.setKeyListener(mKeyListenerWeight);
 
+            mExpectedValueEditText.setEnabled(true);
+
             mSavedLabel.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.scale_out));
             mSavedLabel.setVisibility(View.INVISIBLE);
 
             mTypeSpinner.setEnabled(true);
             mImportanceSpinner.setEnabled(true);
             mExpectedRatingBar.setEnabled(true);
-            mExpectedAverages.setEnabled(true);
+            mExpectedAveragesSpinner.setEnabled(true);
             mExpectedCheckBox.setEnabled(true);
 
             mIsSaved = false;
-        }
-
-        /**
-         * Retrieve the importance based on the spinner value. Also sets the weight in mRequirements.
-         *
-         * @return importance
-         */
-        Requirement.Importance getImportance() {
-            switch (mImportanceSpinner.getSelectedItem().toString()) {
-                case "High":
-                    mRequirements.get(getAdapterPosition()).setWeight(Requirement.WEIGHT_HIGH);
-                    return Requirement.Importance.high;
-                case "Normal":
-                    mRequirements.get(getAdapterPosition()).setWeight(Requirement.WEIGHT_NORMAL);
-                    return Requirement.Importance.normal;
-                case "Low":
-                    mRequirements.get(getAdapterPosition()).setWeight(Requirement.WEIGHT_LOW);
-                    return Requirement.Importance.low;
-                case "Custom":
-                    mRequirements.get(getAdapterPosition()).setWeight(Double.parseDouble(mWeightEditText.getText().toString()));
-                    return Requirement.Importance.custom;
-                case "Exclude":
-                    mRequirements.get(getAdapterPosition()).setWeight(Requirement.WEIGHT_EXCLUDE);
-                    return Requirement.Importance.exclude;
-            }
-            return Requirement.Importance.normal;
-        }
-
-        Requirement.Type getType() {
-            switch (mTypeSpinner.getSelectedItem().toString()) {
-                case "Number":
-                    return Requirement.Type.number;
-                case "Star Rating":
-                    return Requirement.Type.starRating;
-                case "Checkbox":
-                    return Requirement.Type.checkbox;
-                case "Above/Below Avg":
-                    return Requirement.Type.averaging;
-            }
-            return Requirement.Type.number;
         }
 
         /**
@@ -375,7 +354,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
                 case checkbox:
                     return (mExpectedCheckBox.isChecked()) ? 1.0 : 0;
                 case averaging:
-                    return Requirement.getAveragingValue(mExpectedAverages.getSelectedItem().toString());
+                    return Requirement.getAveragingValue(mExpectedAveragesSpinner.getSelectedItem().toString());
                 case starRating:
                     return mExpectedRatingBar.getRating();
                 default:
@@ -387,14 +366,41 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
             }
         }
 
+        void setExpectedValue(Requirement requirement){
+            switch (requirement.getType()) {
+                case checkbox:
+                    mExpectedCheckBox.setChecked(requirement.getExpected() == 1);
+                    break;
+                case averaging:
+                    mExpectedAveragesSpinner.setSelection((int)requirement.getExpected());
+                    break;
+                case starRating:
+                    mExpectedRatingBar.setRating((float)requirement.getExpected());
+                    break;
+                default:
+                    if(requirement.getExpected() != 0) {
+                        mExpectedValueEditText.setText(String.valueOf(requirement.getExpected()));
+                    } else {
+                        mExpectedValueEditText.setText("");
+                    }
+            }
+        }
+
         /**
          * Saves the values in this viewholder to mRequirements
          */
         void saveState() {
             mRequirements.get(getAdapterPosition()).setName(mRequirementNameEditText.getText().toString());
-            mRequirements.get(getAdapterPosition()).setImportance(getImportance());
+
+            double customWeight = 0;
+            if(!mWeightEditText.getText().toString().equals("")){
+                customWeight = Double.parseDouble(mWeightEditText.getText().toString());
+            }
+
+            mRequirements.get(getAdapterPosition()).setImportanceAndWeightFromString(
+                    mImportanceSpinner.getSelectedItem().toString(), customWeight);
             mRequirements.get(getAdapterPosition()).setNotes(Objects.requireNonNull(mNotesTextInput.getText()).toString());
-            Requirement.Type type = getType();
+            Requirement.Type type = Requirement.getTypeFromString(mTypeSpinner.getSelectedItem().toString());
             mRequirements.get(getAdapterPosition()).setType(type);
             mRequirements.get(getAdapterPosition()).setExpected(getExpectedValue(type));
         }

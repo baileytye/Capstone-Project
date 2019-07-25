@@ -117,15 +117,13 @@ public class ProjectRepository {
             Timber.d("Inserting Project: %s", projects[0].getName());
             int id = (int) projectsDao.insertProject(projects[0]);
 
-            Timber.d("Requirements length: %d", (projects[0].getRequirements() != null) ? projects[0].getRequirements().size() : 0);
-            for (Requirement r:
-                 projects[0].getRequirements()) {
+            Timber.d("Requirements length: %d", (projects[0].getRequirements() != null) ? projects[0].getRequirements().size() : null);
+            for (Requirement r: projects[0].getRequirements()) {
                 r.setProjectId(id);
                 requirementsDao.insertRequirement(r);
             }
-            Timber.d("Options length: %d", (projects[0].getOptions() != null) ? projects[0].getOptions().size() : 0);
-            for (Option o: projects[0].getOptions()
-                 ) {
+            Timber.d("Options length: %d", (projects[0].getOptions() != null) ? projects[0].getOptions().size() : null);
+            for (Option o: projects[0].getOptions()) {
                 o.setProjectId(id);
                 optionsDao.insertOption(o);
             }
