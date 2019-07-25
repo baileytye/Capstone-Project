@@ -144,13 +144,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onProjectEditMenuCLicked(int position) {
-       startAddProjectActivity(position);
+        startAddProjectActivity(position);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if ((requestCode == ADD_PROJECT_REQUEST_CODE) && (resultCode == RESULT_OK)) {
-            if(data!= null && data.hasExtra(EXTRA_NEW_PROJECT)){
+            if (data != null && data.hasExtra(EXTRA_NEW_PROJECT)) {
                 Project p = data.getParcelableExtra(EXTRA_NEW_PROJECT);
                 mViewModel.insertProject(p);
                 Timber.d("Project: %s inserted into the database", (p != null) ? p.getName() : "NULL");
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity
             Timber.d("Livedata updated");
             mAdapter.setProjects(this.mProjects);
             mAdapter.notifyDataSetChanged();
-            if(mProjects.size() > 0) {
+            if (mProjects.size() > 0) {
                 Timber.d("Number of requirements loaded: %d",
                         ((this.mProjects.get(0).getRequirements() != null)
                                 ? this.mProjects.get(0).getRequirements().size() : 0));
@@ -200,9 +200,9 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    void startAddProjectActivity(int position){
+    void startAddProjectActivity(int position) {
         Intent intent = new Intent(getApplicationContext(), AddProjectActivity.class);
-        if(position >= 0){
+        if (position >= 0) {
             intent.putExtra(EXTRA_EDIT_PROJECT, mProjects.get(position));
         }
         Transition transition = new Slide(Gravity.TOP);

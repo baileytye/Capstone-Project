@@ -26,7 +26,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
 
     public DetailsAdapter(Project project) {
         mProject = project;
-        if(project != null ) {
+        if (project != null) {
             mOptionsCount = project.getOptions().size();
         } else {
             mOptionsCount = 0;
@@ -50,9 +50,9 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
         return mOptionsCount;
     }
 
-    public void setProject(Project p){
+    public void setProject(Project p) {
         mProject = p;
-        if(mProject.getOptions() != null) {
+        if (mProject.getOptions() != null) {
             mOptionsCount = mProject.getOptions().size();
         } else {
             mOptionsCount = 0;

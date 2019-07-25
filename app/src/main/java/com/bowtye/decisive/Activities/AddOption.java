@@ -16,8 +16,6 @@ import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -35,7 +33,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -100,10 +97,10 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         mOption = new Option("", 0, 0, false, new ArrayList<>(), "", new ArrayList<>());
 
         Intent intent = getIntent();
-        if(intent != null){
-            if(intent.hasExtra(EXTRA_PROJECT)){
+        if (intent != null) {
+            if (intent.hasExtra(EXTRA_PROJECT)) {
                 Project p = intent.getParcelableExtra(EXTRA_PROJECT);
-                if(p != null) {
+                if (p != null) {
                     mRequirements = p.getRequirements();
                 }
             }
@@ -125,7 +122,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 finishAfterTransition();
                 return true;
             case R.id.action_save:
-                switch(validateAndSave()){
+                switch (validateAndSave()) {
                     case VALIDATION_NAME_ERROR:
                         DialogHelper.showErrorDialog("Save Option",
                                 "Please give this option a name", this);
@@ -145,10 +142,10 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         return super.onOptionsItemSelected(item);
     }
 
-    public void onActivityResult(int requestCode,int resultCode,Intent data){
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Result code is RESULT_OK only if the user selects an Image
         if (resultCode == Activity.RESULT_OK)
-            switch (requestCode){
+            switch (requestCode) {
                 case GALLERY_REQUEST_CODE:
                     //data.getData returns the content URI for the selected Image
                     Uri selectedImage = data.getData();
@@ -170,8 +167,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     captureFromCamera();
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    mSheetDialog.dismiss();
                 }
                 return;
             }
@@ -199,9 +195,9 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private int validateAndSave(){
+    private int validateAndSave() {
         String name = Objects.requireNonNull(mOptionNameEditText.getText()).toString();
-        if(name.equals("")){
+        if (name.equals("")) {
             return VALIDATION_NAME_ERROR;
         } else {
             mOption.setName(name);
@@ -209,18 +205,18 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
 
         double price;
         String priceString = Objects.requireNonNull(mPriceEditText.getText()).toString();
-        if(priceString.equals("")){
+        if (priceString.equals("")) {
             price = 0;
         } else {
             price = Double.parseDouble(priceString);
         }
         mOption.setPrice(price);
 
-        for(int i = 0; i < mRequirements.size(); i ++){
+        for (int i = 0; i < mRequirements.size(); i++) {
             AddOptionAdapter.AddOptionRequirementViewHolder holder =
                     (AddOptionAdapter.AddOptionRequirementViewHolder)
                             mRecyclerView.findViewHolderForAdapterPosition(i);
-            if(holder != null) {
+            if (holder != null) {
                 mOption.getRequirementValues().add(holder.getRequirementValue());
             } else {
                 return VALIDATION_HOLDER_ERROR;
@@ -229,16 +225,16 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         return VALIDATION_OK;
     }
 
-    private void pickFromGallery(){
+    private void pickFromGallery() {
         //Create an Intent with action as ACTION_PICK
-        Intent intent=new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_PICK);
         // Sets the type as image/*. This ensures only components of type image are selected
         intent.setType("image/*");
         //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
         String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         // Launching the Intent
-        startActivityForResult(intent,GALLERY_REQUEST_CODE);
+        startActivityForResult(intent, GALLERY_REQUEST_CODE);
     }
 
     private void captureFromCamera() {
@@ -325,7 +321,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
 
     @Override
     public void onBottomSheetClicked(int id) {
-        switch (id){
+        switch (id) {
             case TAKE_PHOTO:
                 captureFromCamera();
                 break;

@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.appbar.AppBarLayout
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/app_bar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     style="@style/MyAppbarLayoutStyle"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
 
     <com.google.android.material.appbar.CollapsingToolbarLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        app:titleEnabled="false"
         android:elevation="4dp"
-        app:layout_scrollFlags="scroll|enterAlways">
+        android:fitsSystemWindows="true"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:titleEnabled="false">
 
         <androidx.appcompat.widget.Toolbar
-            android:layout_height="wrap_content"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:contentInsetLeft="0dp"
             app:contentInsetStart="0dp"
             app:contentInsetStartWithNavigation="0dp"
-            android:id="@+id/toolbar"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <EditText
@@ -32,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:gravity="center"
-                android:hint="Project Name"
+                android:hint="@string/hint_project_name"
                 android:paddingLeft="8dp"
                 android:paddingTop="4dp"
                 android:paddingRight="8dp"

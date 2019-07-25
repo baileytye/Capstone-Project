@@ -16,4 +16,6 @@
     <dimen name="card_margin_edges">4dp</dimen>
     <dimen name="bottom_sheet_corner_radius">5dp</dimen>
     <dimen name="bottom_sheet_top_padding">8dp</dimen>
+    <dimen name="text_input_layer_padding">8dp</dimen>
+    <dimen name="recycler_view_fab_bottom_padding">80dp</dimen>
 </resources>

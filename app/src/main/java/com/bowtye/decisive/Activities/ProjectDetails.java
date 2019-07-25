@@ -63,8 +63,8 @@ public class ProjectDetails extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        if(intent != null){
-            if(intent.hasExtra(EXTRA_PROJECT_ID)){
+        if (intent != null) {
+            if (intent.hasExtra(EXTRA_PROJECT_ID)) {
                 mProjectId = intent.getIntExtra(EXTRA_PROJECT_ID, -1);
             }
         }
@@ -86,9 +86,9 @@ public class ProjectDetails extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if ((requestCode == ADD_OPTION_REQUEST_CODE) && (resultCode == RESULT_OK)) {
-            if(data!= null && data.hasExtra(EXTRA_NEW_OPTION)){
+            if (data != null && data.hasExtra(EXTRA_NEW_OPTION)) {
                 Option o = data.getParcelableExtra(EXTRA_NEW_OPTION);
-                if(mProject.getOptions() == null){
+                if (mProject.getOptions() == null) {
                     mProject.setOptions(new ArrayList<>());
                 }
                 mProject.getOptions().add(o);
@@ -117,20 +117,23 @@ public class ProjectDetails extends AppCompatActivity {
             Transition transition = new Slide(Gravity.TOP);
 
             getWindow().setExitTransition(transition);
-            startActivityForResult(intent, ADD_OPTION_REQUEST_CODE, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            startActivityForResult(intent, ADD_OPTION_REQUEST_CODE,
+                    ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
         });
     }
 
-    private void prepareViewModel(){
+    private void prepareViewModel() {
         mViewModel = ViewModelProviders.of(this).get(DetailsViewModel.class);
         mViewModel.getProject(mProjectId).observe(this, mProject -> {
             this.mProject = mProject;
             mAdapter.setProject(mProject);
             mAdapter.notifyDataSetChanged();
             mToolbarTitle.setText(mProject.getName());
-            if(mProject.getOptions() != null && mProject.getRequirements() != null) {
-                Timber.d("Number of requirements loaded: %d", ((this.mProject.getRequirements() != null) ? this.mProject.getRequirements().size() : 0));
-                Timber.d("Number of options loaded: %d", ((this.mProject.getOptions() != null) ? this.mProject.getOptions().size() : 0));
+            if (mProject.getOptions() != null && mProject.getRequirements() != null) {
+                Timber.d("Number of requirements loaded: %d",
+                        ((this.mProject.getRequirements() != null) ? this.mProject.getRequirements().size() : 0));
+                Timber.d("Number of options loaded: %d",
+                        ((this.mProject.getOptions() != null) ? this.mProject.getOptions().size() : 0));
             }
         });
     }

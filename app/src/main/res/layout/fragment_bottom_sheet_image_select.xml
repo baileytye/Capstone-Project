@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/bottom_sheet_image_select"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="0dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="0dp">
 
     <Button
         android:id="@+id/bt_take_photo"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_camera_alt_24dp"
+        android:drawableStart="@drawable/ic_camera_alt_24dp"
         android:drawablePadding="16dp"
-        android:gravity="left|center_vertical"
-        android:text="Take Photo"
+        android:gravity="start|center_vertical"
+        android:text="@string/button_take_photo"
         android:textAppearance="@style/CardItemHeadingTextStyle" />
 
     <Button
@@ -24,9 +23,9 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_image_24dp"
+        android:drawableStart="@drawable/ic_image_24dp"
         android:drawablePadding="16dp"
-        android:gravity="left|center_vertical"
-        android:text="Choose Image"
+        android:gravity="start|center_vertical"
+        android:text="@string/button_choose_image"
         android:textAppearance="@style/CardItemHeadingTextStyle" />
 </LinearLayout>
