@@ -23,25 +23,25 @@ public class MainViewModel extends AndroidViewModel {
     private final ProjectRepository mRepo;
 
 
-    public MainViewModel(@NonNull Application application){
+    public MainViewModel(@NonNull Application application) {
         super(application);
         mRepo = ProjectRepository.getInstance(application);
     }
 
 
-    public LiveData<List<Project>> getProjects(){
-        if(mProjects == null){
+    public LiveData<List<Project>> getProjects() {
+        if (mProjects == null) {
             mProjects = new MutableLiveData<>();
             loadProjects();
         }
         return mProjects;
     }
 
-    public void insertProject(Project p){
+    public void insertProject(Project p) {
         mRepo.insert(p);
     }
 
-    public void insertDummyProject(){
+    public void insertDummyProject() {
         Requirement r1 = new Requirement("Requirement 1",
                 Requirement.Type.number, Requirement.Importance.normal, 0,
                 "", 0, 0);
@@ -52,26 +52,26 @@ public class MainViewModel extends AndroidViewModel {
                 Requirement.Type.number, Requirement.Importance.normal, 0,
                 "", 0, 0);
 
-        List<Requirement> requirements = new ArrayList<>(Arrays.asList(r1,r2,r3));
+        List<Requirement> requirements = new ArrayList<>(Arrays.asList(r1, r2, r3));
 
         List<Double> requirementValues = new ArrayList<>(Arrays.asList(1.0, 2.0, 3.0));
 
-        Option option1 = new Option("Option 1", 100000,0,false,requirementValues,"",null);
+        Option option1 = new Option("Option 1", 100000, 0, false, requirementValues, "", null);
 
         Project p = new Project(requirements, Collections.singletonList(option1), "Project Test", true);
 
         mRepo.insert(p);
     }
 
-    private void loadProjects(){
+    private void loadProjects() {
         mProjects = mRepo.getProjects();
     }
 
-    public void clearProjects(){
+    public void clearProjects() {
         mRepo.clearTable();
     }
 
-    public void deleteProject(Project p){
+    public void deleteProject(Project p) {
         mRepo.delete(p);
     }
 }

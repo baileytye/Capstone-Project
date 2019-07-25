@@ -18,7 +18,7 @@ import static androidx.room.ForeignKey.CASCADE;
         foreignKeys = @ForeignKey(entity = Project.class,
                 parentColumns = "id",
                 childColumns = "projectId",
-                onDelete = CASCADE ))
+                onDelete = CASCADE))
 public class Requirement implements Parcelable {
 
     public static final double FAR_BELOW_AVERAGE = -2.0;
@@ -32,7 +32,7 @@ public class Requirement implements Parcelable {
     public static final double WEIGHT_LOW = 0.5;
     public static final double WEIGHT_EXCLUDE = 0;
 
-    @PrimaryKey (autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     private int reqId;
     private int projectId;
     private String name;
@@ -72,8 +72,8 @@ public class Requirement implements Parcelable {
         this.value = value;
     }
 
-    public static double getAveragingValue(String type){
-        switch(type){
+    public static double getAveragingValue(String type) {
+        switch (type) {
             case "Far Above Average":
                 return FAR_ABOVE_AVERAGE;
             case "Above Average":
@@ -81,7 +81,7 @@ public class Requirement implements Parcelable {
             case "Average":
                 return AVERAGE;
             case "Below Average":
-                return BELOW_AVERAGE ;
+                return BELOW_AVERAGE;
             case "Far Below Average":
                 return FAR_BELOW_AVERAGE;
         }
@@ -160,11 +160,11 @@ public class Requirement implements Parcelable {
         this.value = value;
     }
 
-    public enum Type{
+    public enum Type {
         number, starRating, checkbox, averaging
     }
 
-    public enum Importance{
+    public enum Importance {
         high, normal, low, custom, exclude
     }
 

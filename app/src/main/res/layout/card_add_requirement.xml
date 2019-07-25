@@ -2,7 +2,6 @@
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -20,7 +19,7 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:hint="Weight"
+            android:hint="@string/hint_weight"
             android:inputType="number"
             android:paddingStart="@dimen/card_notes_padding"
             android:paddingEnd="@dimen/card_notes_padding"
@@ -105,7 +104,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/card_heading_separation"
-            android:text="Weight:"
+            android:text="@string/label_weight"
             android:textAppearance="@style/CardItemHeadingTextStyle"
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="@+id/label_importance"
@@ -151,9 +150,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:padding="@dimen/card_notes_padding"
                 android:background="@null"
-                android:hint="@string/hint_notes" />
+                android:hint="@string/hint_notes"
+                android:padding="@dimen/card_notes_padding" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
@@ -165,7 +164,8 @@
             android:tint="@color/red500"
             app:layout_constraintStart_toStartOf="@+id/text_input_layout_notes"
             app:layout_constraintTop_toBottomOf="@+id/text_input_layout_notes"
-            app:srcCompat="@drawable/ic_delete_24dp" />
+            app:srcCompat="@drawable/ic_delete_24dp"
+            android:contentDescription="@string/content_description_delete_requirement" />
 
         <ImageButton
             android:id="@+id/ib_save_edit_requirement"
@@ -174,13 +174,14 @@
             android:background="@null"
             app:layout_constraintEnd_toEndOf="@+id/text_input_layout_notes"
             app:layout_constraintTop_toTopOf="@+id/ib_delete_requirement"
-            app:srcCompat="@drawable/anim_check_to_edit" />
+            app:srcCompat="@drawable/anim_check_to_edit"
+            android:contentDescription="@string/content_description_save_or_edit" />
 
         <TextView
             android:id="@+id/label_saved"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Saved"
+            android:text="@string/label_saved"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/ib_save_edit_requirement"
             app:layout_constraintEnd_toStartOf="@+id/ib_save_edit_requirement"

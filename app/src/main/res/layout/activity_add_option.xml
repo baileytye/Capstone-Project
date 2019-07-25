@@ -6,15 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".Activities.AddOption">
 
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar" />
 
     <include layout="@layout/content_add_option" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
-        app:srcCompat="@drawable/ic_add_24dp"
-        style="@style/MyFabStyle"/>
-
+        style="@style/MyFabStyle"
+        app:srcCompat="@drawable/ic_add_24dp" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

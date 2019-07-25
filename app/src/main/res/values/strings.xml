@@ -29,19 +29,38 @@
     <string name="label_has_price">Has price:</string>
     <string name="label_empty_requirements">Add some requirements below</string>
     <string name="label_current_rating">Current Rating:</string>
+    <string name="label_weight">Weight:</string>
+    <string name="label_saved">Saved</string>
 
+    <!--Hints-->
     <string name="hint_requirement_name">Give this requirement a name!</string>
     <string name="hint_notes">Notes</string>
     <string name="hint_expected">Expected</string>
     <string name="hint_project_name">Project Name</string>
+    <string name="hint_value">Value</string>
+    <string name="hint_option_name">Name</string>
+    <string name="hint_price">Price</string>
+    <string name="hint_weight">Weight</string>
 
+
+    <!--Button Labels-->
     <string name="button_advanced">Advanced</string>
     <string name="button_remove">Remove</string>
     <string name="button_rule_out">Rule Out</string>
     <string name="button_details">Details</string>
+    <string name="button_take_photo">Take Photo</string>
+    <string name="button_choose_image">Choose Image</string>
 
     <string name="placeholder_item_name">Item Name</string>
     <string name="placeholder_price">$100 000</string>
+    <string name="placeholder_requirement_label">Requirement:</string>
+    <string name="placeholder_rating">4.78</string>
+
+    <!--Content Descriptions-->
+    <string name="content_description_option_images">Option images</string>
+    <string name="content_description_delete_requirement">Delete requirement</string>
+    <string name="content_description_save_or_edit">save or edit</string>
+
 
     <!--Requirement Arrays-->
     <string-array name="type_array">

@@ -26,7 +26,7 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
 
     private List<Requirement> mRequirements;
 
-    public AddOptionAdapter(List<Requirement> requirements){
+    public AddOptionAdapter(List<Requirement> requirements) {
         mRequirements = requirements;
     }
 
@@ -47,7 +47,7 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
         return mRequirements.size();
     }
 
-    public class AddOptionRequirementViewHolder extends RecyclerView.ViewHolder{
+    public class AddOptionRequirementViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.et_requirement_value)
         EditText mRequirementValueEditText;
@@ -61,21 +61,21 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
         @BindView(R.id.tv_requirement_name)
         TextView mRequirementName;
 
-        public AddOptionRequirementViewHolder(@NonNull View itemView) {
+        AddOptionRequirementViewHolder(@NonNull View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(int position){
+        public void bind(int position) {
             Requirement.Type type = mRequirements.get(position).getType();
             setVisibleType(type);
             mRequirementName.setText(mRequirements.get(getAdapterPosition()).getName());
         }
 
-        void setVisibleType(Requirement.Type type){
+        void setVisibleType(Requirement.Type type) {
             Timber.d("Type: %s", type.toString());
-            switch(type){
+            switch (type) {
                 case starRating:
                     mRequirementValueCheckBox.setVisibility(View.INVISIBLE);
                     mRequirementValueEditText.setVisibility(View.INVISIBLE);
@@ -102,8 +102,8 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
             }
         }
 
-        public double getRequirementValue(){
-            switch (mRequirements.get(getAdapterPosition()).getType()){
+        public double getRequirementValue() {
+            switch (mRequirements.get(getAdapterPosition()).getType()) {
                 case checkbox:
                     return (mRequirementValueCheckBox.isChecked()) ? 1 : 0;
                 case averaging:

@@ -37,8 +37,8 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
     private List<Requirement> mRequirements;
     private Context mContext;
 
-    public AddProjectAdapter(Context context, List<Requirement> requirements){
-        if(requirements == null) {
+    public AddProjectAdapter(Context context, List<Requirement> requirements) {
+        if (requirements == null) {
             mRequirements = new ArrayList<>();
         } else {
             mRequirements = requirements;
@@ -53,21 +53,21 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
         return new AddRequirementViewHolder(v);
     }
 
-    public void setRequirements(List<Requirement> list){
+    public void setRequirements(List<Requirement> list) {
         mRequirements = list;
     }
 
-    public void addRequirementCard(){
+    public void addRequirementCard() {
         mRequirements.add(new Requirement(
-           "", Requirement.Type.number, Requirement.Importance.normal,
-            0.0, "", 1.0, 0.0
+                "", Requirement.Type.number, Requirement.Importance.normal,
+                0.0, "", 1.0, 0.0
         ));
         notifyItemInserted(mRequirements.size() - 1);
         Timber.d("Item added, Requirements length is %d, name is %s", mRequirements.size(),
-                mRequirements.get(mRequirements.size() - 1).getName().toString());
+                mRequirements.get(mRequirements.size() - 1).getName());
     }
 
-    private void removeAt(int position){
+    private void removeAt(int position) {
         mRequirements.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mRequirements.size() - 1);
@@ -84,14 +84,14 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
         return mRequirements.size();
     }
 
-    public List<Requirement> getRequirements(){
+    public List<Requirement> getRequirements() {
         return mRequirements;
     }
 
     /**
      * Viewholder of an add requirement card
      */
-    public class AddRequirementViewHolder extends RecyclerView.ViewHolder{
+    public class AddRequirementViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.et_requirement_name)
         EditText mRequirementNameEditText;
@@ -139,16 +139,17 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
             ButterKnife.bind(this, itemView);
         }
 
-        public boolean getIsSaved(){
+        public boolean getIsSaved() {
             return mIsSaved;
         }
 
         /**
          * Binds data to requirement card
+         *
          * @param r requirement to bind
          */
-        void bind(Requirement r){
-            Timber.d("Item binding, name: %s", r.getName().toString());
+        void bind(Requirement r) {
+            Timber.d("Item binding, name: %s", r.getName());
 
             mIsSaved = false;
             saveDrawable = (AnimatedVectorDrawable) mContext.getDrawable(R.drawable.anim_check_to_edit);
@@ -166,7 +167,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
             mImportanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    if(mImportanceSpinner.getItemAtPosition(i).toString().equals("Custom")){
+                    if (mImportanceSpinner.getItemAtPosition(i).toString().equals("Custom")) {
                         mWeightEditText.setVisibility(View.VISIBLE);
                         mWeightLabelTextView.setVisibility(View.VISIBLE);
                     } else {
@@ -183,7 +184,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
             mTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    switch (mTypeSpinner.getItemAtPosition(i).toString()){
+                    switch (mTypeSpinner.getItemAtPosition(i).toString()) {
                         case "Number":
                             mExpectedValueEditText.setVisibility(View.VISIBLE);
                             mExpectedRatingBar.setVisibility(View.INVISIBLE);
@@ -217,13 +218,9 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
                 }
             });
 
-            mSaveEditButton.setOnClickListener(view -> {
-                swapState();
-            });
+            mSaveEditButton.setOnClickListener(view -> swapState());
 
-            mDeleteButton.setOnClickListener(view -> {
-                removeAt(getAdapterPosition());
-            });
+            mDeleteButton.setOnClickListener(view -> removeAt(getAdapterPosition()));
 
             mRequirementNameEditText.addTextChangedListener(new TextWatcher() {
 
@@ -247,18 +244,18 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
         /**
          * Swap the state from saved to editable and vice versa
          */
-        void swapState(){
-            if(mIsSaved){
+        void swapState() {
+            if (mIsSaved) {
                 setEditableState();
             } else {
                 String name = mRequirementNameEditText.getText().toString();
-                if(name.equals("")){
+                if (name.equals("")) {
                     mRequirementNameEditText.setError("Give this requirement a name");
                     mRequirementNameEditText.requestFocus();
                     return;
                 }
 
-                if(mWeightEditText.getVisibility() == View.VISIBLE && mWeightEditText.getText().toString().equals("")){
+                if (mWeightEditText.getVisibility() == View.VISIBLE && mWeightEditText.getText().toString().equals("")) {
                     mWeightEditText.setError("Enter a weight");
                     mWeightEditText.requestFocus();
                     return;
@@ -273,7 +270,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
         /**
          * Sets the state of this requirement card to saved and uneditable
          */
-        void setSavedState(){
+        void setSavedState() {
 
             mSaveEditButton.setImageDrawable(saveDrawable);
             Objects.requireNonNull(saveDrawable).start();
@@ -305,7 +302,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
         /**
          * Sets the state of this requirement card to editable
          */
-        void setEditableState(){
+        void setEditableState() {
 
             mSaveEditButton.setImageDrawable(editDrawable);
             Objects.requireNonNull(editDrawable).start();
@@ -329,6 +326,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
 
         /**
          * Retrieve the importance based on the spinner value. Also sets the weight in mRequirements.
+         *
          * @return importance
          */
         Requirement.Importance getImportance() {
@@ -352,8 +350,8 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
             return Requirement.Importance.normal;
         }
 
-        Requirement.Type getType(){
-            switch (mTypeSpinner.getSelectedItem().toString()){
+        Requirement.Type getType() {
+            switch (mTypeSpinner.getSelectedItem().toString()) {
                 case "Number":
                     return Requirement.Type.number;
                 case "Star Rating":
@@ -368,11 +366,12 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
 
         /**
          * Retrieve expected value based on spinner value.
+         *
          * @param type type of requirement
          * @return expected value of requirement
          */
-        double getExpectedValue(Requirement.Type type){
-            switch(type) {
+        double getExpectedValue(Requirement.Type type) {
+            switch (type) {
                 case checkbox:
                     return (mExpectedCheckBox.isChecked()) ? 1.0 : 0;
                 case averaging:
@@ -380,7 +379,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
                 case starRating:
                     return mExpectedRatingBar.getRating();
                 default:
-                    if(mExpectedValueEditText.getText().toString().equals("")){
+                    if (mExpectedValueEditText.getText().toString().equals("")) {
                         return 0;
                     } else {
                         return Double.parseDouble(mExpectedValueEditText.getText().toString());
@@ -391,7 +390,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
         /**
          * Saves the values in this viewholder to mRequirements
          */
-        void saveState(){
+        void saveState() {
             mRequirements.get(getAdapterPosition()).setName(mRequirementNameEditText.getText().toString());
             mRequirements.get(getAdapterPosition()).setImportance(getImportance());
             mRequirements.get(getAdapterPosition()).setNotes(Objects.requireNonNull(mNotesTextInput.getText()).toString());

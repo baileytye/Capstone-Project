@@ -50,20 +50,20 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_bottom_sheet_image_select, container, false);
+        View view = inflater.inflate(R.layout.fragment_bottom_sheet_image_select, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
 
     @OnClick(R.id.bt_take_photo)
-    void takePhoto(){
+    void takePhoto() {
         callback.onBottomSheetClicked(TAKE_PHOTO);
     }
 
     @OnClick(R.id.bt_choose_image)
-    void chooseImage(){
+    void chooseImage() {
         callback.onBottomSheetClicked(CHOOSE_IMAGE);
     }
 
