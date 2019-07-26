@@ -33,22 +33,22 @@ public class Option implements Parcelable {
     private Boolean ruledOut;
     private List<Double> requirementValues;
     private String notes;
-    private List<String> imagePaths;
+    private String imagePath;
 
     @Ignore
     public Option(String name, double price, double rating, Boolean ruledOut,
-                  List<Double> requirementValues, String notes, List<String> imagePaths) {
+                  List<Double> requirementValues, String notes, String imagePath) {
         this.name = name;
         this.price = price;
         this.rating = rating;
         this.ruledOut = ruledOut;
         this.requirementValues = requirementValues;
         this.notes = notes;
-        this.imagePaths = imagePaths;
+        this.imagePath = imagePath;
     }
 
     public Option(int optionId, int projectId, String name, double price, double rating, Boolean ruledOut,
-                  List<Double> requirementValues, String notes, List<String> imagePaths) {
+                  List<Double> requirementValues, String notes, String imagePath) {
         this.optionId = optionId;
         this.projectId = projectId;
         this.name = name;
@@ -57,7 +57,7 @@ public class Option implements Parcelable {
         this.ruledOut = ruledOut;
         this.requirementValues = requirementValues;
         this.notes = notes;
-        this.imagePaths = imagePaths;
+        this.imagePath = imagePath;
     }
 
     public int getOptionId() {
@@ -124,12 +124,12 @@ public class Option implements Parcelable {
         this.notes = notes;
     }
 
-    public List<String> getImagePaths() {
-        return imagePaths;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImagePaths(List<String> imagePaths) {
-        this.imagePaths = imagePaths;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @Override
@@ -148,7 +148,7 @@ public class Option implements Parcelable {
         dest.writeValue(this.ruledOut);
         dest.writeList(this.requirementValues);
         dest.writeString(this.notes);
-        dest.writeStringList(this.imagePaths);
+        dest.writeString(this.imagePath);
     }
 
     @Ignore
@@ -162,7 +162,7 @@ public class Option implements Parcelable {
         this.requirementValues = new ArrayList<Double>();
         in.readList(this.requirementValues, Double.class.getClassLoader());
         this.notes = in.readString();
-        this.imagePaths = in.createStringArrayList();
+        this.imagePath = in.readString();
     }
 
     public static final Creator<Option> CREATOR = new Creator<Option>() {

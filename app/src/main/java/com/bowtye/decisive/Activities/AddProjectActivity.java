@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bowtye.decisive.Adapters.AddProjectAdapter;
-import com.bowtye.decisive.Helpers.ViewHelper;
+import com.bowtye.decisive.Helpers.ViewUtils;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -114,11 +114,11 @@ public class AddProjectActivity extends AppCompatActivity {
                         finishAfterTransition();
                         break;
                     case VALIDATION_NAME_ERROR:
-                        ViewHelper.showErrorDialog("Save Project",
+                        ViewUtils.showErrorDialog("Save Project",
                                 "Please give this project a name", this);
                         break;
                     case VALIDATION_SAVE_REQ_ERROR:
-                        ViewHelper.showErrorDialog("Save Project",
+                        ViewUtils.showErrorDialog("Save Project",
                                 "Please save all requirements", this);
                         break;
                 }

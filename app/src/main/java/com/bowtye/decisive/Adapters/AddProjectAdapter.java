@@ -20,7 +20,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bowtye.decisive.Helpers.ViewHelper;
+import com.bowtye.decisive.Helpers.ViewUtils;
 import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -179,6 +179,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
 
                 }
             });
+
             mTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -313,7 +314,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
             mExpectedCheckBox.setEnabled(false);
 
             mIsSaved = true;
-            ViewHelper.hideKeyboardFrom(mContext, mItemView);
+            ViewUtils.hideKeyboardFrom(mContext, mItemView);
         }
 
         /**
