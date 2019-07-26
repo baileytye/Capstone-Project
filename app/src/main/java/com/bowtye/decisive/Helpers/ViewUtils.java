@@ -9,7 +9,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import java.util.Objects;
 
-public class ViewHelper {
+public class ViewUtils {
 
     public static void showErrorDialog(String title, String message, Context context) {
         new AlertDialog.Builder(context)

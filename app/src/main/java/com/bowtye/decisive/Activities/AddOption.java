@@ -11,7 +11,7 @@ import android.os.Bundle;
 import com.bowtye.decisive.Adapters.AddOptionAdapter;
 import com.bowtye.decisive.BuildConfig;
 import com.bowtye.decisive.Fragments.BottomSheetFragment;
-import com.bowtye.decisive.Helpers.ViewHelper;
+import com.bowtye.decisive.Helpers.ViewUtils;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.Requirement;
@@ -38,7 +38,6 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +48,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 import static com.bowtye.decisive.Activities.AddProjectActivity.EXTRA_PROJECT;
 import static com.bowtye.decisive.Activities.ProjectDetails.EXTRA_NEW_OPTION;
@@ -96,7 +96,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
 
         ButterKnife.bind(this);
 
-        mOption = new Option("", 0, 0, false, new ArrayList<>(), "", new ArrayList<>());
+        mOption = new Option("", 0, 0, false, new ArrayList<>(), "", "");
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -126,11 +126,11 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
             case R.id.action_save:
                 switch (validateAndSave()) {
                     case VALIDATION_NAME_ERROR:
-                        ViewHelper.showErrorDialog("Save Option",
+                        ViewUtils.showErrorDialog("Save Option",
                                 "Please give this option a name", this);
                         break;
                     case VALIDATION_HOLDER_ERROR:
-                        ViewHelper.showErrorDialog("Save Option",
+                        ViewUtils.showErrorDialog("Save Option",
                                 "Please fill the requirement values", this);
                         break;
                     case VALIDATION_OK:
@@ -167,6 +167,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Timber.d("Permission granted, launching camera");
                     captureFromCamera();
                 } else {
                     mSheetDialog.dismiss();
@@ -240,9 +241,12 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
     }
 
     private void captureFromCamera() {
+        Timber.d("Capture from camera");
+
         if (Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
+                Timber.d("Permissions not granted");
                 // Permission is not granted
                 // Should we show an explanation?
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -251,6 +255,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                     // this thread waiting for the user's response! After the user
                     // sees the explanation, try again to request the permission.
                 } else {
+                    Timber.d("Requesting permissions");
                     // No explanation needed; request the permission
                     ActivityCompat.requestPermissions(this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -264,8 +269,10 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
     }
 
     private void dispatchTakePictureIntent() {
+        Timber.d("Dispatching picture intent");
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
+        Timber.d(takePictureIntent.resolveActivity(getPackageManager()).toShortString());
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
             File photoFile = null;
@@ -273,6 +280,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 // Error occurred while creating the File
+                Timber.d("IO Exception: %s", ex.getMessage());
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -280,6 +288,8 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                         BuildConfig.APPLICATION_ID + ".provider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
+                Timber.d("Launching Camera");
                 startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
                 galleryAddPic();
             }
@@ -289,10 +299,10 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
     private File createImageFile() throws IOException {
         // Create an image file name
         //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String timeStamp = SimpleDateFormat.getDateInstance(DateFormat.DEFAULT, Locale.ENGLISH).format(new Date());
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss", Locale.ENGLISH).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DCIM), "Camera");
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -305,6 +315,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
     }
 
     private void galleryAddPic() {
+        Timber.d("Broadcasting picture taken");
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(currentPhotoPath);
         Uri contentUri = Uri.fromFile(f);
