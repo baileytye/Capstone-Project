@@ -30,12 +30,15 @@ dependencies {
     def timber_version = "4.7.1"
     def play_services_version = "17.0.0"
     def lifecycle_version = "2.0.0"
+    def picasso_version = "2.71828"
 
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
     implementation "com.jakewharton:butterknife:$butterknife_version"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife_version"
+
+    implementation "com.squareup.picasso:picasso:$picasso_version"
 
     implementation "com.jakewharton.timber:timber:$timber_version"
 

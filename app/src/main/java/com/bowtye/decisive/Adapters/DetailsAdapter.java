@@ -2,6 +2,7 @@ package com.bowtye.decisive.Adapters;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,51 +16,47 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.R;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder> {
+    RecyclerView.RecycledViewPool sharedPool = new RecyclerView.RecycledViewPool();
 
-    private int mOptionsCount;
     private Project mProject;
+    private OptionItemClickListener mClickCallback;
 
-    public DetailsAdapter(Project project) {
+    public DetailsAdapter(Project project, OptionItemClickListener clickCallback) {
         mProject = project;
-        if (project != null) {
-            mOptionsCount = project.getOptions().size();
-        } else {
-            mOptionsCount = 0;
-        }
+        mClickCallback = clickCallback;
     }
 
     @NonNull
     @Override
     public DetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_option, parent, false);
+
         return new DetailsViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DetailsViewHolder holder, int position) {
-        holder.bind(mProject.getOptions().get(position));
+        holder.bind();
     }
 
     @Override
     public int getItemCount() {
-        return mOptionsCount;
+        return (mProject == null) || (mProject.getOptions() == null) ? 0 : mProject.getOptions().size();
     }
 
     public void setProject(Project p) {
         mProject = p;
-        if (mProject.getOptions() != null) {
-            mOptionsCount = mProject.getOptions().size();
-        } else {
-            mOptionsCount = 0;
-        }
     }
 
-    class DetailsViewHolder extends RecyclerView.ViewHolder {
+    class DetailsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.tv_item_card_title)
         TextView mItemTitleTextView;
@@ -75,20 +72,48 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
         DetailsViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-        }
-
-        void bind(Option o) {
-            mItemHeaderImageView.setImageDrawable(new ColorDrawable(Color.rgb(0x00, 0x6D, 0xB3)));
-            mItemTitleTextView.setText(o.getName());
-            mItemPriceTextView.setText(String.valueOf(o.getPrice()));
+            itemView.setOnClickListener(this);
 
             mRequirementsRecyclerView.setHasFixedSize(true);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(itemView.getContext());
+            LinearLayoutManager layoutManager = new LinearLayoutManager(itemView.getContext());
+            layoutManager.setInitialPrefetchItemCount(mProject.getRequirements().size());
             mRequirementsRecyclerView.setLayoutManager(layoutManager);
-            RequirementsAdapter adapter = new RequirementsAdapter(mProject.getRequirements(),
-                    o.getRequirementValues());
-            mRequirementsRecyclerView.setAdapter(adapter);
+            mRequirementsRecyclerView.setRecycledViewPool(sharedPool);
         }
 
+        void bind() {
+            Option o = mProject.getOptions().get(getAdapterPosition());
+            if(o.getImagePath().equals("")) {
+                mItemHeaderImageView.setImageDrawable(new ColorDrawable(Color.rgb(0x00, 0x6D, 0xB3)));
+            } else {
+                Picasso.get()
+                        .load(new File(mProject.getOptions().get(getAdapterPosition()).getImagePath()))
+                        .fit()
+                        .centerCrop()
+                        .into(mItemHeaderImageView);
+            }
+            mItemTitleTextView.setText(o.getName());
+
+            if(o.getPrice() == 0){
+                mItemPriceTextView.setVisibility(View.GONE);
+            } else {
+                mItemPriceTextView.setVisibility(View.VISIBLE);
+                mItemPriceTextView.setText(String.valueOf(o.getPrice()));
+            }
+
+            RequirementsAdapter adapter = new RequirementsAdapter(mProject.getRequirements(),
+                    mProject.getOptions().get(getAdapterPosition()).getRequirementValues());
+            mRequirementsRecyclerView.setAdapter(adapter);
+
+        }
+
+        @Override
+        public void onClick(View view) {
+            mClickCallback.onOptionItemClicked(getAdapterPosition());
+        }
+    }
+
+    public interface OptionItemClickListener {
+        void onOptionItemClicked(int position);
     }
 }
