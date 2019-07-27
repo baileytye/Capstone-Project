@@ -33,4 +33,8 @@ public class DetailsViewModel extends AndroidViewModel {
         mRepo.insert(p);
     }
 
+    public void deleteOption(Project p, int position){
+        mRepo.deleteOption(p.getOptions().get(position));
+    }
+
 }

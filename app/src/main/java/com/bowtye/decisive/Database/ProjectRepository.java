@@ -106,6 +106,10 @@ public class ProjectRepository {
         new DeleteAsyncTask().execute(project);
     }
 
+    public void deleteOption(final Option option){
+        new DeleteOptionAsyncTask().execute(option);
+    }
+
     public void clearTable(){
         new ClearAsyncTask().execute();
     }
@@ -144,6 +148,16 @@ public class ProjectRepository {
         protected Void doInBackground(Project... projects) {
             projectsDao.deleteProject(projects[0]);
             Timber.d("Deleted project: %s", projects[0].getName());
+            return null;
+        }
+    }
+
+    private static class DeleteOptionAsyncTask extends AsyncTask<Option, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Option... options) {
+            optionsDao.deleteOption(options[0]);
+            Timber.d("Deleted option: %s, from project: %s", options[0].getName(), options[0].getProjectId());
             return null;
         }
     }
