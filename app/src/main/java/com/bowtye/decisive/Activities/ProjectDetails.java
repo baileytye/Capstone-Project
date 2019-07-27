@@ -34,11 +34,12 @@ import timber.log.Timber;
 
 import static com.bowtye.decisive.Activities.MainActivity.EXTRA_PROJECT_ID;
 
-public class ProjectDetails extends AppCompatActivity {
+public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.OptionItemClickListener {
 
     private static final int ADD_OPTION_REQUEST_CODE = 877;
-    private static final String EXTRA_PROJECT = "extra_project";
+    public static final String EXTRA_PROJECT = "extra_project";
     public static final String EXTRA_NEW_OPTION = "extra_new_option";
+    public static final String EXTRA_OPTION = "extra_option";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -54,6 +55,9 @@ public class ProjectDetails extends AppCompatActivity {
     private Project mProject;
     private int mProjectId;
     private DetailsViewModel mViewModel;
+
+    private boolean itemAdded = false;
+    private int itemDeleted = -1;
 
 
     @Override
@@ -92,6 +96,7 @@ public class ProjectDetails extends AppCompatActivity {
                     mProject.setOptions(new ArrayList<>());
                 }
                 mProject.getOptions().add(o);
+                itemAdded = true;
                 mViewModel.insertOption(mProject);
                 Timber.d("Project: %s inserted into the database", (o != null) ? o.getName() : "NULL");
             }
@@ -107,7 +112,7 @@ public class ProjectDetails extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new DetailsAdapter(mProject);
+        mAdapter = new DetailsAdapter(mProject, this);
         mRecyclerView.setAdapter(mAdapter);
 
         mFab.setOnClickListener(view -> {
@@ -127,7 +132,12 @@ public class ProjectDetails extends AppCompatActivity {
         mViewModel.getProject(mProjectId).observe(this, mProject -> {
             this.mProject = mProject;
             mAdapter.setProject(mProject);
-            mAdapter.notifyDataSetChanged();
+            if(itemAdded){
+                mAdapter.notifyItemInserted(mProject.getOptions().size() - 1);
+            } else {
+                mAdapter.notifyDataSetChanged();
+            }
+
             mToolbarTitle.setText(mProject.getName());
             if (mProject.getOptions() != null && mProject.getRequirements() != null) {
                 Timber.d("Number of requirements loaded: %d",
@@ -136,5 +146,17 @@ public class ProjectDetails extends AppCompatActivity {
                         ((this.mProject.getOptions() != null) ? this.mProject.getOptions().size() : 0));
             }
         });
+    }
+
+    @Override
+    public void onOptionItemClicked(int position) {
+        Intent intent = new Intent(getApplicationContext(), OptionDetails.class);
+        if (position >= 0) {
+            intent.putExtra(EXTRA_OPTION, mProject.getOptions().get(position));
+        }
+        Transition transition = new Slide(Gravity.START);
+
+        getWindow().setExitTransition(transition);
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 }

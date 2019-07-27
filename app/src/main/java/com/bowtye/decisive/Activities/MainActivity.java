@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.bowtye.decisive.Adapters.MainAdapter;
 import com.bowtye.decisive.BuildConfig;
+import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ViewModels.MainViewModel;
@@ -34,6 +35,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -154,6 +158,15 @@ public class MainActivity extends AppCompatActivity
         if ((requestCode == ADD_PROJECT_REQUEST_CODE) && (resultCode == RESULT_OK)) {
             if (data != null && data.hasExtra(EXTRA_NEW_PROJECT)) {
                 Project p = data.getParcelableExtra(EXTRA_NEW_PROJECT);
+                if((p != null) && (p.getOptions().size() > 0) &&
+                        (p.getOptions().get(0).getRequirementValues().size() < p.getRequirements().size())){
+                    for(int i = 0; i < p.getOptions().size(); i++){
+                        p.getOptions().get(i).setRequirementValues(new ArrayList<>());
+                        ArrayList<Double> values = new ArrayList<>(Arrays.asList(new Double[p.getRequirements().size()]));
+                        Collections.fill(values, 0.0);
+                        p.getOptions().get(i).setRequirementValues(values);
+                    }
+                }
                 mViewModel.insertProject(p);
                 Timber.d("Project: %s inserted into the database", (p != null) ? p.getName() : "NULL");
             }

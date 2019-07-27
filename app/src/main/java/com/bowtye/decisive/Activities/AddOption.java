@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -151,10 +152,12 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 case GALLERY_REQUEST_CODE:
                     //data.getData returns the content URI for the selected Image
                     Uri selectedImage = data.getData();
+                    mOption.setImagePath(selectedImage != null ? selectedImage.toString() : "");
                     mPicturesImageView.setImageURI(selectedImage);
                     break;
                 case CAMERA_REQUEST_CODE:
                     mPicturesImageView.setImageURI(Uri.parse(currentPhotoPath));
+                    mOption.setImagePath(currentPhotoPath);
                     break;
             }
     }
@@ -196,6 +199,9 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new AddOptionAdapter(mRequirements);
         mRecyclerView.setAdapter(mAdapter);
+        if(!mOption.getImagePath().equals("")){
+            mPicturesImageView.setImageURI(Uri.parse(currentPhotoPath));
+        }
     }
 
     private int validateAndSave() {
@@ -291,7 +297,6 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
 
                 Timber.d("Launching Camera");
                 startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
-                galleryAddPic();
             }
         }
     }
@@ -301,7 +306,8 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss", Locale.ENGLISH).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+                "Camera");
 
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -312,15 +318,6 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
-    }
-
-    private void galleryAddPic() {
-        Timber.d("Broadcasting picture taken");
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(currentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
     }
 
     /**

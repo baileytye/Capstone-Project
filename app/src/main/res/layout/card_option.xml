@@ -9,6 +9,7 @@
     android:layout_marginLeft="@dimen/card_margin_edges"
     android:layout_marginRight="@dimen/card_margin_edges"
     android:layout_marginBottom="@dimen/card_margin_edges"
+    android:layout_marginTop="@dimen/card_margin_edges"
     android:backgroundTint="@color/white"
     app:cardCornerRadius="10dp">
 
@@ -23,15 +24,15 @@
             android:id="@+id/iv_item_card_header"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:background="@color/colorPrimaryLight"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/content_description_option_images"
             android:scaleType="centerCrop"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/backgrounds/scenic"
-            android:contentDescription="@string/content_description_option_images" />
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <TextView
             android:id="@+id/tv_item_card_title"
@@ -58,8 +59,8 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/darker_gray"
+            android:layout_marginTop="16dp"
+            android:background="@color/grey6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_item_card_price" />
@@ -71,9 +72,9 @@
             android:layout_marginStart="@dimen/card_padding"
             android:layout_marginEnd="@dimen/card_padding"
             android:paddingStart="8dp"
-            android:paddingTop="4dp"
+            android:paddingTop="8dp"
             android:paddingEnd="8dp"
-            android:paddingBottom="4dp"
+            android:paddingBottom="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider"
@@ -84,7 +85,7 @@
             android:id="@+id/divider2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/grey6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_requirements" />
@@ -94,8 +95,8 @@
             style="@style/MyButtonStyle"
             android:layout_width="150dp"
             android:layout_height="40dp"
-            android:layout_marginStart="@dimen/card_padding"
-            android:layout_marginTop="@dimen/card_heading_separation"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="@dimen/card_padding"
             android:backgroundTint="@color/red500"
             android:text="@string/button_rule_out"
@@ -109,7 +110,7 @@
             style="@style/MyButtonStyle"
             android:layout_width="150dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="@dimen/card_padding"
+            android:layout_marginEnd="24dp"
             android:backgroundTint="@color/colorPrimary"
             android:text="@string/button_details"
             android:textColor="@color/white"
@@ -123,7 +124,6 @@
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="80dp"
             android:layout_height="16dp"
-            android:layout_marginEnd="8dp"
             android:numStars="5"
             app:layout_constraintBottom_toBottomOf="@+id/tv_rating"
             app:layout_constraintEnd_toEndOf="@+id/bt_details"
@@ -134,6 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="@string/placeholder_rating"
             android:textAppearance="@style/CardSubHeadingTextStyle"
@@ -141,7 +142,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/tv_item_card_price"
             app:layout_constraintEnd_toStartOf="@+id/rb_rating"
             app:layout_constraintStart_toStartOf="@+id/bt_details"
-            app:layout_constraintTop_toTopOf="@+id/tv_item_card_price" />
+            app:layout_constraintTop_toTopOf="@+id/tv_item_card_title"
+            app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
