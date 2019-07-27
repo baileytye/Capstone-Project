@@ -31,6 +31,7 @@
     <string name="label_current_rating">Current Rating:</string>
     <string name="label_weight">Weight:</string>
     <string name="label_saved">Saved</string>
+    <string name="label_empty_options">Add some options to this project!</string>
 
     <!--Hints-->
     <string name="hint_requirement_name">Give this requirement a name!</string>
@@ -60,6 +61,7 @@
     <string name="content_description_option_images">Option images</string>
     <string name="content_description_delete_requirement">Delete requirement</string>
     <string name="content_description_save_or_edit">save or edit</string>
+    <string name="action_delete_option">Delete Option</string>
 
 
     <!--Requirement Arrays-->

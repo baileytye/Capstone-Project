@@ -141,6 +141,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
             super(itemView);
             ButterKnife.bind(this, itemView);
             mItemView = itemView;
+            setListeners();
         }
 
         public boolean getIsSaved() {
@@ -161,6 +162,9 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
             mSaveEditButton.setImageDrawable(saveDrawable);
 
             setInitialValues(requirement);
+        }
+
+        void setListeners(){
 
             mImportanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -217,7 +221,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
                 }
             });
 
-            mSaveEditButton.setOnClickListener(view -> swapState());
+            mSaveEditButton.setOnClickListener(view -> validateAndSwapState());
 
             mDeleteButton.setOnClickListener(view -> removeAt(getAdapterPosition()));
 
@@ -240,7 +244,6 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
             });
         }
 
-
         void setInitialValues(Requirement requirement){
 
             mRequirementNameEditText.setText(requirement.getName());
@@ -260,7 +263,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
         /**
          * Swap the state from saved to editable and vice versa
          */
-        void swapState() {
+        void validateAndSwapState() {
             if (mIsSaved) {
                 setEditableState();
             } else {
@@ -303,6 +306,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
 
             mKeyListenerWeight = mWeightEditText.getKeyListener();
             mWeightEditText.setKeyListener(null);
+            mWeightEditText.setEnabled(false);
 
             mSavedLabel.setVisibility(View.VISIBLE);
             mSavedLabel.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.scale_in));
@@ -330,6 +334,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
             mNotesTextInput.setKeyListener(mKeyListenerNotes);
             mWeightEditText.setKeyListener(mKeyListenerWeight);
 
+            mWeightEditText.setEnabled(true);
             mExpectedValueEditText.setEnabled(true);
 
             mSavedLabel.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.scale_out));
