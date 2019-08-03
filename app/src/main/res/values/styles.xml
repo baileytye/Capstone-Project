@@ -40,7 +40,8 @@
     <!--Button Style-->
     <style name="MyButtonStyle" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:textAppearance">@style/ButtonTextStyle</item>
-        <item name="android:background">@drawable/bg_button</item>
+        <item name="android:background">@drawable/bg_button_with_ripple</item>
+        <item name="android:clickable">true</item>
     </style>
 
     <!-- set the rounded drawable as background to your bottom sheet -->

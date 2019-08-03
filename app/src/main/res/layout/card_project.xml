@@ -11,6 +11,9 @@
     android:layout_marginRight="@dimen/card_margin_edges"
     android:layout_marginBottom="4dp"
     android:backgroundTint="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
     app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -82,7 +85,7 @@
             android:layout_margin="8dp"
             android:layout_marginEnd="24dp"
             android:tint="@color/grey3"
-            app:layout_constraintBottom_toBottomOf="@+id/label_choices"
+            app:layout_constraintBottom_toBottomOf="@+id/label_requirements_count"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_project_card_title"
             app:srcCompat="@drawable/ic_keyboard_arrow_right_24dp" />

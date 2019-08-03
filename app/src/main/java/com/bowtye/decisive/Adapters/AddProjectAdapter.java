@@ -61,7 +61,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
     public void addRequirementCard() {
         mRequirements.add(new Requirement(
                 "", Requirement.Type.number, Requirement.Importance.normal,
-                0.0, "", 1.0, 0.0
+                0.0, "", 1.0
         ));
         notifyItemInserted(mRequirements.size() - 1);
         Timber.d("Item added, Requirements length is %d, name is %s", mRequirements.size(),
@@ -360,7 +360,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
                 case checkbox:
                     return (mExpectedCheckBox.isChecked()) ? 1.0 : 0;
                 case averaging:
-                    return Requirement.getAveragingValue(mExpectedAveragesSpinner.getSelectedItem().toString());
+                    return Requirement.getAveragingValue(mExpectedAveragesSpinner.getSelectedItem().toString(), this.mItemView.getContext());
                 case starRating:
                     return mExpectedRatingBar.getRating();
                 default:

@@ -3,6 +3,9 @@ package com.bowtye.decisive.Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,6 +52,12 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
         TextView mRequirementNameTextView;
         @BindView(R.id.tv_requirement_value)
         TextView mRequirementValueTextView;
+        @BindView(R.id.cb_requirement_value)
+        CheckBox mRequirementValueCheckBox;
+        @BindView(R.id.rb_requirement_value)
+        RatingBar mRequirementValueRatingBar;
+        @BindView(R.id.iv_thumb)
+        ImageView mThumbImageView;
 
         RequirementViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -56,8 +65,43 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
         }
 
         void bind(Requirement requirement, Double value) {
-            mRequirementNameTextView.setText(requirement.getName());
-            mRequirementValueTextView.setText(String.valueOf(value));
+            mRequirementNameTextView.setText(requirement.getName() + ':');
+            setRequirementVisibilityAndValues(requirement, value);
         }
+
+        void setRequirementVisibilityAndValues(Requirement requirement, Double value){
+            switch(requirement.getType()){
+                case starRating:
+                    mRequirementValueTextView.setVisibility(View.INVISIBLE);
+                    mRequirementValueCheckBox.setVisibility(View.INVISIBLE);
+                    mRequirementValueRatingBar.setVisibility(View.VISIBLE);
+                    mRequirementValueRatingBar.setRating(value.floatValue());
+                    break;
+                case checkbox:
+                    mRequirementValueTextView.setVisibility(View.INVISIBLE);
+                    mRequirementValueCheckBox.setVisibility(View.VISIBLE);
+                    mRequirementValueRatingBar.setVisibility(View.INVISIBLE);
+                    mRequirementValueCheckBox.setChecked(value == 1);
+                    break;
+                case averaging:
+                    mRequirementValueTextView.setVisibility(View.VISIBLE);
+                    mRequirementValueCheckBox.setVisibility(View.INVISIBLE);
+                    mRequirementValueRatingBar.setVisibility(View.INVISIBLE);
+                    mRequirementValueTextView.setText(Requirement.getAveragingString(value, this.itemView.getContext()));
+                    break;
+                default:
+                    mRequirementValueTextView.setVisibility(View.VISIBLE);
+                    mRequirementValueCheckBox.setVisibility(View.INVISIBLE);
+                    mRequirementValueRatingBar.setVisibility(View.INVISIBLE);
+                    mRequirementValueTextView.setText(String.valueOf(value));
+            }
+
+            if(Double.compare(value, requirement.getExpected()) >= 0){
+                mThumbImageView.setImageResource(R.drawable.ic_thumb_up_24dp);
+            } else {
+                mThumbImageView.setImageResource(R.drawable.ic_thumb_down_24dp);
+            }
+        }
+
     }
 }
