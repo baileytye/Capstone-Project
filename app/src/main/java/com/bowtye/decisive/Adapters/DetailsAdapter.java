@@ -2,11 +2,14 @@ package com.bowtye.decisive.Adapters;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Rating;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -69,11 +72,15 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
         RecyclerView mRequirementsRecyclerView;
         @BindView(R.id.tv_rating)
         TextView mRatingTextView;
+        @BindView(R.id.bt_details)
+        Button mDetailsButton;
+        @BindView(R.id.rb_option_rating)
+        RatingBar mOptionRatingBar;
 
         DetailsViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(this);
+            mDetailsButton.setOnClickListener(this);
 
             mRequirementsRecyclerView.setHasFixedSize(true);
             LinearLayoutManager layoutManager = new LinearLayoutManager(itemView.getContext());
@@ -102,11 +109,19 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
                 mItemPriceTextView.setText(String.valueOf(o.getPrice()));
             }
 
+            mRatingTextView.setText(String.valueOf(o.getRating()));
+            if(o.getRating() >= 0 && o.getRating() <= 5) {
+                mOptionRatingBar.setRating((float) o.getRating());
+            } else {
+                mOptionRatingBar.setRating(0);
+            }
+
             RequirementsAdapter adapter = new RequirementsAdapter(mProject.getRequirementList(),
                     mProject.getOptionList().get(getAdapterPosition()).getRequirementValues());
             mRequirementsRecyclerView.setAdapter(adapter);
 
         }
+
 
         @Override
         public void onClick(View view) {

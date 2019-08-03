@@ -96,7 +96,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
 
         ButterKnife.bind(this);
 
-        mOption = new Option("", 0, 0, false, new ArrayList<>(), "", "");
+        mOption = new Option("", 0, (float) 0, false, new ArrayList<>(), "", "");
 
         Intent intent = getIntent();
         if (intent != null) {

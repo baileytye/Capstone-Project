@@ -107,7 +107,7 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
                 case checkbox:
                     return (mRequirementValueCheckBox.isChecked()) ? 1 : 0;
                 case averaging:
-                    return Requirement.getAveragingValue(mRequirementValueSpinner.getSelectedItem().toString());
+                    return Requirement.getAveragingValue(mRequirementValueSpinner.getSelectedItem().toString(), this.itemView.getContext());
                 case starRating:
                     return mRequirementValueRatingBar.getRating();
                 default:

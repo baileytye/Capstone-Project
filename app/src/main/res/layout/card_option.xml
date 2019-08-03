@@ -120,7 +120,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <RatingBar
-            android:id="@+id/rb_rating"
+            android:id="@+id/rb_option_rating"
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="80dp"
             android:layout_height="16dp"
@@ -140,7 +140,7 @@
             android:textAppearance="@style/CardSubHeadingTextStyle"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_item_card_price"
-            app:layout_constraintEnd_toStartOf="@+id/rb_rating"
+            app:layout_constraintEnd_toStartOf="@+id/rb_option_rating"
             app:layout_constraintStart_toStartOf="@+id/bt_details"
             app:layout_constraintTop_toTopOf="@+id/tv_item_card_title"
             app:layout_constraintVertical_bias="1.0" />

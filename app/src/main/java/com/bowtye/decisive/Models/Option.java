@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
@@ -13,8 +12,6 @@ import com.bowtye.decisive.Database.Converters;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "option")
 @TypeConverters(Converters.class)
@@ -25,14 +22,14 @@ public class Option implements Parcelable {
     private int projectId;
     private String name;
     private double price;
-    private double rating;
+    private Float rating;
     private Boolean ruledOut;
     private List<Double> requirementValues;
     private String notes;
     private String imagePath;
 
     @Ignore
-    public Option(String name, double price, double rating, Boolean ruledOut,
+    public Option(String name, double price, Float rating, Boolean ruledOut,
                   List<Double> requirementValues, String notes, String imagePath) {
         this.name = name;
         this.price = price;
@@ -43,7 +40,7 @@ public class Option implements Parcelable {
         this.imagePath = imagePath;
     }
 
-    public Option(int optionId, int projectId, String name, double price, double rating, Boolean ruledOut,
+    public Option(int optionId, int projectId, String name, double price, Float rating, Boolean ruledOut,
                   List<Double> requirementValues, String notes, String imagePath) {
         this.optionId = optionId;
         this.projectId = projectId;
@@ -96,11 +93,11 @@ public class Option implements Parcelable {
         this.price = price;
     }
 
-    public double getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 
@@ -140,7 +137,7 @@ public class Option implements Parcelable {
         dest.writeInt(this.projectId);
         dest.writeString(this.name);
         dest.writeDouble(this.price);
-        dest.writeDouble(this.rating);
+        dest.writeFloat(this.rating);
         dest.writeValue(this.ruledOut);
         dest.writeList(this.requirementValues);
         dest.writeString(this.notes);
@@ -153,7 +150,7 @@ public class Option implements Parcelable {
         this.projectId = in.readInt();
         this.name = in.readString();
         this.price = in.readDouble();
-        this.rating = in.readDouble();
+        this.rating = in.readFloat();
         this.ruledOut = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.requirementValues = new ArrayList<Double>();
         in.readList(this.requirementValues, Double.class.getClassLoader());
