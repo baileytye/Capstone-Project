@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
+import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 import com.squareup.picasso.Picasso;
 
@@ -26,10 +27,10 @@ import butterknife.ButterKnife;
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder> {
     RecyclerView.RecycledViewPool sharedPool = new RecyclerView.RecycledViewPool();
 
-    private Project mProject;
+    private ProjectWithDetails mProject;
     private OptionItemClickListener mClickCallback;
 
-    public DetailsAdapter(Project project, OptionItemClickListener clickCallback) {
+    public DetailsAdapter(ProjectWithDetails project, OptionItemClickListener clickCallback) {
         mProject = project;
         mClickCallback = clickCallback;
     }
@@ -49,10 +50,10 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
 
     @Override
     public int getItemCount() {
-        return (mProject == null) || (mProject.getOptions() == null) ? 0 : mProject.getOptions().size();
+        return (mProject == null) || (mProject.getOptionList() == null) ? 0 : mProject.getOptionList().size();
     }
 
-    public void setProject(Project p) {
+    public void setProject(ProjectWithDetails p) {
         mProject = p;
     }
 
@@ -76,18 +77,18 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
 
             mRequirementsRecyclerView.setHasFixedSize(true);
             LinearLayoutManager layoutManager = new LinearLayoutManager(itemView.getContext());
-            layoutManager.setInitialPrefetchItemCount(mProject.getRequirements().size());
+            layoutManager.setInitialPrefetchItemCount(mProject.getRequirementList().size());
             mRequirementsRecyclerView.setLayoutManager(layoutManager);
             mRequirementsRecyclerView.setRecycledViewPool(sharedPool);
         }
 
         void bind() {
-            Option o = mProject.getOptions().get(getAdapterPosition());
+            Option o = mProject.getOptionList().get(getAdapterPosition());
             if(o.getImagePath().equals("")) {
                 mItemHeaderImageView.setImageDrawable(new ColorDrawable(Color.rgb(0x00, 0x6D, 0xB3)));
             } else {
                 Picasso.get()
-                        .load(new File(mProject.getOptions().get(getAdapterPosition()).getImagePath()))
+                        .load(new File(mProject.getOptionList().get(getAdapterPosition()).getImagePath()))
                         .fit()
                         .centerCrop()
                         .into(mItemHeaderImageView);
@@ -101,8 +102,8 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
                 mItemPriceTextView.setText(String.valueOf(o.getPrice()));
             }
 
-            RequirementsAdapter adapter = new RequirementsAdapter(mProject.getRequirements(),
-                    mProject.getOptions().get(getAdapterPosition()).getRequirementValues());
+            RequirementsAdapter adapter = new RequirementsAdapter(mProject.getRequirementList(),
+                    mProject.getOptionList().get(getAdapterPosition()).getRequirementValues());
             mRequirementsRecyclerView.setAdapter(adapter);
 
         }

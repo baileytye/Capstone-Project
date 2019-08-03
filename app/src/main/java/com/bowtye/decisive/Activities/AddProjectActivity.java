@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bowtye.decisive.Adapters.AddProjectAdapter;
 import com.bowtye.decisive.Helpers.ViewUtils;
 import com.bowtye.decisive.Models.Project;
+import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -52,7 +53,7 @@ public class AddProjectActivity extends AppCompatActivity {
 
     private RecyclerView.LayoutManager mLayoutManager;
     private AddProjectAdapter mAdapter;
-    private Project mProject;
+    private ProjectWithDetails mProject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,7 @@ public class AddProjectActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_project);
         ButterKnife.bind(this);
 
-        mProject = new Project(new ArrayList<>(), new ArrayList<>(), "", true);
+        mProject = new ProjectWithDetails(new Project("", true), new ArrayList<>(), new ArrayList<>());
         Intent intent = getIntent();
 
         if(savedInstanceState != null){
@@ -87,7 +88,7 @@ public class AddProjectActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Timber.d("Saved project with %d requirements", (mAdapter.getRequirements() == null) ? 0 : mAdapter.getRequirements().size());
-        mProject.setRequirements(mAdapter.getRequirements());
+        mProject.setRequirementList(mAdapter.getRequirements());
         outState.putParcelable(EXTRA_PROJECT, mProject);
     }
 
@@ -137,12 +138,12 @@ public class AddProjectActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        mProjectNameEditText.setText(mProject.getName());
+        mProjectNameEditText.setText(mProject.getProject().getName());
 
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new AddProjectAdapter(this, (mProject == null) ? null : mProject.getRequirements());
+        mAdapter = new AddProjectAdapter(this, (mProject == null) ? null : mProject.getRequirementList());
         mRecyclerView.setAdapter(mAdapter);
 
         checkIfEmpty();
@@ -175,7 +176,7 @@ public class AddProjectActivity extends AppCompatActivity {
             return VALIDATION_NAME_ERROR;
         }
 
-        mProject.setName(name);
+        mProject.getProject().setName(name);
 
         for(int i = 0 ; i < mAdapter.getItemCount(); i++){
             AddProjectAdapter.AddRequirementViewHolder holder = (AddProjectAdapter.AddRequirementViewHolder)
@@ -185,7 +186,7 @@ public class AddProjectActivity extends AppCompatActivity {
                 return VALIDATION_SAVE_REQ_ERROR;
             }
         }
-        mProject.setRequirements(mAdapter.getRequirements());
+        mProject.setRequirementList(mAdapter.getRequirements());
 
         return VALIDATION_OK;
     }

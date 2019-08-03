@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.bowtye.decisive.Adapters.DetailsAdapter;
 import com.bowtye.decisive.Models.Option;
-import com.bowtye.decisive.Models.Project;
+import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ViewModels.DetailsViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -60,15 +60,13 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
 
     private RecyclerView.LayoutManager mLayoutManager;
     private DetailsAdapter mAdapter;
-    private Project mProject;
+    private ProjectWithDetails mProject;
     private int mProjectId;
     private DetailsViewModel mViewModel;
 
     private boolean mItemAdded = false;
-    private int mItemDeleted = -1;
+    private boolean mItemDeleted = false;
     private int mItemSelected = -1;
-    //TODO: implement deleting, notify adapter only of deleted item
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,19 +100,19 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
         if ((requestCode == ADD_OPTION_REQUEST_CODE) && (resultCode == RESULT_OK)) {
             if (data != null && data.hasExtra(EXTRA_NEW_OPTION)) {
                 Option o = data.getParcelableExtra(EXTRA_NEW_OPTION);
-                if (mProject.getOptions() == null) {
-                    mProject.setOptions(new ArrayList<>());
+                if (mProject.getOptionList() == null) {
+                    mProject.setOptionList(new ArrayList<>());
                 }
-                mProject.getOptions().add(o);
                 mItemAdded = true;
-                mViewModel.insertOption(mProject);
+                mViewModel.insertOption(o, mProjectId);
                 Timber.d("Project: %s inserted into the database", (o != null) ? o.getName() : "NULL");
             }
         } else if(requestCode == EDIT_OPTION_REQUEST_CODE){
             if(data != null && data.hasExtra(EXTRA_EDIT_OPTION)) {
                 switch (resultCode) {
                     case RESULT_DELETED:
-                        mViewModel.deleteOption(mProject, mItemSelected);
+                        mViewModel.deleteOption(mProject.getOptionList().get(mItemSelected));
+                        mItemDeleted = true;
                 }
             }
         }
@@ -132,8 +130,6 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
         mAdapter = new DetailsAdapter(mProject, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        setEmptyMessageVisability();
-
         mFab.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), AddOption.class);
             intent.putExtra(EXTRA_PROJECT, mProject);
@@ -147,40 +143,46 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
     }
 
     private void prepareViewModel() {
+
         mViewModel = ViewModelProviders.of(this).get(DetailsViewModel.class);
-        mViewModel.getProject(mProjectId).observe(this, mProject -> {
-            this.mProject = mProject;
+        mViewModel.getProject(mProjectId).observe(this, projectWithDetails -> {
+            Timber.d("Livedata Updated");
+            mProject = projectWithDetails;
             mAdapter.setProject(mProject);
-            if(mItemAdded){
-                mAdapter.notifyItemInserted(mProject.getOptions().size() - 1);
+            if(mItemAdded) {
+                mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
+                mItemAdded = false;
+            } else if(mItemDeleted){
+                mAdapter.notifyItemRemoved(mItemSelected);
+                mItemDeleted = false;
             } else {
                 mAdapter.notifyDataSetChanged();
             }
 
-            setEmptyMessageVisability();
+            setEmptyMessageVisibility();
 
-            mToolbarTitle.setText(mProject.getName());
-            if (mProject.getOptions() != null && mProject.getRequirements() != null) {
+            mToolbarTitle.setText(mProject.getProject().getName());
+            if (mProject.getOptionList() != null && mProject.getRequirementList() != null) {
                 Timber.d("Number of requirements loaded: %d",
-                        ((this.mProject.getRequirements() != null) ? this.mProject.getRequirements().size() : 0));
+                        ((this.mProject.getRequirementList() != null) ? this.mProject.getRequirementList().size() : 0));
                 Timber.d("Number of options loaded: %d",
-                        ((this.mProject.getOptions() != null) ? this.mProject.getOptions().size() : 0));
+                        ((this.mProject.getOptionList() != null) ? this.mProject.getOptionList().size() : 0));
             }
         });
     }
 
-    void setEmptyMessageVisability(){
-        if(mAdapter.getItemCount() == 0) {
+    void setEmptyMessageVisibility(){
+        if((mProject == null) || (mProject.getOptionList().size() == 0)) {
             mEmptyOptionsTextView.setVisibility(View.VISIBLE);
         } else {
-            mEmptyOptionsTextView.setVisibility(View.GONE);
+            mEmptyOptionsTextView.setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public void onOptionItemClicked(int position) {
         Intent intent = new Intent(getApplicationContext(), OptionDetails.class);
-        intent.putExtra(EXTRA_OPTION, mProject.getOptions().get(position));
+        intent.putExtra(EXTRA_OPTION, mProject.getOptionList().get(position));
         mItemSelected = position;
 
         Transition transition = new Slide(Gravity.START);

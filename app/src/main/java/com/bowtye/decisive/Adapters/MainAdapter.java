@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.Models.Project;
+import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 
 import java.util.List;
@@ -25,10 +26,10 @@ import timber.log.Timber;
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {
 
     private int mProjectCount;
-    private List<Project> mProjects;
+    private List<ProjectWithDetails> mProjects;
     final private ProjectItemClickListener mClickListener;
 
-    public MainAdapter(List<Project> projects, ProjectItemClickListener clickListener) {
+    public MainAdapter(List<ProjectWithDetails> projects, ProjectItemClickListener clickListener) {
         mClickListener = clickListener;
         mProjects = projects;
         if (mProjects != null) {
@@ -38,7 +39,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         }
     }
 
-    public void setProjects(List<Project> projects) {
+    public void setProjects(List<ProjectWithDetails> projects) {
         mProjects = projects;
         if (mProjects != null) {
             mProjectCount = mProjects.size();
@@ -73,6 +74,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         TextView mProjectTitle;
         @BindView(R.id.tv_project_choices)
         TextView mChoicesTextView;
+        @BindView(R.id.tv_project_requirement_count)
+        TextView mRequirementsTextView;
 
         MainViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,15 +90,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             mClickListener.onProjectItemClicked(getAdapterPosition());
         }
 
-        void bind(Project p) {
+        void bind(ProjectWithDetails p) {
             mProjectImageView.setImageDrawable(new ColorDrawable(Color.rgb(0x03, 0x9B, 0xE5)));
-            mProjectTitle.setText(p.getName());
-            mChoicesTextView.setText((p.getOptions() == null) ? "0" : String.valueOf(p.getOptions().size()));
+            mProjectTitle.setText(p.getProject().getName());
+            mChoicesTextView.setText((p.getOptionList() == null) ? "0" : String.valueOf(p.getOptionList().size()));
+            mRequirementsTextView.setText((p.getRequirementList()== null) ? "0" : String.valueOf(p.getRequirementList().size()));
         }
 
         @Override
         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-            contextMenu.setHeaderTitle(mProjects.get(getAdapterPosition()).getName());
+            contextMenu.setHeaderTitle(mProjects.get(getAdapterPosition()).getProject().getName());
             MenuItem deleteActionItem = contextMenu.add("Delete");
             deleteActionItem.setOnMenuItemClickListener(menuItem -> {
                 mClickListener.onProjectDeleteMenuClicked(getAdapterPosition());
