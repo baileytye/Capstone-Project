@@ -14,11 +14,7 @@ import com.bowtye.decisive.Database.Converters;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity(tableName = "requirement",
-        foreignKeys = @ForeignKey(entity = Project.class,
-                parentColumns = "id",
-                childColumns = "projectId",
-                onDelete = CASCADE))
+@Entity(tableName = "requirement")
 public class Requirement implements Parcelable {
 
     public static final double FAR_BELOW_AVERAGE = -2.0;

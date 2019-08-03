@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -14,7 +13,7 @@ import com.bowtye.decisive.BuildConfig;
 import com.bowtye.decisive.Fragments.BottomSheetFragment;
 import com.bowtye.decisive.Helpers.ViewUtils;
 import com.bowtye.decisive.Models.Option;
-import com.bowtye.decisive.Models.Project;
+import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -102,9 +101,9 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.hasExtra(EXTRA_PROJECT)) {
-                Project p = intent.getParcelableExtra(EXTRA_PROJECT);
+                ProjectWithDetails p = intent.getParcelableExtra(EXTRA_PROJECT);
                 if (p != null) {
-                    mRequirements = p.getRequirements();
+                    mRequirements = p.getRequirementList();
                 }
             }
         }

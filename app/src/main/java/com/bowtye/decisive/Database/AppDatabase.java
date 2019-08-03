@@ -32,8 +32,5 @@ public abstract class AppDatabase extends RoomDatabase {
         return sInstance;
     }
 
-
-    public abstract ProjectsDao projectsDao();
-    public abstract RequirementsDao requirementsDao();
-    public abstract OptionsDao optionsDao();
+    public abstract ProjectListDao projectListDao();
 }

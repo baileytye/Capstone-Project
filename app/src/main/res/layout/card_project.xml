@@ -20,6 +20,29 @@
         android:background="@drawable/bg_card"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/tv_project_requirement_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="5"
+            android:textAppearance="@style/CardSubHeadingTextStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/label_requirements_count"
+            app:layout_constraintStart_toEndOf="@+id/label_requirements_count"
+            app:layout_constraintTop_toTopOf="@+id/label_requirements_count" />
+
+        <TextView
+            android:id="@+id/label_requirements_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:text="Requirements:"
+            android:textAppearance="@style/CardSubHeadingTextStyle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/label_choices"
+            app:layout_constraintTop_toBottomOf="@+id/label_choices" />
+
         <ImageView
             android:id="@+id/iv_project_card_header"
             android:layout_width="match_parent"
@@ -47,10 +70,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
             android:text="@string/label_choices"
             android:textAppearance="@style/CardSubHeadingTextStyle"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tv_project_card_title"
             app:layout_constraintTop_toBottomOf="@+id/tv_project_card_title" />
 
