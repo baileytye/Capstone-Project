@@ -144,9 +144,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(getApplicationContext(), ProjectDetails.class);
         intent.putExtra(EXTRA_PROJECT_ID, mProjects.get(position).getProject().getId());
 
-        Transition transition = new Slide(Gravity.START);
-
-        getWindow().setExitTransition(transition);
+        getWindow().setExitTransition(new Slide(Gravity.START));
         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 

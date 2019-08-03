@@ -10,6 +10,7 @@
     <dimen name="card_notes_padding">8dp</dimen>
     <dimen name="card_heading_separation">28dp</dimen>
     <dimen name="card_margin_edges">4dp</dimen>
+    <dimen name="card_corner_radius">10dp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
 

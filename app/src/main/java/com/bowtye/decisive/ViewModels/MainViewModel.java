@@ -46,23 +46,23 @@ public class MainViewModel extends AndroidViewModel {
 
     public void insertDummyProject() {
         Timber.d("Inserting dummy project");
-        Requirement r1 = new Requirement("Requirement 1",
-                Requirement.Type.number, Requirement.Importance.normal, 0,
-                "", 0, 0);
-        Requirement r2 = new Requirement("Requirement 2",
-                Requirement.Type.number, Requirement.Importance.normal, 0,
-                "", 0, 0);
-        Requirement r3 = new Requirement("Requirement 3",
-                Requirement.Type.number, Requirement.Importance.normal, 0,
-                "", 0, 0);
+        Requirement r1 = new Requirement("Bedrooms",
+                Requirement.Type.number, Requirement.Importance.normal, 3,
+                "", 0);
+        Requirement r2 = new Requirement("Outside Colors",
+                Requirement.Type.averaging, Requirement.Importance.normal, 0,
+                "", 0);
+        Requirement r3 = new Requirement("Garage",
+                Requirement.Type.checkbox, Requirement.Importance.high, 1,
+                "", 0);
 
         List<Requirement> requirements = new ArrayList<>(Arrays.asList(r1, r2, r3));
 
-        List<Double> requirementValues = new ArrayList<>(Arrays.asList(1.0, 2.0, 3.0));
+        List<Double> requirementValues = new ArrayList<>(Arrays.asList(1.0, 2.0, 0.0));
 
-        Option option1 = new Option("Option 1", 100000, 0, false, requirementValues, "", "");
+        Option option1 = new Option("House 1", 100000, (float) 2.3, false, requirementValues, "First test house", "");
 
-        Project p = new Project("Test Project", false);
+        Project p = new Project("House", false);
 
         ProjectWithDetails projectWithDetails = new ProjectWithDetails(p, Collections.singletonList(option1), requirements);
 

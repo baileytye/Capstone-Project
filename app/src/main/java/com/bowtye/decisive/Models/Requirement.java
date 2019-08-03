@@ -1,18 +1,17 @@
 package com.bowtye.decisive.Models;
 
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.bowtye.decisive.Database.Converters;
-
-import static androidx.room.ForeignKey.CASCADE;
+import com.bowtye.decisive.R;
 
 @Entity(tableName = "requirement")
 public class Requirement implements Parcelable {
@@ -41,22 +40,20 @@ public class Requirement implements Parcelable {
     private double expected;
     private String notes;
     private double weight;
-    private double value;
 
     @Ignore
     public Requirement(String name, Type type, Importance importance, double expected,
-                       String notes, double weight, double value) {
+                       String notes, double weight) {
         this.name = name;
         this.type = type;
         this.importance = importance;
         this.expected = expected;
         this.notes = notes;
         this.weight = weight;
-        this.value = value;
     }
 
     public Requirement(int reqId, int projectId, String name, Type type, Importance importance, double expected,
-                       String notes, double weight, double value) {
+                       String notes, double weight) {
         this.reqId = reqId;
         this.projectId = projectId;
         this.name = name;
@@ -65,23 +62,49 @@ public class Requirement implements Parcelable {
         this.expected = expected;
         this.notes = notes;
         this.weight = weight;
-        this.value = value;
     }
 
-    public static double getAveragingValue(String type) {
-        switch (type) {
-            case "Far Above Average":
-                return FAR_ABOVE_AVERAGE;
-            case "Above Average":
-                return ABOVE_AVERAGE;
-            case "Average":
-                return AVERAGE;
-            case "Below Average":
-                return BELOW_AVERAGE;
-            case "Far Below Average":
-                return FAR_BELOW_AVERAGE;
+    public static double getAveragingValue(String type, Context context) {
+
+        String[] averageLabels = context.getResources().getStringArray(R.array.averages);
+
+        if(type.equals(averageLabels[0])){
+            return FAR_ABOVE_AVERAGE;
+        } else if(type.equals(averageLabels[1])){
+            return ABOVE_AVERAGE;
+        } else if(type.equals(averageLabels[2])){
+            return AVERAGE;
+        } else if(type.equals(averageLabels[3])){
+            return BELOW_AVERAGE;
+        } else if(type.equals(averageLabels[4])){
+            return FAR_BELOW_AVERAGE;
         }
+
         return AVERAGE;
+    }
+
+    /**
+     * Converts the numerical value to a string representation of averaging labels
+     * @param value will be converted to int, which is save since values are only -2 to 2
+     * @return string of value
+     */
+    public static String getAveragingString(double value, Context context){
+
+        String[] averageLabels = context.getResources().getStringArray(R.array.averages);
+
+        switch ((int) value){
+            case (int) FAR_ABOVE_AVERAGE:
+                return averageLabels[0];
+            case (int) ABOVE_AVERAGE:
+                return averageLabels[1];
+            case (int) AVERAGE:
+                return averageLabels[2];
+            case (int) BELOW_AVERAGE:
+                return averageLabels[3];
+            case (int) FAR_BELOW_AVERAGE:
+                return averageLabels[4];
+        }
+        return(averageLabels[2]);
     }
 
     public int getReqId() {
@@ -148,14 +171,6 @@ public class Requirement implements Parcelable {
         this.weight = weight;
     }
 
-    public double getValue() {
-        return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
-
     public static Type getTypeFromString(String typeString) {
         switch (typeString) {
             case "Number":
@@ -219,7 +234,6 @@ public class Requirement implements Parcelable {
         dest.writeDouble(this.expected);
         dest.writeString(this.notes);
         dest.writeDouble(this.weight);
-        dest.writeDouble(this.value);
     }
 
     @Ignore
@@ -234,7 +248,6 @@ public class Requirement implements Parcelable {
         this.expected = in.readDouble();
         this.notes = in.readString();
         this.weight = in.readDouble();
-        this.value = in.readDouble();
     }
 
     public static final Creator<Requirement> CREATOR = new Creator<Requirement>() {
