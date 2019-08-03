@@ -6,8 +6,7 @@ import android.os.Bundle;
 
 import com.bowtye.decisive.Adapters.MainAdapter;
 import com.bowtye.decisive.BuildConfig;
-import com.bowtye.decisive.Models.Option;
-import com.bowtye.decisive.Models.Project;
+import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ViewModels.MainViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity
     private MainAdapter mAdapter;
     private MainViewModel mViewModel;
 
-    private List<Project> mProjects;
+    private List<ProjectWithDetails> mProjects;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,9 +113,17 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_clear) {
             mViewModel.clearProjects();
+            return true;
+        } else if(id == R.id.action_delete_option){
+            mViewModel.clearOptions();
+            return true;
+        } else if (id == R.id.action_delete_requirement){
+            mViewModel.clearRequirements();
+            return true;
+        } else if(id == R.id.action_insert_dummy){
+            mViewModel.insertDummyProject();
             return true;
         }
 
@@ -135,7 +142,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onProjectItemClicked(int position) {
         Intent intent = new Intent(getApplicationContext(), ProjectDetails.class);
-        intent.putExtra(EXTRA_PROJECT_ID, mProjects.get(position).getId());
+        intent.putExtra(EXTRA_PROJECT_ID, mProjects.get(position).getProject().getId());
 
         Transition transition = new Slide(Gravity.START);
 
@@ -157,18 +164,18 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if ((requestCode == ADD_PROJECT_REQUEST_CODE) && (resultCode == RESULT_OK)) {
             if (data != null && data.hasExtra(EXTRA_NEW_PROJECT)) {
-                Project p = data.getParcelableExtra(EXTRA_NEW_PROJECT);
-                if((p != null) && (p.getOptions().size() > 0) &&
-                        (p.getOptions().get(0).getRequirementValues().size() < p.getRequirements().size())){
-                    for(int i = 0; i < p.getOptions().size(); i++){
-                        p.getOptions().get(i).setRequirementValues(new ArrayList<>());
-                        ArrayList<Double> values = new ArrayList<>(Arrays.asList(new Double[p.getRequirements().size()]));
+                ProjectWithDetails p = data.getParcelableExtra(EXTRA_NEW_PROJECT);
+                if((p != null) && (p.getOptionList().size() > 0) &&
+                        (p.getOptionList().get(0).getRequirementValues().size() < p.getRequirementList().size())){
+                    for(int i = 0; i < p.getOptionList().size(); i++){
+                        p.getOptionList().get(i).setRequirementValues(new ArrayList<>());
+                        ArrayList<Double> values = new ArrayList<>(Arrays.asList(new Double[p.getRequirementList().size()]));
                         Collections.fill(values, 0.0);
-                        p.getOptions().get(i).setRequirementValues(values);
+                        p.getOptionList().get(i).setRequirementValues(values);
                     }
                 }
-                mViewModel.insertProject(p);
-                Timber.d("Project: %s inserted into the database", (p != null) ? p.getName() : "NULL");
+                mViewModel.insertProjectWithDetails(p);
+                Timber.d("Project: %s inserted into the database", (p != null) ? p.getProject().getName() : "NULL");
             }
         }
     }
@@ -192,6 +199,7 @@ public class MainActivity extends AppCompatActivity
 
         mFab.setOnClickListener(view -> {
             startAddProjectActivity(-1);
+
         });
 
         Timber.d("Number of projects: %d", ((mProjects != null) ? mProjects.size() : 0));
@@ -199,19 +207,11 @@ public class MainActivity extends AppCompatActivity
 
     void prepareViewModel() {
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        mViewModel.getProjects().observe(this, mProjects -> {
-            this.mProjects = mProjects;
-            Timber.d("Livedata updated");
-            mAdapter.setProjects(this.mProjects);
+        mViewModel.getProjects().observe(this, projectWithDetails -> {
+            mProjects = projectWithDetails;
+            Timber.d("Updating Livedata");
+            mAdapter.setProjects(projectWithDetails);
             mAdapter.notifyDataSetChanged();
-            if (mProjects.size() > 0) {
-                Timber.d("Number of requirements loaded: %d",
-                        ((this.mProjects.get(0).getRequirements() != null)
-                                ? this.mProjects.get(0).getRequirements().size() : 0));
-                Timber.d("Number of options loaded: %d",
-                        ((this.mProjects.get(0).getOptions() != null)
-                                ? this.mProjects.get(0).getOptions().size() : 0));
-            }
         });
     }
 

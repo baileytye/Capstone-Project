@@ -17,11 +17,6 @@ public class Project implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @Ignore
-    private List<Requirement> requirements;
-    @Ignore
-    private List<Option> options;
-
     private String name;
     private Boolean hasPrice;
 
@@ -32,9 +27,7 @@ public class Project implements Parcelable {
     }
 
     @Ignore
-    public Project(List<Requirement> requirements, List<Option> options, String name, Boolean hasPrice) {
-        this.requirements = requirements;
-        this.options = options;
+    public Project(String name, Boolean hasPrice) {
         this.name = name;
         this.hasPrice = hasPrice;
     }
@@ -45,22 +38,6 @@ public class Project implements Parcelable {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public List<Requirement> getRequirements() {
-        return requirements;
-    }
-
-    public void setRequirements(List<Requirement> requirements) {
-        this.requirements = requirements;
-    }
-
-    public List<Option> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<Option> options) {
-        this.options = options;
     }
 
     public String getName() {
@@ -88,8 +65,6 @@ public class Project implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
-        dest.writeTypedList(this.requirements);
-        dest.writeTypedList(this.options);
         dest.writeString(this.name);
         dest.writeValue(this.hasPrice);
     }
@@ -97,8 +72,6 @@ public class Project implements Parcelable {
     @Ignore
     protected Project(Parcel in) {
         this.id = in.readInt();
-        this.requirements = in.createTypedArrayList(Requirement.CREATOR);
-        this.options = in.createTypedArrayList(Option.CREATOR);
         this.name = in.readString();
         this.hasPrice = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }

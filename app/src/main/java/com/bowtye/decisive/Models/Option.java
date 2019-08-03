@@ -16,11 +16,7 @@ import java.util.List;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity(tableName = "option",
-        foreignKeys = @ForeignKey(entity = Project.class,
-                parentColumns = "id",
-                childColumns = "projectId",
-                onDelete = CASCADE))
+@Entity(tableName = "option")
 @TypeConverters(Converters.class)
 public class Option implements Parcelable {
 

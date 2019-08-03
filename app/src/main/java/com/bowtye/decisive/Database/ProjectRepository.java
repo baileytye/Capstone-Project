@@ -6,11 +6,9 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
 import com.bowtye.decisive.Models.Option;
-import com.bowtye.decisive.Models.Project;
-import com.bowtye.decisive.Models.Requirement;
+import com.bowtye.decisive.Models.ProjectWithDetails;
 
 import java.util.List;
 
@@ -18,14 +16,12 @@ import timber.log.Timber;
 
 public class ProjectRepository {
 
-    private static ProjectsDao projectsDao;
-    private static RequirementsDao requirementsDao;
-    private static OptionsDao optionsDao;
+    private static ProjectListDao projectListDao;
 
     private static ProjectRepository instance;
 
-    private LiveData<List<Project>> projects;
-    private LiveData<Project> selectedProject;
+    private LiveData<List<ProjectWithDetails>> projects;
+    private MutableLiveData<ProjectWithDetails> selectedProject;
 
     public static ProjectRepository getInstance(Application application) {
         if(instance == null) {
@@ -39,70 +35,68 @@ public class ProjectRepository {
     }
 
     @SuppressLint("StaticFieldLeak")
-    private ProjectRepository(Application application){
+    private ProjectRepository(Application application) {
         AppDatabase database = AppDatabase.getInstance(application.getApplicationContext());
-        projectsDao = database.projectsDao();
-        requirementsDao = database.requirementsDao();
-        optionsDao = database.optionsDao();
 
-        projects = projectsDao.loadProjects();
-        projects = Transformations.switchMap(projects, (List<Project> input) -> {
-            final MutableLiveData<List<Project>> projectsMutable = new MutableLiveData<>();
-            new AsyncTask<List<Project>, Void, List<Project>>(){
+        projectListDao = database.projectListDao();
 
-                @Override
-                protected List<Project> doInBackground(List<Project>... lists) {
-                    for(int i = 0; i < lists[0].size(); i++){
-                        lists[0].get(i).setOptions(optionsDao.loadOptionsWithProjectId(lists[0].get(i).getId()));
-                        lists[0].get(i).setRequirements(requirementsDao.loadRequirementsWithProjectId(lists[0].get(i).getId()));
-                    }
-                    return lists[0];
-                }
-
-                @Override
-                protected void onPostExecute(List<Project> projects) {
-                    super.onPostExecute(projects);
-                    projectsMutable.postValue(projects);
-                }
-            }.execute(input);
-            return projectsMutable;
-        });
+        projects = projectListDao.getProjects();
+        selectedProject = new MutableLiveData<>();
     }
 
-    public LiveData<List<Project>> getProjects(){
+    public void insertProjectWithDetails(ProjectWithDetails projectWithDetails){
+        new InsertAsyncTask().execute(projectWithDetails);
+    }
+
+    public void insertOption(Option option, int projectId){
+        option.setProjectId(projectId);
+        new InsertOptionAsyncTask().execute(option);
+    }
+
+    public void clearTables(){
+        new ClearAsyncTask().execute();
+    }
+
+    public void clearOptionTable(){
+        new ClearOptionsAsyncTask().execute();
+    }
+
+    public void clearRequirementsTable(){
+        new ClearRequirementsAsyncTask().execute();
+    }
+
+    public LiveData<List<ProjectWithDetails>> getProjects(){
         Timber.d("GetProjects called");
         return projects;
     }
 
-    public LiveData<Project> updateSelectedProject(int id){
-        selectedProject = projectsDao.loadProjectById(id);
-        selectedProject = Transformations.switchMap(selectedProject, input -> {
-            final MutableLiveData<Project> projectMutable = new MutableLiveData<>();
-            new AsyncTask<Project, Void, Project> (){
-
-                @Override
-                protected Project doInBackground(Project... projects) {
-                    projects[0].setOptions(optionsDao.loadOptionsWithProjectId(projects[0].getId()));
-                    projects[0].setRequirements(requirementsDao.loadRequirementsWithProjectId(projects[0].getId()));
-                    return projects[0];
-                }
-
-                @Override
-                protected void onPostExecute(Project project) {
-                    super.onPostExecute(project);
-                    projectMutable.postValue(project);
-                }
-            }.execute(input);
-            return projectMutable;
-        });
-        return selectedProject;
+    public LiveData<ProjectWithDetails> getSelectedProject(int id){
+        return projectListDao.loadProjectById(id);
     }
 
-    public void insert(final Project project){
+    private static class InsertAsyncTask extends AsyncTask<ProjectWithDetails,Void,Void> {
+
+        @Override
+        protected Void doInBackground(ProjectWithDetails... projectWithDetails) {
+            projectListDao.insertProjectWithDetails(projectWithDetails[0]);
+            return null;
+        }
+    }
+
+    private static class InsertOptionAsyncTask extends AsyncTask<Option,Void,Void> {
+
+        @Override
+        protected Void doInBackground(Option... options) {
+            projectListDao.insertOption(options[0]);
+            return null;
+        }
+    }
+
+    public void insert(final ProjectWithDetails project){
         new InsertAsyncTask().execute(project);
     }
 
-    public void delete(final Project project){
+    public void delete(final ProjectWithDetails project){
         new DeleteAsyncTask().execute(project);
     }
 
@@ -110,44 +104,12 @@ public class ProjectRepository {
         new DeleteOptionAsyncTask().execute(option);
     }
 
-    public void clearTable(){
-        new ClearAsyncTask().execute();
-    }
-
-    private static class InsertAsyncTask extends AsyncTask<Project,Void,Void> {
+    private static class DeleteAsyncTask extends AsyncTask<ProjectWithDetails, Void, Void>{
 
         @Override
-        protected Void doInBackground(Project... projects) {
-            Timber.d("Inserting Project: %s", projects[0].getName());
-            int id = (int) projectsDao.insertProject(projects[0]);
-
-            Timber.d("Requirements length: %d", (projects[0].getRequirements() != null) ? projects[0].getRequirements().size() : null);
-            for (Requirement r: projects[0].getRequirements()) {
-                r.setProjectId(id);
-                requirementsDao.insertRequirement(r);
-            }
-            Timber.d("Options length: %d", (projects[0].getOptions() != null) ? projects[0].getOptions().size() : null);
-            for (Option o: projects[0].getOptions()) {
-                o.setProjectId(id);
-                optionsDao.insertOption(o);
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Timber.d("Project inserted into database");
-        }
-    }
-
-    private static class DeleteAsyncTask extends AsyncTask<Project, Void, Void>{
-
-        @Override
-        protected Void doInBackground(Project... projects) {
-            projectsDao.deleteProject(projects[0]);
-            Timber.d("Deleted project: %s", projects[0].getName());
+        protected Void doInBackground(ProjectWithDetails... projects) {
+            projectListDao.deleteProjectWithDetails(projects[0]);
+            Timber.d("Deleted project: %s", projects[0].getProject().getName());
             return null;
         }
     }
@@ -156,7 +118,7 @@ public class ProjectRepository {
 
         @Override
         protected Void doInBackground(Option... options) {
-            optionsDao.deleteOption(options[0]);
+            projectListDao.deleteOption(options[0]);
             Timber.d("Deleted option: %s, from project: %s", options[0].getName(), options[0].getProjectId());
             return null;
         }
@@ -166,7 +128,25 @@ public class ProjectRepository {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            projectsDao.deleteAll();
+            projectListDao.clearAllTables();
+            return null;
+        }
+    }
+
+    private static class ClearOptionsAsyncTask extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            projectListDao.clearOptionTable();
+            return null;
+        }
+    }
+
+    private static class ClearRequirementsAsyncTask extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            projectListDao.clearRequirementTable();
             return null;
         }
     }

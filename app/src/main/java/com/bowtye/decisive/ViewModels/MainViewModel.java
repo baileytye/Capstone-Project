@@ -10,6 +10,7 @@ import androidx.lifecycle.AndroidViewModel;
 import com.bowtye.decisive.Database.ProjectRepository;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
+import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.Models.Requirement;
 
 import java.util.ArrayList;
@@ -17,9 +18,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class MainViewModel extends AndroidViewModel {
 
-    private LiveData<List<Project>> mProjects;
+    private LiveData<List<ProjectWithDetails>> mProjects;
     private final ProjectRepository mRepo;
 
 
@@ -29,7 +32,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
-    public LiveData<List<Project>> getProjects() {
+    public LiveData<List<ProjectWithDetails>> getProjects() {
         if (mProjects == null) {
             mProjects = new MutableLiveData<>();
             loadProjects();
@@ -37,11 +40,12 @@ public class MainViewModel extends AndroidViewModel {
         return mProjects;
     }
 
-    public void insertProject(Project p) {
+    public void insertProjectWithDetails(ProjectWithDetails p) {
         mRepo.insert(p);
     }
 
     public void insertDummyProject() {
+        Timber.d("Inserting dummy project");
         Requirement r1 = new Requirement("Requirement 1",
                 Requirement.Type.number, Requirement.Importance.normal, 0,
                 "", 0, 0);
@@ -56,11 +60,13 @@ public class MainViewModel extends AndroidViewModel {
 
         List<Double> requirementValues = new ArrayList<>(Arrays.asList(1.0, 2.0, 3.0));
 
-        Option option1 = new Option("Option 1", 100000, 0, false, requirementValues, "", null);
+        Option option1 = new Option("Option 1", 100000, 0, false, requirementValues, "", "");
 
-        Project p = new Project(requirements, Collections.singletonList(option1), "Project Test", true);
+        Project p = new Project("Test Project", false);
 
-        mRepo.insert(p);
+        ProjectWithDetails projectWithDetails = new ProjectWithDetails(p, Collections.singletonList(option1), requirements);
+
+        mRepo.insertProjectWithDetails(projectWithDetails);
     }
 
     private void loadProjects() {
@@ -68,10 +74,18 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void clearProjects() {
-        mRepo.clearTable();
+        mRepo.clearTables();
     }
 
-    public void deleteProject(Project p) {
+    public void clearOptions() {
+        mRepo.clearOptionTable();
+    }
+
+    public void clearRequirements() {
+        mRepo.clearRequirementsTable();
+    }
+
+    public void deleteProject(ProjectWithDetails p) {
         mRepo.delete(p);
     }
 }
