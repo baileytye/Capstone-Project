@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="4dp">
 
     <ImageView
         android:id="@+id/iv_thumb"
-        android:contentDescription="@string/content_description_thumbs_up_or_down"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/content_description_thumbs_up_or_down"
+        android:paddingRight="8dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,9 +22,12 @@
         android:id="@+id/tv_requirement_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:text="@string/placeholder_requirement_label"
+        android:textAppearance="@style/CardSubHeadingTextStyle"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_requirement_value"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1.2"
         app:layout_constraintStart_toEndOf="@+id/iv_thumb"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,30 +35,35 @@
         android:id="@+id/tv_requirement_value"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintBottom_toBottomOf="@+id/tv_requirement_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toEndOf="@+id/tv_requirement_name"
         app:layout_constraintTop_toTopOf="@+id/tv_requirement_name" />
 
-    <CheckBox
-        android:id="@+id/cb_requirement_value"
+    <ImageView
+        android:id="@+id/iv_requirement_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:clickable="false"
-        android:focusable="false"
+        android:layout_marginStart="12dp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_requirement_name"
         app:layout_constraintStart_toEndOf="@+id/tv_requirement_name"
-        app:layout_constraintTop_toTopOf="@+id/tv_requirement_name" />
+        app:layout_constraintTop_toTopOf="@+id/tv_requirement_name"
+        app:layout_constraintVertical_bias="0.4"
+        app:srcCompat="@drawable/ic_check_circle_24dp" />
 
     <RatingBar
         android:id="@+id/rb_requirement_value"
         style="@style/Widget.AppCompat.RatingBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:focusable="false"
+        android:layout_marginStart="12dp"
         android:clickable="false"
-        android:layout_marginStart="8dp"
+        android:focusable="false"
         app:layout_constraintBottom_toBottomOf="@+id/tv_requirement_name"
         app:layout_constraintStart_toEndOf="@+id/tv_requirement_name"
         app:layout_constraintTop_toTopOf="@+id/tv_requirement_name" />

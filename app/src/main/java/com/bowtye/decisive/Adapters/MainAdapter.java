@@ -13,9 +13,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -91,7 +93,19 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         }
 
         void bind(ProjectWithDetails p) {
-            mProjectImageView.setImageDrawable(new ColorDrawable(Color.rgb(0x03, 0x9B, 0xE5)));
+
+            String image = checkForImages(p);
+
+            if(image.equals("")) {
+                mProjectImageView.setVisibility(View.GONE);
+            } else {
+                mProjectImageView.setVisibility(View.VISIBLE);
+                Picasso.get()
+                        .load(image)
+                        .fit()
+                        .centerCrop()
+                        .into(mProjectImageView);
+            }
             mProjectTitle.setText(p.getProject().getName());
             mChoicesTextView.setText((p.getOptionList() == null) ? "0" : String.valueOf(p.getOptionList().size()));
             mRequirementsTextView.setText((p.getRequirementList()== null) ? "0" : String.valueOf(p.getRequirementList().size()));
@@ -111,6 +125,15 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
                 return true;
             });
 
+        }
+
+        private String checkForImages(ProjectWithDetails project){
+            for(Option option: project.getOptionList()){
+                if(!option.getImagePath().equals("")){
+                    return option.getImagePath();
+                }
+            }
+            return "";
         }
 
     }

@@ -92,10 +92,11 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
         void bind() {
             Option o = mProject.getOptionList().get(getAdapterPosition());
             if(o.getImagePath().equals("")) {
-                mItemHeaderImageView.setImageDrawable(new ColorDrawable(Color.rgb(0x00, 0x6D, 0xB3)));
+                mItemHeaderImageView.setVisibility(View.GONE);
             } else {
+                mItemHeaderImageView.setVisibility(View.VISIBLE);
                 Picasso.get()
-                        .load(new File(mProject.getOptionList().get(getAdapterPosition()).getImagePath()))
+                        .load(o.getImagePath())
                         .fit()
                         .centerCrop()
                         .into(mItemHeaderImageView);
@@ -117,7 +118,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             }
 
             RequirementsAdapter adapter = new RequirementsAdapter(mProject.getRequirementList(),
-                    mProject.getOptionList().get(getAdapterPosition()).getRequirementValues());
+                    mProject.getOptionList().get(getAdapterPosition()).getRequirementValues(), false);
             mRequirementsRecyclerView.setAdapter(adapter);
 
         }

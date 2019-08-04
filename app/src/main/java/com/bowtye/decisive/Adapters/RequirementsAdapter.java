@@ -23,10 +23,12 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
 
     private List<Requirement> mRequirements;
     private List<Double> mRequirementValues;
+    private boolean mShowThumb;
 
-    RequirementsAdapter(List<Requirement> requirements, List<Double> values) {
+    RequirementsAdapter(List<Requirement> requirements, List<Double> values, boolean showThumb) {
         mRequirements = requirements;
         mRequirementValues = values;
+        mShowThumb = showThumb;
     }
 
     @NonNull
@@ -52,8 +54,8 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
         TextView mRequirementNameTextView;
         @BindView(R.id.tv_requirement_value)
         TextView mRequirementValueTextView;
-        @BindView(R.id.cb_requirement_value)
-        CheckBox mRequirementValueCheckBox;
+        @BindView(R.id.iv_requirement_value)
+        ImageView mRequirementValueCheckBox;
         @BindView(R.id.rb_requirement_value)
         RatingBar mRequirementValueRatingBar;
         @BindView(R.id.iv_thumb)
@@ -81,7 +83,9 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
                     mRequirementValueTextView.setVisibility(View.INVISIBLE);
                     mRequirementValueCheckBox.setVisibility(View.VISIBLE);
                     mRequirementValueRatingBar.setVisibility(View.INVISIBLE);
-                    mRequirementValueCheckBox.setChecked(value == 1);
+                    mRequirementValueCheckBox.setImageResource((value == 1)
+                            ? R.drawable.ic_check_circle_24dp
+                            : R.drawable.ic_cancel_24dp);
                     break;
                 case averaging:
                     mRequirementValueTextView.setVisibility(View.VISIBLE);
@@ -96,10 +100,14 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
                     mRequirementValueTextView.setText(String.valueOf(value));
             }
 
-            if(Double.compare(value, requirement.getExpected()) >= 0){
-                mThumbImageView.setImageResource(R.drawable.ic_thumb_up_24dp);
+            if(mShowThumb) {
+                if (Double.compare(value, requirement.getExpected()) >= 0) {
+                    mThumbImageView.setImageResource(R.drawable.ic_thumb_up_24dp);
+                } else {
+                    mThumbImageView.setImageResource(R.drawable.ic_thumb_down_24dp);
+                }
             } else {
-                mThumbImageView.setImageResource(R.drawable.ic_thumb_down_24dp);
+                mThumbImageView.setVisibility(View.GONE);
             }
         }
 

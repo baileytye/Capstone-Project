@@ -151,12 +151,14 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 case GALLERY_REQUEST_CODE:
                     //data.getData returns the content URI for the selected Image
                     Uri selectedImage = data.getData();
-                    mOption.setImagePath(selectedImage != null ? selectedImage.toString() : "");
+                    mOption.setImagePath((selectedImage == null) ? "" : selectedImage.toString());
                     mPicturesImageView.setImageURI(selectedImage);
                     break;
                 case CAMERA_REQUEST_CODE:
-                    mPicturesImageView.setImageURI(Uri.parse(currentPhotoPath));
-                    mOption.setImagePath(currentPhotoPath);
+                    File f = new File(currentPhotoPath);
+                    Uri takenImage = Uri.fromFile(f);
+                    mOption.setImagePath((takenImage == null) ? "" : takenImage.toString());
+                    mPicturesImageView.setImageURI(takenImage);
                     break;
             }
     }
@@ -254,19 +256,12 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 Timber.d("Permissions not granted");
                 // Permission is not granted
                 // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    // Show an explanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
-                } else {
-                    Timber.d("Requesting permissions");
-                    // No explanation needed; request the permission
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-                    return;
-                }
+                Timber.d("Requesting permissions");
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                return;
             }
         }
 

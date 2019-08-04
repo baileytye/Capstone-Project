@@ -100,7 +100,7 @@
             android:layout_marginBottom="@dimen/card_padding"
             android:backgroundTint="@color/red500"
             android:text="@string/button_rule_out"
-            android:textColor="@color/white"
+            android:textColor="@color/red500"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rv_requirements" />
@@ -113,7 +113,7 @@
             android:layout_marginEnd="24dp"
             android:backgroundTint="@color/colorPrimary"
             android:text="@string/button_details"
-            android:textColor="@color/white"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="@+id/bt_rule_out"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/bt_rule_out"
