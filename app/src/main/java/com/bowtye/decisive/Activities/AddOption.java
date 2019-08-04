@@ -2,8 +2,11 @@ package com.bowtye.decisive.Activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,7 +40,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -151,16 +158,33 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 case GALLERY_REQUEST_CODE:
                     //data.getData returns the content URI for the selected Image
                     Uri selectedImage = data.getData();
-                    mOption.setImagePath((selectedImage == null) ? "" : selectedImage.toString());
-                    mPicturesImageView.setImageURI(selectedImage);
+                    if(selectedImage != null) {
+                        try {
+                            File photoFile = createImageFile();
+                            InputStream inputStream = getContentResolver().openInputStream(selectedImage);
+                            FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                            // Copying
+                            copyStream(Objects.requireNonNull(inputStream), fileOutputStream);
+                            fileOutputStream.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            Timber.e("Error occurred while creating image: %s", e.getMessage());
+                            break;
+                        }
+                    }
+                    saveImageAndSetHeaderImage();
                     break;
                 case CAMERA_REQUEST_CODE:
-                    File f = new File(currentPhotoPath);
-                    Uri takenImage = Uri.fromFile(f);
-                    mOption.setImagePath((takenImage == null) ? "" : takenImage.toString());
-                    mPicturesImageView.setImageURI(takenImage);
+                    saveImageAndSetHeaderImage();
                     break;
             }
+    }
+
+    private void saveImageAndSetHeaderImage(){
+        File f = new File(currentPhotoPath);
+        Uri takenImage = Uri.fromFile(f);
+        mOption.setImagePath((takenImage == null) ? "" : takenImage.toString());
+        mPicturesImageView.setImageURI(takenImage);
     }
 
     @Override
@@ -176,11 +200,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 } else {
                     mSheetDialog.dismiss();
                 }
-                return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request.
         }
     }
 
@@ -264,7 +284,6 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 return;
             }
         }
-
         dispatchTakePictureIntent();
     }
 
@@ -300,8 +319,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss", Locale.ENGLISH).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
-                "Camera");
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -313,6 +331,15 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+    public static void copyStream(InputStream input, OutputStream output) throws IOException {
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = input.read(buffer)) != -1) {
+            output.write(buffer, 0, bytesRead);
+        }
+    }
+
 
     /**
      * showing bottom sheet dialog

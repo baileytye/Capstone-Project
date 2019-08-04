@@ -26,6 +26,7 @@ import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder> {
     RecyclerView.RecycledViewPool sharedPool = new RecyclerView.RecycledViewPool();
@@ -95,6 +96,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
                 mItemHeaderImageView.setVisibility(View.GONE);
             } else {
                 mItemHeaderImageView.setVisibility(View.VISIBLE);
+                Timber.d("Image selected for card project: %s", o.getImagePath());
                 Picasso.get()
                         .load(o.getImagePath())
                         .fit()

@@ -96,10 +96,13 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
             String image = checkForImages(p);
 
+            Timber.d("Image selected for main project: %s", image);
+
             if(image.equals("")) {
                 mProjectImageView.setVisibility(View.GONE);
             } else {
                 mProjectImageView.setVisibility(View.VISIBLE);
+                Picasso.get().setLoggingEnabled(true);
                 Picasso.get()
                         .load(image)
                         .fit()
