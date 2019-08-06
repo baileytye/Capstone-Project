@@ -167,10 +167,11 @@ public class MainActivity extends AppCompatActivity
                 if((p != null) && (p.getOptionList().size() > 0) &&
                         (p.getOptionList().get(0).getRequirementValues().size() < p.getRequirementList().size())){
                     for(int i = 0; i < p.getOptionList().size(); i++){
-                        p.getOptionList().get(i).setRequirementValues(new ArrayList<>());
-                        ArrayList<Double> values = new ArrayList<>(Arrays.asList(new Double[p.getRequirementList().size()]));
-                        Collections.fill(values, 0.0);
-                        p.getOptionList().get(i).setRequirementValues(values);
+
+                        for(int j = p.getOptionList().get(i).getRequirementValues().size();
+                        j < p.getRequirementList().size(); j ++){
+                            p.getOptionList().get(i).getRequirementValues().add(0.0);
+                        }
                     }
                 }
                 mViewModel.insertProjectWithDetails(p);

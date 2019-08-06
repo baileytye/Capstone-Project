@@ -21,5 +21,6 @@
     <dimen name="bottom_sheet_top_padding">8dp</dimen>
 
     <dimen name="text_input_layer_padding">8dp</dimen>
+    <dimen name="recycler_view_padding">8dp</dimen>
 
 </resources>

@@ -25,7 +25,7 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
     private List<Double> mRequirementValues;
     private boolean mShowThumb;
 
-    RequirementsAdapter(List<Requirement> requirements, List<Double> values, boolean showThumb) {
+    public RequirementsAdapter(List<Requirement> requirements, List<Double> values, boolean showThumb) {
         mRequirements = requirements;
         mRequirementValues = values;
         mShowThumb = showThumb;
@@ -45,7 +45,11 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
 
     @Override
     public int getItemCount() {
-        return mRequirements.size();
+        return (mRequirements == null || mRequirementValues == null) ? 0 :mRequirements.size();
+    }
+
+    public void setRequirementValues(List<Double> values){
+        mRequirementValues = values;
     }
 
     class RequirementViewHolder extends RecyclerView.ViewHolder {

@@ -10,10 +10,5 @@
 
     <include layout="@layout/content_add_option" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        style="@style/MyFabStyle"
-        app:srcCompat="@drawable/ic_add_24dp" />
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

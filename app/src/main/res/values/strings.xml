@@ -20,7 +20,8 @@
     <string name="menu_help_and_feedback">Help and feedback</string>
 
     <string name="action_settings">Settings</string>
-    <string name="action_delete_option">Delete Option</string>
+    <string name="action_delete_option">Delete</string>
+    <string name="action_edit">Edit</string>
 
     <!--Labels-->
     <string name="label_choices">Choices:</string>

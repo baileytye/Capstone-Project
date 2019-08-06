@@ -20,6 +20,7 @@ import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
+import com.bowtye.decisive.VerticalSpaceItemDecoration;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -87,6 +88,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             LinearLayoutManager layoutManager = new LinearLayoutManager(itemView.getContext());
             layoutManager.setInitialPrefetchItemCount(mProject.getRequirementList().size());
             mRequirementsRecyclerView.setLayoutManager(layoutManager);
+            mRequirementsRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration(24));
             mRequirementsRecyclerView.setRecycledViewPool(sharedPool);
         }
 
@@ -114,7 +116,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
 
             mRatingTextView.setText(String.valueOf(o.getRating()));
             if(o.getRating() >= 0 && o.getRating() <= 5) {
-                mOptionRatingBar.setRating((float) o.getRating());
+                mOptionRatingBar.setRating(o.getRating());
             } else {
                 mOptionRatingBar.setRating(0);
             }
@@ -122,7 +124,6 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             RequirementsAdapter adapter = new RequirementsAdapter(mProject.getRequirementList(),
                     mProject.getOptionList().get(getAdapterPosition()).getRequirementValues(), false);
             mRequirementsRecyclerView.setAdapter(adapter);
-
         }
 
 

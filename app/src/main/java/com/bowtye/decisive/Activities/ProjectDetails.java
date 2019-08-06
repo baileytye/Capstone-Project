@@ -43,9 +43,9 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
     public static final int RESULT_DELETED = 10;
 
     public static final String EXTRA_PROJECT = "extra_project";
-    public static final String EXTRA_NEW_OPTION = "extra_new_option";
     public static final String EXTRA_OPTION = "extra_option";
-    public static final String EXTRA_EDIT_OPTION = "extra_edit_option";
+    public static final String EXTRA_DELETE_OPTION = "extra_delete_option";
+    public static final String EXTRA_OPTION_ID = "extra_option_id";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -81,8 +81,8 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
             }
         }
 
-        prepareViewModel();
         prepareViews();
+        prepareViewModel();
     }
 
     @Override
@@ -98,8 +98,8 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if ((requestCode == ADD_OPTION_REQUEST_CODE) && (resultCode == RESULT_OK)) {
-            if (data != null && data.hasExtra(EXTRA_NEW_OPTION)) {
-                Option o = data.getParcelableExtra(EXTRA_NEW_OPTION);
+            if (data != null && data.hasExtra(EXTRA_OPTION)) {
+                Option o = data.getParcelableExtra(EXTRA_OPTION);
                 if (mProject.getOptionList() == null) {
                     mProject.setOptionList(new ArrayList<>());
                 }
@@ -108,7 +108,7 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
                 Timber.d("Project: %s inserted into the database", (o != null) ? o.getName() : "NULL");
             }
         } else if(requestCode == EDIT_OPTION_REQUEST_CODE){
-            if(data != null && data.hasExtra(EXTRA_EDIT_OPTION)) {
+            if(data != null && data.hasExtra(EXTRA_DELETE_OPTION)) {
                 switch (resultCode) {
                     case RESULT_DELETED:
                         mViewModel.deleteOption(mProject.getOptionList().get(mItemSelected));
@@ -182,7 +182,9 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
     @Override
     public void onOptionItemClicked(int position) {
         Intent intent = new Intent(getApplicationContext(), OptionDetails.class);
-        intent.putExtra(EXTRA_OPTION, mProject.getOptionList().get(position));
+        intent.putExtra(EXTRA_OPTION_ID, mProject.getOptionList().get(position).getOptionId());
+        intent.putExtra(EXTRA_PROJECT, mProject);
+
         mItemSelected = position;
 
         Transition transition = new Slide(Gravity.START);

@@ -107,6 +107,23 @@ public class Requirement implements Parcelable {
         return(averageLabels[2]);
     }
 
+    public static int getAveragingIndex(double value, Context context){
+        switch((int) value){
+            case (int) FAR_ABOVE_AVERAGE:
+                return 0;
+            case (int) ABOVE_AVERAGE:
+                return 1;
+            case (int) AVERAGE:
+                return 2;
+            case (int) BELOW_AVERAGE:
+                return 3;
+            case (int) FAR_BELOW_AVERAGE:
+                return 4;
+            default:
+                return 2;
+        }
+    }
+
     public int getReqId() {
         return reqId;
     }

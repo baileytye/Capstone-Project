@@ -74,6 +74,22 @@ public class ProjectRepository {
         return projectListDao.loadProjectById(id);
     }
 
+    public LiveData<Option> getSelectedOption(int id){
+        return projectListDao.loadOptionById(id);
+    }
+
+    public void insert(final ProjectWithDetails project){
+        new InsertAsyncTask().execute(project);
+    }
+
+    public void delete(final ProjectWithDetails project){
+        new DeleteAsyncTask().execute(project);
+    }
+
+    public void deleteOption(final Option option){
+        new DeleteOptionAsyncTask().execute(option);
+    }
+
     private static class InsertAsyncTask extends AsyncTask<ProjectWithDetails,Void,Void> {
 
         @Override
@@ -90,18 +106,6 @@ public class ProjectRepository {
             projectListDao.insertOption(options[0]);
             return null;
         }
-    }
-
-    public void insert(final ProjectWithDetails project){
-        new InsertAsyncTask().execute(project);
-    }
-
-    public void delete(final ProjectWithDetails project){
-        new DeleteAsyncTask().execute(project);
-    }
-
-    public void deleteOption(final Option option){
-        new DeleteOptionAsyncTask().execute(option);
     }
 
     private static class DeleteAsyncTask extends AsyncTask<ProjectWithDetails, Void, Void>{

@@ -11,18 +11,38 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="16dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_notes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_card"
+            android:padding="@dimen/card_notes_padding"
+            app:layout_constraintEnd_toEndOf="@+id/rv_add_option"
+            app:layout_constraintStart_toStartOf="@+id/rv_add_option"
+            app:layout_constraintTop_toBottomOf="@+id/rv_add_option">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_input_et_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@null"
+                android:hint="@string/hint_notes"
+                android:padding="@dimen/card_notes_padding" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/text_input_layer_padding"
-            android:layout_marginTop="@dimen/text_input_layer_padding"
-            android:layout_marginEnd="@dimen/text_input_layer_padding"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/iv_pictures"
+            app:layout_constraintStart_toStartOf="@+id/iv_pictures"
+            app:layout_constraintTop_toBottomOf="@+id/iv_pictures">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/ti_option_name"
@@ -56,21 +76,24 @@
             app:layout_constraintEnd_toEndOf="@+id/textInputLayout2"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout2"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
-            tools:itemCount="5"
+            tools:itemCount="3"
             tools:listitem="@layout/list_item_add_option">
 
         </androidx.recyclerview.widget.RecyclerView>
 
         <ImageView
             android:id="@+id/iv_pictures"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="0dp"
+            android:layout_height="240dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:scaleType="centerCrop"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/bg_card_with_ripple"
+            android:contentDescription="@string/content_description_option_images"
+            android:scaleType="center"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rv_add_option"
-            tools:srcCompat="@tools:sample/backgrounds/scenic"
-            android:contentDescription="@string/content_description_option_images" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@drawable/ic_add_a_photo_24dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

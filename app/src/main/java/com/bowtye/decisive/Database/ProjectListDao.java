@@ -26,6 +26,9 @@ public abstract class ProjectListDao {
     @Query("SELECT * FROM project WHERE id = :id")
     abstract LiveData<ProjectWithDetails> loadProjectById(int id);
 
+    @Query("SELECT * FROM option WHERE optionId = :id")
+    abstract LiveData<Option> loadOptionById(int id);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract long insertProject(Project project);
 

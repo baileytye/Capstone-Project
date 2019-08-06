@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
 
@@ -25,16 +26,18 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
 
 
     private List<Requirement> mRequirements;
+    private Option mOption;
 
-    public AddOptionAdapter(List<Requirement> requirements) {
+    public AddOptionAdapter(List<Requirement> requirements, Option option) {
         mRequirements = requirements;
+        mOption = option;
     }
 
     @NonNull
     @Override
     public AddOptionRequirementViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_add_option, parent, false);
-        return new AddOptionRequirementViewHolder(v);
+        return new AddOptionRequirementViewHolder(v, (mOption != null));
     }
 
     @Override
@@ -61,9 +64,11 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
         @BindView(R.id.tv_requirement_name)
         TextView mRequirementName;
 
-        AddOptionRequirementViewHolder(@NonNull View itemView) {
-            super(itemView);
+        boolean mIsEdit;
 
+        AddOptionRequirementViewHolder(@NonNull View itemView, boolean isEdit) {
+            super(itemView);
+            mIsEdit = isEdit;
             ButterKnife.bind(this, itemView);
         }
 
@@ -71,6 +76,23 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
             Requirement.Type type = mRequirements.get(position).getType();
             setVisibleType(type);
             mRequirementName.setText(mRequirements.get(getAdapterPosition()).getName());
+            if(mIsEdit){
+                switch(type){
+                    case starRating:
+                        mRequirementValueRatingBar.setRating(mOption.getRequirementValues().get(position).floatValue());
+                        break;
+                    case checkbox:
+                        mRequirementValueCheckBox.setChecked(mOption.getRequirementValues().get(position) == 1);
+                        break;
+                    case averaging:
+                        mRequirementValueSpinner.setSelection(Requirement.getAveragingIndex(
+                                mOption.getRequirementValues().get(position), itemView.getContext()));
+                        break;
+                    case number:
+                        mRequirementValueEditText.setText(mOption.getRequirementValues().get(position).toString());
+                        break;
+                }
+            }
         }
 
         void setVisibleType(Requirement.Type type) {

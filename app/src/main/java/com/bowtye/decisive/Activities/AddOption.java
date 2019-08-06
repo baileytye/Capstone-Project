@@ -2,11 +2,8 @@ package com.bowtye.decisive.Activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,8 +16,8 @@ import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,11 +33,11 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,11 +51,10 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import timber.log.Timber;
 
 import static com.bowtye.decisive.Activities.AddProjectActivity.EXTRA_PROJECT;
-import static com.bowtye.decisive.Activities.ProjectDetails.EXTRA_NEW_OPTION;
+import static com.bowtye.decisive.Activities.ProjectDetails.EXTRA_OPTION;
 import static com.bowtye.decisive.Fragments.BottomSheetFragment.CHOOSE_IMAGE;
 import static com.bowtye.decisive.Fragments.BottomSheetFragment.TAKE_PHOTO;
 
@@ -76,8 +72,6 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
     Toolbar mToolbar;
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitleTextView;
-    @BindView(R.id.fab)
-    FloatingActionButton mFab;
     @BindView(R.id.rv_add_option)
     RecyclerView mRecyclerView;
     @BindView(R.id.ti_option_name)
@@ -86,6 +80,8 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
     TextInputEditText mPriceEditText;
     @BindView(R.id.iv_pictures)
     ImageView mPicturesImageView;
+    @BindView(R.id.text_input_et_notes)
+    EditText mNotesEditText;
 
     RecyclerView.LayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
@@ -95,6 +91,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
     String currentPhotoPath;
 
     BottomSheetFragment mSheetDialog;
+    boolean isEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +101,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         ButterKnife.bind(this);
 
         mOption = new Option("", 0, (float) 0, false, new ArrayList<>(), "", "");
+        isEdit = false;
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -112,6 +110,10 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 if (p != null) {
                     mRequirements = p.getRequirementList();
                 }
+            }
+            if(intent.hasExtra(EXTRA_OPTION)){
+                mOption = intent.getParcelableExtra(EXTRA_OPTION);
+                isEdit = true;
             }
         }
         prepareViews();
@@ -142,7 +144,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                         break;
                     case VALIDATION_OK:
                         Intent out = new Intent();
-                        out.putExtra(EXTRA_NEW_OPTION, mOption);
+                        out.putExtra(EXTRA_OPTION, mOption);
                         setResult(RESULT_OK, out);
                         finishAfterTransition();
                         return true;
@@ -184,6 +186,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         File f = new File(currentPhotoPath);
         Uri takenImage = Uri.fromFile(f);
         mOption.setImagePath((takenImage == null) ? "" : takenImage.toString());
+        mPicturesImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         mPicturesImageView.setImageURI(takenImage);
     }
 
@@ -218,11 +221,44 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new AddOptionAdapter(mRequirements);
-        mRecyclerView.setAdapter(mAdapter);
-        if(!mOption.getImagePath().equals("")){
-            mPicturesImageView.setImageURI(Uri.parse(currentPhotoPath));
+
+
+        if(isEdit) {
+            mOptionNameEditText.setText(mOption.getName());
+            mPriceEditText.setText(String.valueOf(mOption.getPrice()));
+            mNotesEditText.setText(mOption.getNotes());
+            mAdapter = new AddOptionAdapter(mRequirements, mOption);
+
+            if(!mOption.getImagePath().equals("")) {
+                Picasso.get()
+                        .load(mOption.getImagePath())
+                        .fit()
+                        .centerCrop()
+                        .into(mPicturesImageView);
+                mPicturesImageView.setOnClickListener(null);
+            } else {
+                setPlaceholderImage();
+            }
+        } else {
+            if (!mOption.getImagePath().equals("")) {
+                mPicturesImageView.setImageURI(Uri.parse(currentPhotoPath));
+                mPicturesImageView.setOnClickListener(null);
+            } else {
+                setPlaceholderImage();
+            }
+            mAdapter = new AddOptionAdapter(mRequirements, null);
         }
+
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void setPlaceholderImage(){
+        mPicturesImageView.setImageResource(R.drawable.ic_add_a_photo_24dp);
+        mPicturesImageView.setOnClickListener(view -> {
+            mSheetDialog = new BottomSheetFragment(this);
+            FragmentManager fm = getSupportFragmentManager();
+            mSheetDialog.show(fm, "modalSheetDialog");
+        });
     }
 
     private int validateAndSave() {
@@ -242,16 +278,33 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         }
         mOption.setPrice(price);
 
-        for (int i = 0; i < mRequirements.size(); i++) {
-            AddOptionAdapter.AddOptionRequirementViewHolder holder =
-                    (AddOptionAdapter.AddOptionRequirementViewHolder)
-                            mRecyclerView.findViewHolderForAdapterPosition(i);
-            if (holder != null) {
-                mOption.getRequirementValues().add(holder.getRequirementValue());
-            } else {
-                return VALIDATION_HOLDER_ERROR;
+        if(isEdit) {
+            Timber.d("IsEdit, setting requirement values");
+            for (int i = 0; i < mRequirements.size(); i++) {
+                AddOptionAdapter.AddOptionRequirementViewHolder holder =
+                        (AddOptionAdapter.AddOptionRequirementViewHolder)
+                                mRecyclerView.findViewHolderForAdapterPosition(i);
+                if (holder != null) {
+                    mOption.getRequirementValues().set(i, holder.getRequirementValue());
+                } else {
+                    return VALIDATION_HOLDER_ERROR;
+                }
+            }
+        } else {
+            for (int i = 0; i < mRequirements.size(); i++) {
+                AddOptionAdapter.AddOptionRequirementViewHolder holder =
+                        (AddOptionAdapter.AddOptionRequirementViewHolder)
+                                mRecyclerView.findViewHolderForAdapterPosition(i);
+                if (holder != null) {
+                    mOption.getRequirementValues().add(holder.getRequirementValue());
+                } else {
+                    return VALIDATION_HOLDER_ERROR;
+                }
             }
         }
+
+        mOption.setNotes(mNotesEditText.getText().toString());
+
         return VALIDATION_OK;
     }
 
@@ -338,17 +391,6 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         while ((bytesRead = input.read(buffer)) != -1) {
             output.write(buffer, 0, bytesRead);
         }
-    }
-
-
-    /**
-     * showing bottom sheet dialog
-     */
-    @OnClick(R.id.fab)
-    public void showBottomSheetDialog() {
-        mSheetDialog = new BottomSheetFragment(this);
-        FragmentManager fm = getSupportFragmentManager();
-        mSheetDialog.show(fm, "modalSheetDialog");
     }
 
     @Override
