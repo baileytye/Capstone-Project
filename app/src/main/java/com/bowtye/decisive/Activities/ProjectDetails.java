@@ -33,7 +33,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-import static com.bowtye.decisive.Activities.MainActivity.EXTRA_PROJECT_ID;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_DELETE_OPTION;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_OPTION;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_OPTION_ID;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT_ID;
 
 public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.OptionItemClickListener {
 
@@ -41,11 +45,6 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
     private static final int EDIT_OPTION_REQUEST_CODE = 92;
 
     public static final int RESULT_DELETED = 10;
-
-    public static final String EXTRA_PROJECT = "extra_project";
-    public static final String EXTRA_OPTION = "extra_option";
-    public static final String EXTRA_DELETE_OPTION = "extra_delete_option";
-    public static final String EXTRA_OPTION_ID = "extra_option_id";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;

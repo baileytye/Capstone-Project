@@ -53,10 +53,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-import static com.bowtye.decisive.Activities.AddProjectActivity.EXTRA_PROJECT;
-import static com.bowtye.decisive.Activities.ProjectDetails.EXTRA_OPTION;
 import static com.bowtye.decisive.Fragments.BottomSheetFragment.CHOOSE_IMAGE;
 import static com.bowtye.decisive.Fragments.BottomSheetFragment.TAKE_PHOTO;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_OPTION;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT;
 
 public class AddOption extends AppCompatActivity implements BottomSheetFragment.OnBottomSheetClickCallback {
 

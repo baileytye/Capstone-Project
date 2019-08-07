@@ -29,16 +29,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-import static com.bowtye.decisive.Activities.MainActivity.EXTRA_EDIT_PROJECT;
-import static com.bowtye.decisive.Activities.MainActivity.EXTRA_NEW_PROJECT;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_EDIT_PROJECT;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_NEW_PROJECT;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT;
 
 public class AddProjectActivity extends AppCompatActivity {
 
     public static final int VALIDATION_OK = 55;
     public static final int VALIDATION_SAVE_REQ_ERROR = -1;
     public static final int VALIDATION_NAME_ERROR = -2;
-
-    public static final String EXTRA_PROJECT = "extra_project";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;

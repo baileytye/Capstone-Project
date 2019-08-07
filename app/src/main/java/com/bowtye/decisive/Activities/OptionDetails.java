@@ -39,10 +39,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-import static com.bowtye.decisive.Activities.AddProjectActivity.EXTRA_PROJECT;
-import static com.bowtye.decisive.Activities.ProjectDetails.EXTRA_DELETE_OPTION;
-import static com.bowtye.decisive.Activities.ProjectDetails.EXTRA_OPTION;
-import static com.bowtye.decisive.Activities.ProjectDetails.EXTRA_OPTION_ID;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_DELETE_OPTION;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_OPTION;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_OPTION_ID;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT;
 
 public class OptionDetails extends AppCompatActivity {
 

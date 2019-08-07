@@ -69,6 +69,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_card"
         android:padding="@dimen/card_notes_padding"
+        app:layout_constraintEnd_toEndOf="@+id/rv_requirements"
         app:layout_constraintStart_toStartOf="@+id/tv_price"
         app:layout_constraintTop_toBottomOf="@+id/rv_requirements">
 

@@ -3,6 +3,22 @@ package com.bowtye.decisive.Activities;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.Adapters.MainAdapter;
 import com.bowtye.decisive.BuildConfig;
@@ -10,34 +26,10 @@ import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ViewModels.MainViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import android.transition.Slide;
-import android.transition.Transition;
-import android.view.Gravity;
-
-import androidx.annotation.Nullable;
-import androidx.core.view.GravityCompat;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-
-import android.view.MenuItem;
-
 import com.google.android.material.navigation.NavigationView;
-import com.squareup.picasso.Picasso;
 
-import androidx.drawerlayout.widget.DrawerLayout;
+import org.jetbrains.annotations.NotNull;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.Menu;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,13 +37,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_EDIT_PROJECT;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_NEW_PROJECT;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT_ID;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MainAdapter.ProjectItemClickListener {
-
-    public static final String EXTRA_PROJECT_ID = "extra_project_id";
-    public static final String EXTRA_NEW_PROJECT = "extra_new_project";
-    public static final String EXTRA_EDIT_PROJECT = "extra_edit_project";
 
     public static final int ADD_PROJECT_REQUEST_CODE = 3423;
 
@@ -132,9 +124,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NotNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Timber.d("Nav item selected");
+
+        switch (id){
+            case R.id.nav_logout:
+                Timber.d("Logging out");
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                break;
+        }
 
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
