@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:backgroundTint="@color/white"
+    app:cardCornerRadius="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_card">
+
+        <TextView
+            android:id="@+id/tv_requirement_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/card_padding"
+            android:layout_marginTop="@dimen/card_padding"
+            android:text="@string/placeholder_requirement_label"
+            android:textAppearance="@style/CardHeadingTextStyle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/grey6"
+            app:layout_constraintTop_toBottomOf="@+id/tv_requirement_name" />
+
+        <TextView
+            android:id="@+id/label_required"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Expected:"
+            android:textAppearance="@style/CardSubHeadingTextStyle"
+            app:layout_constraintStart_toStartOf="@+id/tv_requirement_name"
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+        <TextView
+            android:id="@+id/tv_expected_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="3"
+            app:layout_constraintBottom_toBottomOf="@+id/label_required"
+            app:layout_constraintStart_toEndOf="@+id/label_required"
+            app:layout_constraintTop_toTopOf="@+id/label_required"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageView
+            android:id="@+id/cb_expected_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/label_required"
+            app:layout_constraintStart_toEndOf="@+id/label_required"
+            app:layout_constraintTop_toTopOf="@+id/label_required" />
+
+        <RatingBar
+            android:id="@+id/rb_expected_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/label_required"
+            app:layout_constraintStart_toEndOf="@+id/label_required"
+            app:layout_constraintTop_toTopOf="@+id/label_required"
+            style="@style/Widget.AppCompat.RatingBar.Small"/>
+
+        <TextView
+            android:id="@+id/label_actual"
+            android:layout_width="wrap_content"
+            android:layout_height="19dp"
+            android:layout_marginTop="12dp"
+            android:text="Actual:"
+            android:textAppearance="@style/CardSubHeadingTextStyle"
+            app:layout_constraintStart_toStartOf="@+id/label_required"
+            app:layout_constraintTop_toBottomOf="@+id/label_required" />
+
+        <TextView
+            android:id="@+id/tv_requirement_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="10"
+            app:layout_constraintBottom_toBottomOf="@+id/label_actual"
+            app:layout_constraintStart_toEndOf="@+id/label_actual"
+            app:layout_constraintTop_toTopOf="@+id/label_actual"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageView
+            android:id="@+id/cb_requirement_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/label_actual"
+            app:layout_constraintStart_toEndOf="@+id/label_actual"
+            app:layout_constraintTop_toTopOf="@+id/label_actual" />
+
+        <RatingBar
+            android:id="@+id/rb_requirement_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/label_actual"
+            app:layout_constraintStart_toEndOf="@+id/label_actual"
+            app:layout_constraintTop_toTopOf="@+id/label_actual"
+            style="@style/Widget.AppCompat.RatingBar.Small"/>
+
+        <TextView
+            android:id="@+id/label_priority"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Priority:"
+            android:textAppearance="@style/CardSubHeadingTextStyle"
+            app:layout_constraintStart_toStartOf="@+id/label_actual"
+            app:layout_constraintTop_toBottomOf="@+id/label_actual" />
+
+        <TextView
+            android:id="@+id/tv_priority"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="High"
+            app:layout_constraintBottom_toBottomOf="@+id/label_priority"
+            app:layout_constraintStart_toEndOf="@+id/label_priority"
+            app:layout_constraintTop_toTopOf="@+id/label_priority" />
+
+        <TextView
+            android:id="@+id/label_points_toward_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="16dp"
+            android:text="Points toward total:"
+            android:textAppearance="@style/CardSubHeadingTextStyle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/label_priority"
+            app:layout_constraintTop_toBottomOf="@+id/label_priority" />
+
+        <TextView
+            android:id="@+id/tv_points_toward_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="30"
+            app:layout_constraintBottom_toBottomOf="@+id/label_points_toward_total"
+            app:layout_constraintStart_toEndOf="@+id/label_points_toward_total"
+            app:layout_constraintTop_toTopOf="@+id/label_points_toward_total" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/card_padding"
             android:layout_marginEnd="@dimen/card_padding"
-            android:padding = "@dimen/recycler_view_padding"
+            android:padding="@dimen/recycler_view_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider"
@@ -116,31 +116,14 @@
             app:layout_constraintTop_toTopOf="@+id/bt_rule_out"
             app:layout_constraintVertical_bias="0.0" />
 
-        <RatingBar
-            android:id="@+id/rb_option_rating"
-            style="@style/Widget.AppCompat.RatingBar.Small"
-            android:layout_width="80dp"
-            android:layout_height="16dp"
-            android:numStars="5"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_rating"
-            app:layout_constraintEnd_toEndOf="@+id/bt_details"
-            app:layout_constraintTop_toTopOf="@+id/tv_rating" />
-
-        <TextView
-            android:id="@+id/tv_rating"
+        <include
+            layout="@layout/layout_rating_with_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/placeholder_rating"
-            android:textAppearance="@style/CardSubHeadingTextStyle"
-            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_item_card_price"
-            app:layout_constraintEnd_toStartOf="@+id/rb_option_rating"
+            app:layout_constraintEnd_toEndOf="@+id/bt_details"
             app:layout_constraintStart_toStartOf="@+id/bt_details"
-            app:layout_constraintTop_toTopOf="@+id/tv_item_card_title"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="@+id/tv_item_card_price" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

@@ -378,7 +378,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
                     mExpectedCheckBox.setChecked(requirement.getExpected() == 1);
                     break;
                 case averaging:
-                    mExpectedAveragesSpinner.setSelection((int)requirement.getExpected());
+                    mExpectedAveragesSpinner.setSelection(Requirement.getAveragingIndex(requirement.getExpected(), this.mItemView.getContext()));
                     break;
                 case starRating:
                     mExpectedRatingBar.setRating((float)requirement.getExpected());

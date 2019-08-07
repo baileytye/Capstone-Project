@@ -56,7 +56,7 @@ public class OptionDetails extends AppCompatActivity {
     TextView mToolbarTitleTextView;
     @BindView(R.id.tv_rating)
     TextView mRatingTextView;
-    @BindView(R.id.rb_rating)
+    @BindView(R.id.rb_option_rating)
     RatingBar mRatingBar;
     @BindView(R.id.text_input_et_notes)
     EditText mNotesTextInputEditText;
@@ -66,6 +66,8 @@ public class OptionDetails extends AppCompatActivity {
     TextView mPriceTextView;
     @BindView(R.id.iv_option_image)
     ImageView mOptionImageView;
+    @BindView(R.id.layout_rating_with_number)
+    View mRatingWithNumberView;
 
     private int mOptionId;
     Option mOption;
@@ -161,6 +163,13 @@ public class OptionDetails extends AppCompatActivity {
         mAdapter = new RequirementsAdapter(mRequirements, null, true);
         mRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration(48));
         mRecyclerView.setAdapter(mAdapter);
+
+        mRatingWithNumberView.setOnClickListener(view -> {
+            Intent intent = new Intent(this.getApplicationContext(), RatingsActivity.class);
+            intent.putExtra(EXTRA_OPTION, mOption);
+            intent.putExtra(EXTRA_PROJECT, mProject);
+            startActivity(intent);
+        });
     }
 
     private void fillData(){
