@@ -70,8 +70,8 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.toolbar_title)
-    TextView mToolbarTitleTextView;
+//    @BindView(R.id.toolbar_title)
+//    TextView mToolbarTitleTextView;
     @BindView(R.id.rv_add_option)
     RecyclerView mRecyclerView;
     @BindView(R.id.ti_option_name)
@@ -216,7 +216,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        mToolbarTitleTextView.setText("Add Option");
+//        mToolbarTitleTextView.setText("Add Option");
 
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);

@@ -17,6 +17,7 @@ import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.VerticalSpaceItemDecoration;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,12 +35,12 @@ public class RatingsActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.toolbar_title)
-    TextView mToolbarTitle;
+//    @BindView(R.id.toolbar_title)
+//    TextView mToolbarTitle;
+    @BindView(R.id.toolbar_layout)
+    CollapsingToolbarLayout mToolbarLayout;
     @BindView(R.id.rv_ratings)
     RecyclerView mRecyclerView;
-    @BindView(R.id.tv_option_title)
-    TextView mOptionTitleTextView;
     @BindView(R.id.rb_option_rating)
     RatingBar mOptionRatingBar;
     @BindView(R.id.tv_rating)
@@ -91,7 +92,8 @@ public class RatingsActivity extends AppCompatActivity {
 
         Timber.d("Rating: %f", mOption.getRating());
 
-        mOptionTitleTextView.setText(mOption.getName());
+        mToolbarLayout.setTitle(mOption.getName());
+        //mOptionTitleTextView.setText(mOption.getName());
         mRatingTextView.setText(String.valueOf(mOption.getRating()));
         mOptionRatingBar.setRating(mOption.getRating());
 

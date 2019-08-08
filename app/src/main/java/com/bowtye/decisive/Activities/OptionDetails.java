@@ -28,6 +28,7 @@ import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.VerticalSpaceItemDecoration;
 import com.bowtye.decisive.ViewModels.OptionDetailsViewModel;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,8 +53,10 @@ public class OptionDetails extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.toolbar_title)
-    TextView mToolbarTitleTextView;
+//    @BindView(R.id.toolbar_title)
+//    TextView mToolbarTitleTextView;
+    @BindView(R.id.toolbar_layout)
+    CollapsingToolbarLayout mToolbarLayout;
     @BindView(R.id.tv_rating)
     TextView mRatingTextView;
     @BindView(R.id.rb_option_rating)
@@ -173,7 +176,8 @@ public class OptionDetails extends AppCompatActivity {
     }
 
     private void fillData(){
-        mToolbarTitleTextView.setText(mOption.getName());
+//        mToolbarTitleTextView.setText(mOption.getName());
+        mToolbarLayout.setTitle(mOption.getName());
 
         mPriceTextView.setText("$" + mOption.getPrice());
         mRatingTextView.setText(String.valueOf(mOption.getRating()));

@@ -22,6 +22,7 @@ import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ViewModels.DetailsViewModel;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
@@ -48,8 +49,10 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.toolbar_title)
-    TextView mToolbarTitle;
+//    @BindView(R.id.toolbar_title)
+//    TextView mToolbarTitle;
+    @BindView(R.id.toolbar_layout)
+    CollapsingToolbarLayout mToolbarLayout;
     @BindView(R.id.rv_details)
     RecyclerView mRecyclerView;
     @BindView(R.id.fab)
@@ -160,7 +163,8 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
 
             setEmptyMessageVisibility();
 
-            mToolbarTitle.setText(mProject.getProject().getName());
+            mToolbarLayout.setTitle(mProject.getProject().getName());
+//            mToolbarTitle.setText(mProject.getProject().getName());
             if (mProject.getOptionList() != null && mProject.getRequirementList() != null) {
                 Timber.d("Number of requirements loaded: %d",
                         ((this.mProject.getRequirementList() != null) ? this.mProject.getRequirementList().size() : 0));

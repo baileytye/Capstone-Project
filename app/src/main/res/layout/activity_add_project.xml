@@ -8,7 +8,7 @@
     tools:context=".Activities.AddProjectActivity"
     tools:menu="@menu/add_project">
 
-    <include layout="@layout/toolbar_add_project" />
+    <include layout="@layout/toolbar" />
 
     <include layout="@layout/content_add_project" />
 

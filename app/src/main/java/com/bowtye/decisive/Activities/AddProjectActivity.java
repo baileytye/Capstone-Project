@@ -1,10 +1,13 @@
 package com.bowtye.decisive.Activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,12 +15,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bowtye.decisive.Adapters.AddProjectAdapter;
 import com.bowtye.decisive.Helpers.ViewUtils;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.ProjectWithDetails;
+import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,23 +38,27 @@ import timber.log.Timber;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_EDIT_PROJECT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_NEW_PROJECT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_REQUIREMENT;
 
 public class AddProjectActivity extends AppCompatActivity {
 
-    public static final int VALIDATION_OK = 55;
+    public static final int VALIDATION_OK = 1;
     public static final int VALIDATION_SAVE_REQ_ERROR = -1;
     public static final int VALIDATION_NAME_ERROR = -2;
+    private static final int ADD_REQUIREMENT_REQUEST_CODE = 17;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.et_project_name)
-    EditText mProjectNameEditText;
-    @BindView(R.id.rv_add_requirements)
-    RecyclerView mRecyclerView;
+    @BindView(R.id.toolbar_layout)
+    CollapsingToolbarLayout mToolbarLayout;
     @BindView(R.id.fab)
     FloatingActionButton mFab;
     @BindView(R.id.label_empty_requirements)
     TextView mEmptyRequirementsLabel;
+    @BindView(R.id.rv_requirements)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.et_project_name)
+    EditText mProjectNameEditText;
 
     private RecyclerView.LayoutManager mLayoutManager;
     private AddProjectAdapter mAdapter;
@@ -99,6 +109,18 @@ public class AddProjectActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == ADD_REQUIREMENT_REQUEST_CODE && data != null){
+            if(data.hasExtra(EXTRA_REQUIREMENT) && resultCode == RESULT_OK){
+                Requirement requirement = data.getParcelableExtra(EXTRA_REQUIREMENT);
+                mAdapter.addRequirement(requirement);
+                Timber.d( "Added %s", Objects.requireNonNull(requirement).getName());
+                checkIfEmpty();
+            }
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NotNull MenuItem item) {
 
         switch (item.getItemId()) {
@@ -137,7 +159,12 @@ public class AddProjectActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        mProjectNameEditText.setText(mProject.getProject().getName());
+        if(!mProject.getProject().getName().equals("")){
+            mProjectNameEditText.setText(mProject.getProject().getName());
+            mToolbarLayout.setTitle("Edit project");
+        } else {
+            mToolbarLayout.setTitle("Add project");
+        }
 
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
@@ -145,12 +172,17 @@ public class AddProjectActivity extends AppCompatActivity {
         mAdapter = new AddProjectAdapter(this, (mProject == null) ? null : mProject.getRequirementList());
         mRecyclerView.setAdapter(mAdapter);
 
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(getDrawable(R.drawable.divider)));
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
+
         checkIfEmpty();
 
         mFab.setOnClickListener(view ->{
-            mAdapter.addRequirementCard();
-            mRecyclerView.setVisibility(View.VISIBLE);
-            mEmptyRequirementsLabel.setVisibility(View.INVISIBLE);
+            Intent intent = new Intent(this, AddRequirement.class);
+            startActivityForResult(intent, ADD_REQUIREMENT_REQUEST_CODE,
+                    ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
         });
     }
 
@@ -176,15 +208,6 @@ public class AddProjectActivity extends AppCompatActivity {
         }
 
         mProject.getProject().setName(name);
-
-        for(int i = 0 ; i < mAdapter.getItemCount(); i++){
-            AddProjectAdapter.AddRequirementViewHolder holder = (AddProjectAdapter.AddRequirementViewHolder)
-                    mRecyclerView.findViewHolderForAdapterPosition(i);
-
-            if(holder!= null && !holder.getIsSaved()){
-                return VALIDATION_SAVE_REQ_ERROR;
-            }
-        }
         mProject.setRequirementList(mAdapter.getRequirements());
 
         return VALIDATION_OK;

@@ -4,15 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.MainActivity">
+    android:fitsSystemWindows="true"
+    tools:context=".Activities.AddRequirement">
 
     <include layout="@layout/toolbar" />
 
-    <include layout="@layout/content_main" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        style="@style/MyFabStyle"
-        app:srcCompat="@drawable/ic_add_24dp" />
+    <include layout="@layout/content_add_requirement" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

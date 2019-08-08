@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.Models.Option;
@@ -97,6 +99,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             String image = checkForImages(p);
 
             Timber.d("Image selected for main project: %s", image);
+
+            mProjectImageView.setClipToOutline(true);
 
             if(image.equals("")) {
                 mProjectImageView.setVisibility(View.GONE);

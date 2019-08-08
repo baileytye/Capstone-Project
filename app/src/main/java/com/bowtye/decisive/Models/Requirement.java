@@ -37,23 +37,25 @@ public class Requirement implements Parcelable {
 
     @TypeConverters(Converters.class)
     private Importance importance;
-    private double expected;
+    private Double expected;
     private String notes;
-    private double weight;
+    private Double weight;
+    private Boolean moreIsBetter;
 
     @Ignore
-    public Requirement(String name, Type type, Importance importance, double expected,
-                       String notes, double weight) {
+    public Requirement(String name, Type type, Importance importance, Double expected,
+                       String notes, Double weight, Boolean moreIsBetter) {
         this.name = name;
         this.type = type;
         this.importance = importance;
         this.expected = expected;
         this.notes = notes;
         this.weight = weight;
+        this.moreIsBetter = moreIsBetter;
     }
 
-    public Requirement(int reqId, int projectId, String name, Type type, Importance importance, double expected,
-                       String notes, double weight) {
+    public Requirement(int reqId, int projectId, String name, Type type, Importance importance, Double expected,
+                       String notes, Double weight, Boolean moreIsBetter) {
         this.reqId = reqId;
         this.projectId = projectId;
         this.name = name;
@@ -62,6 +64,7 @@ public class Requirement implements Parcelable {
         this.expected = expected;
         this.notes = notes;
         this.weight = weight;
+        this.moreIsBetter = moreIsBetter;
     }
 
     public static double getAveragingValue(String type, Context context) {
@@ -164,11 +167,11 @@ public class Requirement implements Parcelable {
         this.importance = importance;
     }
 
-    public double getExpected() {
+    public Double getExpected() {
         return expected;
     }
 
-    public void setExpected(double expected) {
+    public void setExpected(Double expected) {
         this.expected = expected;
     }
 
@@ -180,12 +183,20 @@ public class Requirement implements Parcelable {
         this.notes = notes;
     }
 
-    public double getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
-    public void setWeight(double weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
+    }
+
+    public Boolean getMoreIsBetter() {
+        return moreIsBetter;
+    }
+
+    public void setMoreIsBetter(Boolean moreIsBetter) {
+        this.moreIsBetter = moreIsBetter;
     }
 
     public static Type getTypeFromString(String typeString) {
@@ -202,7 +213,7 @@ public class Requirement implements Parcelable {
         return Requirement.Type.number;
     }
 
-    public void setImportanceAndWeightFromString(String importanceString, double customWeight){
+    public void setImportanceAndWeightFromString(String importanceString, Double customWeight){
         switch (importanceString) {
             case "High":
                 importance =  Importance.high;
@@ -251,6 +262,7 @@ public class Requirement implements Parcelable {
         dest.writeDouble(this.expected);
         dest.writeString(this.notes);
         dest.writeDouble(this.weight);
+        dest.writeValue(this.moreIsBetter);
     }
 
     @Ignore
@@ -265,6 +277,7 @@ public class Requirement implements Parcelable {
         this.expected = in.readDouble();
         this.notes = in.readString();
         this.weight = in.readDouble();
+        this.moreIsBetter = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }
 
     public static final Creator<Requirement> CREATOR = new Creator<Requirement>() {

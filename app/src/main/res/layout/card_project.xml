@@ -6,21 +6,17 @@
     android:id="@+id/card_project"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/card_margin_edges"
-    android:layout_marginTop="4dp"
-    android:layout_marginRight="@dimen/card_margin_edges"
-    android:layout_marginBottom="4dp"
     android:backgroundTint="@color/white"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
-    app:cardCornerRadius="10dp">
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_card"
         android:orientation="vertical">
 
         <TextView
@@ -45,17 +41,20 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/label_choices"
             app:layout_constraintTop_toBottomOf="@+id/label_choices" />
-
-        <ImageView
-            android:id="@+id/iv_project_card_header"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+>
+            <ImageView
+                android:id="@+id/iv_project_card_header"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:scaleType="centerCrop"
+                android:visibility="visible"
+                android:background="@drawable/bg_card"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <TextView
             android:id="@+id/tv_project_card_title"
@@ -82,7 +81,6 @@
             android:id="@+id/iv_details_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
             android:layout_marginEnd="24dp"
             android:tint="@color/grey3"
             app:layout_constraintBottom_toBottomOf="@+id/label_requirements_count"

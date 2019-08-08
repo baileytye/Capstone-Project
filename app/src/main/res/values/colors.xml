@@ -4,8 +4,11 @@
     <color name="colorPrimaryDark">#006DB3</color>
     <color name="colorPrimaryLight">#63CCFF</color>
     <color name="colorAccent">#039BE5</color>
-
     <color name="colorPrimary2">#1565C0</color>
+
+    <color name="mtrl_textinput_default_box_stroke_color">@color/grey400</color>
+
+    <color name="titleColor">#333333</color>
 
     <color name="cardStroke">#BDBDBD</color>
 

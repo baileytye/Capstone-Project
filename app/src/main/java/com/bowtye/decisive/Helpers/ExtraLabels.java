@@ -11,4 +11,6 @@ public class ExtraLabels {
     public static final String EXTRA_DELETE_OPTION = "extra_delete_option";
     public static final String EXTRA_OPTION_ID = "extra_option_id";
 
+    public static final String EXTRA_REQUIREMENT = "extra_requirement";
+
 }
