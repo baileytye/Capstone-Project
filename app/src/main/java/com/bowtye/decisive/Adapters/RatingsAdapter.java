@@ -10,13 +10,18 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.math.MathUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bowtye.decisive.Helpers.RatingUtils;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,11 +31,13 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.RatingsV
 
     private Option mOption;
     private List<Requirement> mRequirements;
+    private List<Float> mRatings;
 
 
     public RatingsAdapter(List<Requirement> requirements, Option option) {
         mOption = option;
         mRequirements = requirements;
+        mRatings = new ArrayList<>(Collections.nCopies(mRequirements.size(), (float) 0));
     }
 
     @NonNull
@@ -48,6 +55,14 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.RatingsV
     @Override
     public int getItemCount() {
         return (mRequirements != null) ? mRequirements.size() : 0;
+    }
+
+    public List<Float> getRatings(){
+        return mRatings;
+    }
+
+    public void setRatings(List<Float> ratings){
+        mRatings = ratings;
     }
 
     class RatingsViewHolder extends RecyclerView.ViewHolder {
@@ -72,6 +87,8 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.RatingsV
         RatingBar mRequirementValueRatingBar;
         @BindView(R.id.cb_requirement_value)
         ImageView mRequirementValueCheckBox;
+        @BindView(R.id.tv_requirement_rating)
+        TextView mRequirementRatingTextView;
 
         public RatingsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,6 +100,10 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.RatingsV
             setRequirementVisibilityAndValues(requirement, mOption.getRequirementValues().get(getAdapterPosition()),
                     requirement.getExpected());
             mRequirementNameTextView.setText(requirement.getName());
+            mRatings.set(getAdapterPosition(), mRatings.get(getAdapterPosition()));
+
+            mRequirementRatingTextView.setText(String.format(Locale.getDefault(),"%.2f",
+                    mRatings.get(getAdapterPosition())));
             //TODO set priority, and label, and points toward total
         }
 

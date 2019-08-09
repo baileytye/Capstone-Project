@@ -58,13 +58,13 @@ public class MainViewModel extends AndroidViewModel {
         Timber.d("Inserting dummy project");
         Requirement r1 = new Requirement("Bedrooms",
                 Requirement.Type.number, Requirement.Importance.normal, 3.0,
-                "", 0.0, false);
+                "", Requirement.WEIGHT_NORMAL, true);
         Requirement r2 = new Requirement("Outside Colors",
-                Requirement.Type.averaging, Requirement.Importance.normal, 0.0,
-                "", 0.0, false);
+                Requirement.Type.averaging, Requirement.Importance.normal, Requirement.AVERAGE,
+                "", Requirement.WEIGHT_NORMAL, true);
         Requirement r3 = new Requirement("Garage",
                 Requirement.Type.checkbox, Requirement.Importance.high, 1.0,
-                "", 0.0, false);
+                "", Requirement.WEIGHT_HIGH, true);
 
         List<Requirement> requirements = new ArrayList<>(Arrays.asList(r1, r2, r3));
 

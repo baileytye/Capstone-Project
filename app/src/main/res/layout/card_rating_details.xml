@@ -154,6 +154,19 @@
             app:layout_constraintStart_toEndOf="@+id/label_points_toward_total"
             app:layout_constraintTop_toTopOf="@+id/label_points_toward_total" />
 
+        <TextView
+            android:id="@+id/tv_requirement_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="4.7"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_requirement_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/tv_requirement_name"
+            app:layout_constraintTop_toTopOf="@+id/tv_requirement_name" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

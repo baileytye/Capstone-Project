@@ -117,10 +117,11 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
                     break;
                 case averaging:
                     if (mIsEdit) {
-                        spAverages.setSelection(Requirement.getAveragingIndex(value, itemView.getContext()));
+                        spAverages.setSelection(Requirement.getAveragingIndex(value, itemView.getContext()), false);
+                    } else {
+                        spAverages.setSelection(Requirement.getAveragingIndex(Requirement.AVERAGE, itemView.getContext()), false);
                     }
                     tvAveragesRequirementName.setText(requirement.getName());
-                    spAverages.setSelection(Requirement.getAveragingIndex(Requirement.AVERAGE, itemView.getContext()), false);
                     spAverages.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

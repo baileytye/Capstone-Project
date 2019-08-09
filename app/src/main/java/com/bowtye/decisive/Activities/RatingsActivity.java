@@ -1,6 +1,7 @@
 package com.bowtye.decisive.Activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.RatingBar;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.Adapters.RatingsAdapter;
+import com.bowtye.decisive.Helpers.RatingUtils;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.Models.Requirement;
@@ -22,6 +24,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -31,7 +34,7 @@ import timber.log.Timber;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_OPTION;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT;
 
-public class RatingsActivity extends AppCompatActivity {
+public class RatingsActivity extends AppCompatActivity implements RatingUtils.RatingResultAsyncCallback {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -91,9 +94,6 @@ public class RatingsActivity extends AppCompatActivity {
         Timber.d("Rating: %f", mOption.getRating());
 
         mToolbarLayout.setTitle(mOption.getName());
-        //mOptionTitleTextView.setText(mOption.getName());
-        mRatingTextView.setText(String.valueOf(mOption.getRating()));
-        mOptionRatingBar.setRating(mOption.getRating());
 
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -101,6 +101,22 @@ public class RatingsActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration(24));
         mAdapter = new RatingsAdapter(mRequirements, mOption);
         mRecyclerView.setAdapter(mAdapter);
+
+        new RatingUtils.CalculateRatingsAsyncTask(mRequirements, mOption.getRequirementValues(), this).execute();
     }
+
+    @Override
+    public void updateUIWithRatingResults(List<Float> ratings) {
+        mAdapter.setRatings(ratings);
+        mAdapter.notifyDataSetChanged();
+        mOption.setRating(RatingUtils.calculateOptionRating(
+                ratings, mRequirements)
+        );
+
+        mRatingTextView.setText(String.format(Locale.getDefault(), "%.2f", mOption.getRating()));
+        mOptionRatingBar.setRating(mOption.getRating());
+    }
+
+
 
 }
