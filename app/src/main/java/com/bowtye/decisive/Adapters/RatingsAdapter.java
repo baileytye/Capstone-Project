@@ -18,7 +18,6 @@ import com.bowtye.decisive.R;
 
 import java.util.List;
 
-import butterknife.BindAnim;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;

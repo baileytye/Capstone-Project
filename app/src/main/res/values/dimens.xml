@@ -18,6 +18,7 @@
 
     <dimen name="recycler_margin">4dp</dimen>
     <dimen name="recycler_view_fab_bottom_padding">80dp</dimen>
+    <dimen name="recycler_item_separation">12dp</dimen>
 
     <dimen name="bottom_sheet_corner_radius">5dp</dimen>
     <dimen name="bottom_sheet_top_padding">8dp</dimen>

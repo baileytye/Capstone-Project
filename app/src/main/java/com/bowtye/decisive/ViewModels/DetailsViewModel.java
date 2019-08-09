@@ -29,6 +29,20 @@ public class DetailsViewModel extends AndroidViewModel {
 
     }
 
+    public void insertProjectWithDetails(ProjectWithDetails p) {
+        if((p != null) && (p.getOptionList().size() > 0) &&
+                (p.getOptionList().get(0).getRequirementValues().size() < p.getRequirementList().size())){
+            for(int i = 0; i < p.getOptionList().size(); i++){
+
+                for(int j = p.getOptionList().get(i).getRequirementValues().size();
+                    j < p.getRequirementList().size(); j ++){
+                    p.getOptionList().get(i).getRequirementValues().add(0.0);
+                }
+            }
+        }
+        mRepo.insert(p);
+    }
+
     public void insertOption(Option option, int projectId){
         mRepo.insertOption(option, projectId);
     }

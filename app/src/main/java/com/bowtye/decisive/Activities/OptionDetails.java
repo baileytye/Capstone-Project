@@ -53,8 +53,6 @@ public class OptionDetails extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-//    @BindView(R.id.toolbar_title)
-//    TextView mToolbarTitleTextView;
     @BindView(R.id.toolbar_layout)
     CollapsingToolbarLayout mToolbarLayout;
     @BindView(R.id.tv_rating)
@@ -164,7 +162,8 @@ public class OptionDetails extends AppCompatActivity {
         layoutManager.setInitialPrefetchItemCount(mRequirements.size());
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new RequirementsAdapter(mRequirements, null, true);
-        mRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration(48));
+        mRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration((int)
+            getResources().getDimension(R.dimen.recycler_item_separation)));
         mRecyclerView.setAdapter(mAdapter);
 
         mRatingWithNumberView.setOnClickListener(view -> {
@@ -176,7 +175,6 @@ public class OptionDetails extends AppCompatActivity {
     }
 
     private void fillData(){
-//        mToolbarTitleTextView.setText(mOption.getName());
         mToolbarLayout.setTitle(mOption.getName());
 
         mPriceTextView.setText("$" + mOption.getPrice());

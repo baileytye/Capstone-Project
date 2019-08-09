@@ -67,19 +67,19 @@ public class Requirement implements Parcelable {
         this.moreIsBetter = moreIsBetter;
     }
 
-    public static double getAveragingValue(String type, Context context) {
+    public static double getAveragingValue(String averageString, Context context) {
 
         String[] averageLabels = context.getResources().getStringArray(R.array.averages);
 
-        if(type.equals(averageLabels[0])){
+        if(averageString.equals(averageLabels[0])){
             return FAR_ABOVE_AVERAGE;
-        } else if(type.equals(averageLabels[1])){
+        } else if(averageString.equals(averageLabels[1])){
             return ABOVE_AVERAGE;
-        } else if(type.equals(averageLabels[2])){
+        } else if(averageString.equals(averageLabels[2])){
             return AVERAGE;
-        } else if(type.equals(averageLabels[3])){
+        } else if(averageString.equals(averageLabels[3])){
             return BELOW_AVERAGE;
-        } else if(type.equals(averageLabels[4])){
+        } else if(averageString.equals(averageLabels[4])){
             return FAR_BELOW_AVERAGE;
         }
 

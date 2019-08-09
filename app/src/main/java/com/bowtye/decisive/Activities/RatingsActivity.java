@@ -35,8 +35,6 @@ public class RatingsActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-//    @BindView(R.id.toolbar_title)
-//    TextView mToolbarTitle;
     @BindView(R.id.toolbar_layout)
     CollapsingToolbarLayout mToolbarLayout;
     @BindView(R.id.rv_ratings)

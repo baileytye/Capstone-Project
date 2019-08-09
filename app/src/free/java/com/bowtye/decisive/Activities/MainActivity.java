@@ -37,20 +37,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_EDIT_PROJECT;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_NEW_PROJECT;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT_ID;
+
 public class MainActivity extends AppCompatActivity
         implements MainAdapter.ProjectItemClickListener {
-
-    public static final String EXTRA_PROJECT_ID = "extra_project_id";
-    public static final String EXTRA_NEW_PROJECT = "extra_new_project";
-    public static final String EXTRA_EDIT_PROJECT = "extra_edit_project";
 
     public static final int ADD_PROJECT_REQUEST_CODE = 3423;
 
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-//    @BindView(R.id.toolbar_title)
-//    TextView mToolbarTitle;
     @BindView(R.id.fab)
     FloatingActionButton mFab;
     @BindView(R.id.rv_main)
@@ -134,16 +132,6 @@ public class MainActivity extends AppCompatActivity
         if ((requestCode == ADD_PROJECT_REQUEST_CODE) && (resultCode == RESULT_OK)) {
             if (data != null && data.hasExtra(EXTRA_NEW_PROJECT)) {
                 ProjectWithDetails p = data.getParcelableExtra(EXTRA_NEW_PROJECT);
-                if((p != null) && (p.getOptionList().size() > 0) &&
-                        (p.getOptionList().get(0).getRequirementValues().size() < p.getRequirementList().size())){
-                    for(int i = 0; i < p.getOptionList().size(); i++){
-
-                        for(int j = p.getOptionList().get(i).getRequirementValues().size();
-                        j < p.getRequirementList().size(); j ++){
-                            p.getOptionList().get(i).getRequirementValues().add(0.0);
-                        }
-                    }
-                }
                 mViewModel.insertProjectWithDetails(p);
                 Timber.d("Project: %s inserted into the database", (p != null) ? p.getProject().getName() : "NULL");
             }

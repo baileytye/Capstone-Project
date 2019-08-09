@@ -2,13 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frame_expected"
+    android:id="@+id/frame_values"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:showIn="@layout/content_add_requirement">
+    tools:showIn="@layout/content_add_option">
 
     <FrameLayout
-        android:id="@+id/frame_expected_averages"
+        android:id="@+id/frame_averages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="0.5dp"
@@ -21,7 +21,7 @@
             android:background="@drawable/bg_spinner">
 
             <Spinner
-                android:id="@+id/sp_expected_averages"
+                android:id="@+id/sp_averages"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="5dp"
@@ -32,6 +32,7 @@
         </FrameLayout>
 
         <TextView
+            android:id="@+id/tv_averages_requirement_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -39,34 +40,35 @@
             android:background="@color/white"
             android:paddingStart="2dp"
             android:paddingEnd="2dp"
-            android:text="Expected"
+            android:text="Requirement"
             android:textSize="12sp" />
     </FrameLayout>
 
     <CheckBox
-        android:id="@+id/cb_expected"
+        android:id="@+id/cb_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="Expected" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_expected"
+        android:id="@+id/til_value"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:boxStrokeColor="@color/colorPrimary">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_expected"
+            android:id="@+id/et_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Expected value"
+            android:inputType="number"
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <FrameLayout
-        android:id="@+id/frame_expected_star_rating"
+        android:id="@+id/frame_star_rating"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="0.5dp"
@@ -79,17 +81,18 @@
             android:background="@drawable/bg_spinner">
 
             <me.zhanghai.android.materialratingbar.MaterialRatingBar
-                android:id="@+id/rb_expected"
-                style="@style/Widget.MaterialRatingBar.RatingBar"
+                android:id="@+id/rb_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|start"
                 android:layout_marginStart="4dp"
+                style="@style/Widget.MaterialRatingBar.RatingBar"
                 android:numStars="5" />
 
         </FrameLayout>
 
         <TextView
+            android:id="@+id/tv_rating_requirement_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -97,7 +100,7 @@
             android:background="@color/white"
             android:paddingStart="2dp"
             android:paddingEnd="2dp"
-            android:text="Expected"
+            android:text="Requirement"
             android:textSize="12sp" />
     </FrameLayout>
 

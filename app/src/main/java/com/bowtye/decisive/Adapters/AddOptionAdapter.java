@@ -1,11 +1,14 @@
 package com.bowtye.decisive.Adapters;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.RatingBar;
+import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -15,34 +18,42 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 import timber.log.Timber;
 
 public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddOptionRequirementViewHolder> {
 
-
     private List<Requirement> mRequirements;
     private Option mOption;
+    private Boolean mIsEdit;
 
-    public AddOptionAdapter(List<Requirement> requirements, Option option) {
+    private ItemChangedCallback mCallback;
+
+    public AddOptionAdapter(List<Requirement> requirements, Option option, Boolean isEdit, ItemChangedCallback callback) {
         mRequirements = requirements;
         mOption = option;
+        mIsEdit = isEdit;
+        mCallback = callback;
     }
 
     @NonNull
     @Override
     public AddOptionRequirementViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_add_option, parent, false);
-        return new AddOptionRequirementViewHolder(v, (mOption != null));
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_requirement_value_editable, parent, false);
+        return new AddOptionRequirementViewHolder(v, mIsEdit);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AddOptionRequirementViewHolder holder, int position) {
-        holder.bind(position);
+        holder.bind(mRequirements.get(position), mOption.getRequirementValues().get(position));
     }
 
     @Override
@@ -50,48 +61,107 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
         return mRequirements.size();
     }
 
+    public Option getOption() {
+        return mOption;
+    }
+
     public class AddOptionRequirementViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.et_requirement_value)
-        EditText mRequirementValueEditText;
-        @BindView(R.id.cb_requirement_value)
-        CheckBox mRequirementValueCheckBox;
-        @BindView(R.id.sp_requirement_value)
-        Spinner mRequirementValueSpinner;
-        @BindView(R.id.rb_requirement_value)
-        RatingBar mRequirementValueRatingBar;
+        @BindView(R.id.sp_averages)
+        Spinner spAverages;
+        @BindView(R.id.tv_averages_requirement_name)
+        TextView tvAveragesRequirementName;
+        @BindView(R.id.frame_averages)
+        FrameLayout frameAverages;
+        @BindView(R.id.cb_value)
+        CheckBox cbValue;
+        @BindView(R.id.et_value)
+        TextInputEditText etValue;
+        @BindView(R.id.til_value)
+        TextInputLayout tilValue;
+        @BindView(R.id.rb_value)
+        MaterialRatingBar rbValue;
+        @BindView(R.id.tv_rating_requirement_name)
+        TextView tvRatingRequirementName;
+        @BindView(R.id.frame_star_rating)
+        FrameLayout frameStarRating;
 
-        @BindView(R.id.tv_requirement_name)
-        TextView mRequirementName;
-
-        boolean mIsEdit;
-
-        AddOptionRequirementViewHolder(@NonNull View itemView, boolean isEdit) {
+        AddOptionRequirementViewHolder(@NonNull View itemView, Boolean isEdit) {
             super(itemView);
-            mIsEdit = isEdit;
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(int position) {
-            Requirement.Type type = mRequirements.get(position).getType();
+        public void bind(Requirement requirement, Double value) {
+            Requirement.Type type = requirement.getType();
             setVisibleType(type);
-            mRequirementName.setText(mRequirements.get(getAdapterPosition()).getName());
-            if(mIsEdit){
-                switch(type){
-                    case starRating:
-                        mRequirementValueRatingBar.setRating(mOption.getRequirementValues().get(position).floatValue());
-                        break;
-                    case checkbox:
-                        mRequirementValueCheckBox.setChecked(mOption.getRequirementValues().get(position) == 1);
-                        break;
-                    case averaging:
-                        mRequirementValueSpinner.setSelection(Requirement.getAveragingIndex(
-                                mOption.getRequirementValues().get(position), itemView.getContext()));
-                        break;
-                    case number:
-                        mRequirementValueEditText.setText(mOption.getRequirementValues().get(position).toString());
-                        break;
-                }
+            switch (type) {
+                case starRating:
+                    tvRatingRequirementName.setText(requirement.getName());
+                    if (mIsEdit) {
+                        rbValue.setRating(value.floatValue());
+                    }
+                    rbValue.setOnRatingChangeListener((ratingBar, rating) -> {
+                        mOption.getRequirementValues().set(getAdapterPosition(), (double) rating);
+                        mCallback.requirementItemChanged();
+                    });
+                    break;
+                case checkbox:
+                    if (mIsEdit) {
+                        cbValue.setChecked(value == 1);
+                    }
+                    cbValue.setText(requirement.getName());
+                    cbValue.setOnCheckedChangeListener((compoundButton, b) -> {
+                        mOption.getRequirementValues().set(getAdapterPosition(), (b) ? 1.0 : 0.0);
+                        mCallback.requirementItemChanged();
+                    });
+                    break;
+                case averaging:
+                    if (mIsEdit) {
+                        spAverages.setSelection(Requirement.getAveragingIndex(value, itemView.getContext()));
+                    }
+                    tvAveragesRequirementName.setText(requirement.getName());
+                    spAverages.setSelection(Requirement.getAveragingIndex(Requirement.AVERAGE, itemView.getContext()), false);
+                    spAverages.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            mOption.getRequirementValues().set(getAdapterPosition(),
+                                    Requirement.getAveragingValue(adapterView.getSelectedItem().toString(), itemView.getContext()));
+                            mCallback.requirementItemChanged();
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                        }
+                    });
+                    break;
+                case number:
+                    if (mIsEdit) {
+                        etValue.setText(String.valueOf(value));
+                    }
+                    tilValue.setHint(requirement.getName());
+                    etValue.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            mOption.getRequirementValues().set(getAdapterPosition(),
+                                    (Objects.requireNonNull(etValue.getText()).toString().equals(""))
+                                            ? 0.0
+                                            : Double.parseDouble(etValue.getText().toString())
+                            );
+                            mCallback.requirementItemChanged();
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                        }
+                    });
+                    break;
             }
         }
 
@@ -99,43 +169,33 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
             Timber.d("Type: %s", type.toString());
             switch (type) {
                 case starRating:
-                    mRequirementValueCheckBox.setVisibility(View.INVISIBLE);
-                    mRequirementValueEditText.setVisibility(View.INVISIBLE);
-                    mRequirementValueSpinner.setVisibility(View.INVISIBLE);
-                    mRequirementValueRatingBar.setVisibility(View.VISIBLE);
+                    cbValue.setVisibility(View.INVISIBLE);
+                    tilValue.setVisibility(View.INVISIBLE);
+                    frameAverages.setVisibility(View.INVISIBLE);
+                    frameStarRating.setVisibility(View.VISIBLE);
                     return;
                 case averaging:
-                    mRequirementValueCheckBox.setVisibility(View.INVISIBLE);
-                    mRequirementValueEditText.setVisibility(View.INVISIBLE);
-                    mRequirementValueSpinner.setVisibility(View.VISIBLE);
-                    mRequirementValueRatingBar.setVisibility(View.INVISIBLE);
+                    cbValue.setVisibility(View.INVISIBLE);
+                    tilValue.setVisibility(View.INVISIBLE);
+                    frameAverages.setVisibility(View.VISIBLE);
+                    frameStarRating.setVisibility(View.INVISIBLE);
                     return;
                 case checkbox:
-                    mRequirementValueCheckBox.setVisibility(View.VISIBLE);
-                    mRequirementValueEditText.setVisibility(View.INVISIBLE);
-                    mRequirementValueSpinner.setVisibility(View.INVISIBLE);
-                    mRequirementValueRatingBar.setVisibility(View.INVISIBLE);
+                    cbValue.setVisibility(View.VISIBLE);
+                    tilValue.setVisibility(View.INVISIBLE);
+                    frameAverages.setVisibility(View.INVISIBLE);
+                    frameStarRating.setVisibility(View.INVISIBLE);
                     return;
                 default:
-                    mRequirementValueCheckBox.setVisibility(View.INVISIBLE);
-                    mRequirementValueEditText.setVisibility(View.VISIBLE);
-                    mRequirementValueSpinner.setVisibility(View.INVISIBLE);
-                    mRequirementValueRatingBar.setVisibility(View.INVISIBLE);
+                    cbValue.setVisibility(View.INVISIBLE);
+                    tilValue.setVisibility(View.VISIBLE);
+                    frameAverages.setVisibility(View.INVISIBLE);
+                    frameStarRating.setVisibility(View.INVISIBLE);
             }
         }
+    }
 
-        public double getRequirementValue() {
-            switch (mRequirements.get(getAdapterPosition()).getType()) {
-                case checkbox:
-                    return (mRequirementValueCheckBox.isChecked()) ? 1 : 0;
-                case averaging:
-                    return Requirement.getAveragingValue(mRequirementValueSpinner.getSelectedItem().toString(), this.itemView.getContext());
-                case starRating:
-                    return mRequirementValueRatingBar.getRating();
-                default:
-                    return mRequirementValueEditText.getText().toString().equals("") ? 0 :
-                            Double.parseDouble(mRequirementValueEditText.getText().toString());
-            }
-        }
+    public interface ItemChangedCallback {
+        void requirementItemChanged();
     }
 }

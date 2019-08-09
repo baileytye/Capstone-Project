@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -35,6 +36,8 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_DELETE_OPTION;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_EDIT_PROJECT;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_NEW_PROJECT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_OPTION;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_OPTION_ID;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT;
@@ -46,11 +49,10 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
     private static final int EDIT_OPTION_REQUEST_CODE = 92;
 
     public static final int RESULT_DELETED = 10;
+    private static final int EDIT_PROJECT_REQUEST_CODE = 12;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-//    @BindView(R.id.toolbar_title)
-//    TextView mToolbarTitle;
     @BindView(R.id.toolbar_layout)
     CollapsingToolbarLayout mToolbarLayout;
     @BindView(R.id.rv_details)
@@ -88,10 +90,22 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.project_details, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NotNull MenuItem item) {
 
-        if (item.getItemId() == android.R.id.home) {
-            finishAfterTransition();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finishAfterTransition();
+                return true;
+            case R.id.action_edit_project:
+                startAddProjectActivity();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -109,13 +123,18 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
                 mViewModel.insertOption(o, mProjectId);
                 Timber.d("Project: %s inserted into the database", (o != null) ? o.getName() : "NULL");
             }
-        } else if(requestCode == EDIT_OPTION_REQUEST_CODE){
-            if(data != null && data.hasExtra(EXTRA_DELETE_OPTION)) {
+        } else if (requestCode == EDIT_OPTION_REQUEST_CODE) {
+            if (data != null && data.hasExtra(EXTRA_DELETE_OPTION)) {
                 switch (resultCode) {
                     case RESULT_DELETED:
                         mViewModel.deleteOption(mProject.getOptionList().get(mItemSelected));
                         mItemDeleted = true;
                 }
+            }
+        } else if (requestCode == EDIT_PROJECT_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null && data.hasExtra(EXTRA_NEW_PROJECT)) {
+                ProjectWithDetails p = data.getParcelableExtra(EXTRA_NEW_PROJECT);
+                mViewModel.insertProjectWithDetails(p);
             }
         }
     }
@@ -151,10 +170,10 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
             Timber.d("Livedata Updated");
             mProject = projectWithDetails;
             mAdapter.setProject(mProject);
-            if(mItemAdded) {
+            if (mItemAdded) {
                 mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
                 mItemAdded = false;
-            } else if(mItemDeleted){
+            } else if (mItemDeleted) {
                 mAdapter.notifyItemRemoved(mItemSelected);
                 mItemDeleted = false;
             } else {
@@ -164,7 +183,7 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
             setEmptyMessageVisibility();
 
             mToolbarLayout.setTitle(mProject.getProject().getName());
-//            mToolbarTitle.setText(mProject.getProject().getName());
+
             if (mProject.getOptionList() != null && mProject.getRequirementList() != null) {
                 Timber.d("Number of requirements loaded: %d",
                         ((this.mProject.getRequirementList() != null) ? this.mProject.getRequirementList().size() : 0));
@@ -174,8 +193,8 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
         });
     }
 
-    void setEmptyMessageVisibility(){
-        if((mProject == null) || (mProject.getOptionList().size() == 0)) {
+    void setEmptyMessageVisibility() {
+        if ((mProject == null) || (mProject.getOptionList().size() == 0)) {
             mEmptyOptionsTextView.setVisibility(View.VISIBLE);
         } else {
             mEmptyOptionsTextView.setVisibility(View.INVISIBLE);
@@ -194,6 +213,16 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
 
         getWindow().setExitTransition(transition);
         startActivityForResult(intent, EDIT_OPTION_REQUEST_CODE,
+                ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+    }
+
+    void startAddProjectActivity() {
+        Intent intent = new Intent(getApplicationContext(), AddProjectActivity.class);
+        intent.putExtra(EXTRA_EDIT_PROJECT, mProject);
+        Transition transition = new Slide(Gravity.TOP);
+
+        getWindow().setExitTransition(transition);
+        startActivityForResult(intent, EDIT_PROJECT_REQUEST_CODE,
                 ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 }

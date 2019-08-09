@@ -1,9 +1,5 @@
 package com.bowtye.decisive.Adapters;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.media.Rating;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.Models.Option;
-import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.VerticalSpaceItemDecoration;
 import com.squareup.picasso.Picasso;
-
-import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -94,7 +87,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
 
         void bind() {
             Option o = mProject.getOptionList().get(getAdapterPosition());
-            if(o.getImagePath().equals("")) {
+            if (o.getImagePath().equals("")) {
                 mItemHeaderImageView.setVisibility(View.GONE);
             } else {
                 mItemHeaderImageView.setVisibility(View.VISIBLE);
@@ -107,7 +100,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             }
             mItemTitleTextView.setText(o.getName());
 
-            if(o.getPrice() == 0){
+            if (o.getPrice() == 0) {
                 mItemPriceTextView.setVisibility(View.GONE);
             } else {
                 mItemPriceTextView.setVisibility(View.VISIBLE);
@@ -115,7 +108,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             }
 
             mRatingTextView.setText(String.valueOf(o.getRating()));
-            if(o.getRating() >= 0 && o.getRating() <= 5) {
+            if (o.getRating() >= 0 && o.getRating() <= 5) {
                 mOptionRatingBar.setRating(o.getRating());
             } else {
                 mOptionRatingBar.setRating(0);
@@ -125,7 +118,6 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
                     mProject.getOptionList().get(getAdapterPosition()).getRequirementValues(), false);
             mRequirementsRecyclerView.setAdapter(adapter);
         }
-
 
         @Override
         public void onClick(View view) {

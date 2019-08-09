@@ -1,7 +1,5 @@
 package com.bowtye.decisive.Adapters;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -11,12 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.Models.Option;
-import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 import com.squareup.picasso.Picasso;
@@ -51,7 +46,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             mProjectCount = 0;
         }
     }
-
 
     @NonNull
     @Override
@@ -102,7 +96,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
             mProjectImageView.setClipToOutline(true);
 
-            if(image.equals("")) {
+            if (image.equals("")) {
                 mProjectImageView.setVisibility(View.GONE);
             } else {
                 mProjectImageView.setVisibility(View.VISIBLE);
@@ -115,7 +109,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             }
             mProjectTitle.setText(p.getProject().getName());
             mChoicesTextView.setText((p.getOptionList() == null) ? "0" : String.valueOf(p.getOptionList().size()));
-            mRequirementsTextView.setText((p.getRequirementList()== null) ? "0" : String.valueOf(p.getRequirementList().size()));
+            mRequirementsTextView.setText((p.getRequirementList() == null) ? "0" : String.valueOf(p.getRequirementList().size()));
         }
 
         @Override
@@ -134,9 +128,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
         }
 
-        private String checkForImages(ProjectWithDetails project){
-            for(Option option: project.getOptionList()){
-                if(!option.getImagePath().equals("")){
+        private String checkForImages(ProjectWithDetails project) {
+            for (Option option : project.getOptionList()) {
+                if (!option.getImagePath().equals("")) {
                     return option.getImagePath();
                 }
             }
@@ -146,8 +140,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     }
 
     public interface ProjectItemClickListener {
+
         void onProjectItemClicked(int position);
+
         void onProjectDeleteMenuClicked(int position);
+
         void onProjectEditMenuCLicked(int position);
     }
 }

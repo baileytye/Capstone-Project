@@ -3,22 +3,23 @@ package com.bowtye.decisive.Activities;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bowtye.decisive.Adapters.AddProjectAdapter;
 import com.bowtye.decisive.Helpers.ViewUtils;
+import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.Models.Requirement;
@@ -36,16 +37,18 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_EDIT_PROJECT;
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_EDIT_REQUIREMENT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_NEW_PROJECT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_REQUIREMENT;
 
-public class AddProjectActivity extends AppCompatActivity {
+public class AddProjectActivity extends AppCompatActivity implements AddProjectAdapter.OnRequirementClickedCallback, ViewUtils.warningCallback {
 
     public static final int VALIDATION_OK = 1;
     public static final int VALIDATION_SAVE_REQ_ERROR = -1;
     public static final int VALIDATION_NAME_ERROR = -2;
     private static final int ADD_REQUIREMENT_REQUEST_CODE = 17;
+    private static final int EDIT_REQUIREMENT_REQUEST_CODE = 18;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -63,6 +66,8 @@ public class AddProjectActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private AddProjectAdapter mAdapter;
     private ProjectWithDetails mProject;
+    private int mPositionClicked;
+    private Boolean itemChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,14 +78,16 @@ public class AddProjectActivity extends AppCompatActivity {
         mProject = new ProjectWithDetails(new Project("", true), new ArrayList<>(), new ArrayList<>());
         Intent intent = getIntent();
 
-        if(savedInstanceState != null){
-            if(savedInstanceState.containsKey(EXTRA_PROJECT)){
+        itemChanged = false;
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(EXTRA_PROJECT)) {
                 mProject = savedInstanceState.getParcelable(EXTRA_PROJECT);
             }
         }
 
-        if(intent != null){
-            if(intent.hasExtra(EXTRA_EDIT_PROJECT)){
+        if (intent != null) {
+            if (intent.hasExtra(EXTRA_EDIT_PROJECT)) {
                 mProject = intent.getParcelableExtra(EXTRA_EDIT_PROJECT);
             }
         }
@@ -110,12 +117,22 @@ public class AddProjectActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == ADD_REQUIREMENT_REQUEST_CODE && data != null){
-            if(data.hasExtra(EXTRA_REQUIREMENT) && resultCode == RESULT_OK){
+        if (requestCode == ADD_REQUIREMENT_REQUEST_CODE && data != null) {
+            if (data.hasExtra(EXTRA_REQUIREMENT) && resultCode == RESULT_OK) {
                 Requirement requirement = data.getParcelableExtra(EXTRA_REQUIREMENT);
                 mAdapter.addRequirement(requirement);
-                Timber.d( "Added %s", Objects.requireNonNull(requirement).getName());
+                Timber.d("Added %s", Objects.requireNonNull(requirement).getName());
                 checkIfEmpty();
+                itemChanged = true;
+            }
+        } else if (requestCode == EDIT_REQUIREMENT_REQUEST_CODE && data != null) {
+            if (data.hasExtra(EXTRA_REQUIREMENT) && resultCode == RESULT_OK) {
+                Requirement requirement = data.getParcelableExtra(EXTRA_REQUIREMENT);
+                for (Option option : mProject.getOptionList()) {
+                    option.getRequirementValues().set(mPositionClicked, (double) 0);
+                }
+                mAdapter.overideRequirement(requirement, mPositionClicked);
+                itemChanged = true;
             }
         }
     }
@@ -125,7 +142,13 @@ public class AddProjectActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case android.R.id.home:
-                finishAfterTransition();
+                if (itemChanged) {
+                    ViewUtils.showWarningDialog(
+                            getResources().getString(R.string.leave_without_saving_dialog_message),
+                            this, this);
+                } else {
+                    finishAfterTransition();
+                }
                 return true;
             case R.id.action_save:
                 switch (validateEntries()) {
@@ -144,7 +167,7 @@ public class AddProjectActivity extends AppCompatActivity {
                                 "Please save all requirements", this);
                         break;
                 }
-            return true;
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -159,12 +182,29 @@ public class AddProjectActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        if(!mProject.getProject().getName().equals("")){
+        if (!mProject.getProject().getName().equals("")) {
             mProjectNameEditText.setText(mProject.getProject().getName());
             mToolbarLayout.setTitle("Edit project");
         } else {
             mToolbarLayout.setTitle("Add project");
         }
+
+        mProjectNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                itemChanged = true;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
@@ -172,22 +212,17 @@ public class AddProjectActivity extends AppCompatActivity {
         mAdapter = new AddProjectAdapter(this, (mProject == null) ? null : mProject.getRequirementList());
         mRecyclerView.setAdapter(mAdapter);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                LinearLayoutManager.VERTICAL);
-        dividerItemDecoration.setDrawable(Objects.requireNonNull(getDrawable(R.drawable.divider)));
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
-
         checkIfEmpty();
 
-        mFab.setOnClickListener(view ->{
+        mFab.setOnClickListener(view -> {
             Intent intent = new Intent(this, AddRequirement.class);
             startActivityForResult(intent, ADD_REQUIREMENT_REQUEST_CODE,
                     ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
         });
     }
 
-    public void checkIfEmpty(){
-        if(mAdapter.getItemCount() == 0){
+    public void checkIfEmpty() {
+        if (mAdapter.getItemCount() == 0) {
             mRecyclerView.setVisibility(View.INVISIBLE);
             mEmptyRequirementsLabel.setVisibility(View.VISIBLE);
         } else {
@@ -198,12 +233,13 @@ public class AddProjectActivity extends AppCompatActivity {
 
     /**
      * Validates project fields
+     *
      * @return error code based on missing, or invalid fields
      */
-    private int validateEntries(){
+    private int validateEntries() {
         String name = mProjectNameEditText.getText().toString();
 
-        if(name.equals("")){
+        if (name.equals("")) {
             return VALIDATION_NAME_ERROR;
         }
 
@@ -211,5 +247,21 @@ public class AddProjectActivity extends AppCompatActivity {
         mProject.setRequirementList(mAdapter.getRequirements());
 
         return VALIDATION_OK;
+    }
+
+    @Override
+    public void onRequirementClicked(Requirement requirement, int position) {
+        mPositionClicked = position;
+        Intent intent = new Intent(this, AddRequirement.class);
+        intent.putExtra(EXTRA_EDIT_REQUIREMENT, requirement);
+        startActivityForResult(intent, EDIT_REQUIREMENT_REQUEST_CODE,
+                ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+    }
+
+    @Override
+    public void warningClicked(int result) {
+        if (result == ViewUtils.DIALOG_OK) {
+            finishAfterTransition();
+        }
     }
 }

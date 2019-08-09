@@ -30,17 +30,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_EDIT_REQUIREMENT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_REQUIREMENT;
 
 public class AddRequirement extends AppCompatActivity {
 
     public static final int VALIDATION_OK = 1;
-    public static final int VALIDATION_SAVE_REQ_ERROR = -1;
     public static final int VALIDATION_NAME_ERROR = -2;
     public static final int VALIDATION_WEIGHT_ERROR = -3;
 
-//    @BindView(R.id.toolbar_title)
-//    TextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.toolbar_layout)
@@ -80,6 +78,7 @@ public class AddRequirement extends AppCompatActivity {
 
 
     private Requirement mRequirement;
+    private Boolean isEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +90,15 @@ public class AddRequirement extends AppCompatActivity {
                 "", Requirement.Type.number, Requirement.Importance.normal,
                 0.0, "", 1.0, false
         );
+        isEdit = false;
+
+        Intent intent = getIntent();
+        if(intent != null){
+            if(intent.hasExtra(EXTRA_EDIT_REQUIREMENT)){
+                mRequirement = intent.getParcelableExtra(EXTRA_EDIT_REQUIREMENT);
+                isEdit = true;
+            }
+        }
 
         prepareViews();
     }
@@ -137,7 +145,8 @@ public class AddRequirement extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        mToolbarLayout.setTitle("Add requirement");
+
+        mToolbarLayout.setTitle((isEdit) ? "Edit requirement" : "Add requirement");
 
         setExpectedVisibility();
         setInitialValues(mRequirement);
