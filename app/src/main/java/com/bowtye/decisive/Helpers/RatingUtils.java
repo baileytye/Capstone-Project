@@ -7,7 +7,6 @@ import com.bowtye.decisive.Models.Requirement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public class RatingUtils {
 

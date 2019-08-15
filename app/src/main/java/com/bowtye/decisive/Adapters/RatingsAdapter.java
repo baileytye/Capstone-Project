@@ -1,19 +1,15 @@
 package com.bowtye.decisive.Adapters;
 
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.math.MathUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bowtye.decisive.Helpers.RatingUtils;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Requirement;
 import com.bowtye.decisive.R;

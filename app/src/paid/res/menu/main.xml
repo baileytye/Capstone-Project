@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_sign_out"
+        android:orderInCategory="100"
+        android:title="Sign out"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_clear"
+        android:orderInCategory="100"
+        android:title="Clear Projects"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_delete_option"
+        android:orderInCategory="101"
+        android:title="Delete Option"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_delete_requirement"
+        android:orderInCategory="101"
+        android:title="Delete Requirement"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_insert_dummy"
+        android:orderInCategory="103"
+        android:title="Insert Dummy"
+        app:showAsAction="never" />
+
+</menu>

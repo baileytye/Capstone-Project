@@ -108,11 +108,11 @@
             android:id="@+id/divider2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginTop="16dp"
             android:background="@color/grey200"
-            app:layout_constraintTop_toBottomOf="@id/rv_requirement_values"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_requirement_values" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_notes"

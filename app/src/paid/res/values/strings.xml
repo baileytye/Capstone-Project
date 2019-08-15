@@ -1,3 +1,4 @@
 <resources>
     <string name="menu_logout_title">Logout</string>
+    <string name="default_web_client_id">78569816095-aak428906s8r9ld6d3jj3gd9bsc2n8ip.apps.googleusercontent.com</string>
 </resources>

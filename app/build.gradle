@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('/Users/baileytye/Google Drive/Udacity/Capstone Project/keys')
+            storePassword 'password'
+            keyAlias = 'keyUdacity'
+            keyPassword 'udacity'
+        }
+    }
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.bowtye.decisive"
@@ -14,6 +22,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
@@ -55,7 +64,9 @@ dependencies {
 
     implementation "com.jakewharton.timber:timber:$timber_version"
 
-    implementation "com.google.android.gms:play-services-auth:$play_services_version"
+    paidImplementation "com.google.android.gms:play-services-auth:$play_services_version"
+    paidImplementation 'com.google.firebase:firebase-auth:18.1.0'
+    paidImplementation 'com.google.firebase:firebase-core:17.0.1'
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
@@ -70,4 +81,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
+
+if (getGradle().getStartParameter().getTaskRequests()
+        .toString().contains("Paid")){
+    apply plugin: 'com.google.gms.google-services'
 }

@@ -121,6 +121,8 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
                 }
                 mItemAdded = true;
                 mViewModel.insertOption(o, mProjectId);
+
+                //TODO: Add calculate ratings
                 Timber.d("Project: %s inserted into the database", (o != null) ? o.getName() : "NULL");
             }
         } else if (requestCode == EDIT_OPTION_REQUEST_CODE) {

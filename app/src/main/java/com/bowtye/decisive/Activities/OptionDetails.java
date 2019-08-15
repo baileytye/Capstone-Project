@@ -145,6 +145,7 @@ public class OptionDetails extends AppCompatActivity {
                         Timber.d("Received option from add ");
                         mOption = data.getParcelableExtra(EXTRA_OPTION);
                         mViewModel.insertOption(mOption, mProject.getProject().getId());
+                        //TODO: add calculate ratings
                         break;
                 }
             }
