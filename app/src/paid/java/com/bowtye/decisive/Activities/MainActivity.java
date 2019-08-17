@@ -1,14 +1,19 @@
 package com.bowtye.decisive.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.bowtye.decisive.PicassoMenuLoader;
+import com.bowtye.decisive.Helpers.PicassoMenuLoader;
 import com.bowtye.decisive.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
+
+import timber.log.Timber;
+
+import static com.bowtye.decisive.Activities.LoginActivity.SIGN_OUT;
 
 public class MainActivity extends BaseMainActivity{
 
@@ -26,8 +31,12 @@ public class MainActivity extends BaseMainActivity{
         // Inflate the menu; this adds items to the action bar if it is present.
         super.onCreateOptionsMenu(menu);
 
-        PicassoMenuLoader menuLoader = new PicassoMenuLoader(menu.getItem(0), this);
-        Picasso.get().load(mUser.getPhotoUrl()).into(menuLoader);
+        //TODO: fix bug where picture does not load sometimes
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            Timber.d("Setting user image");
+            PicassoMenuLoader menuLoader = new PicassoMenuLoader(menu.getItem(0), this);
+            Picasso.get().load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()).into(menuLoader);
+        }
         return true;
     }
 
@@ -37,7 +46,8 @@ public class MainActivity extends BaseMainActivity{
         int id = item.getItemId();
 
         if(id == R.id.action_sign_out){
-            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent();
+            setResult(SIGN_OUT, intent);
             finish();
             return true;
         }

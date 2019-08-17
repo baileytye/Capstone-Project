@@ -67,6 +67,7 @@ dependencies {
     paidImplementation "com.google.android.gms:play-services-auth:$play_services_version"
     paidImplementation 'com.google.firebase:firebase-auth:18.1.0'
     paidImplementation 'com.google.firebase:firebase-core:17.0.1'
+    paidImplementation 'com.google.firebase:firebase-firestore:20.2.0'
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
@@ -84,6 +85,6 @@ dependencies {
 }
 
 if (getGradle().getStartParameter().getTaskRequests()
-        .toString().contains("Paid")){
+        .toString().contains("Paid")) {
     apply plugin: 'com.google.gms.google-services'
 }

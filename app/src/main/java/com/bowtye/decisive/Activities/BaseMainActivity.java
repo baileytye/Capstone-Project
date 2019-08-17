@@ -67,10 +67,6 @@ public class BaseMainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
-
         ButterKnife.bind(this);
 
         prepareViewModel();

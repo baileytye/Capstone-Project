@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.room.Embedded;
+import androidx.room.Ignore;
 import androidx.room.Relation;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public class ProjectWithDetails implements Parcelable {
 
     @Relation(parentColumn = "id", entityColumn = "projectId")
     List<Requirement> requirementList;
+
+    @Ignore
+    public ProjectWithDetails(){}
 
     public ProjectWithDetails(Project project, List<Option> optionList, List<Requirement> requirementList) {
         this.project = project;

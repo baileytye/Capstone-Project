@@ -40,7 +40,7 @@ public class DetailsViewModel extends AndroidViewModel {
                 }
             }
         }
-        mRepo.insert(p);
+        mRepo.insertProjectWithDetails(p);
     }
 
     public void insertOption(Option option, int projectId){

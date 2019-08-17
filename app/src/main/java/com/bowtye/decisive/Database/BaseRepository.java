@@ -14,38 +14,21 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class ProjectRepository {
+public class BaseRepository {
 
     private static ProjectListDao projectListDao;
-
-    private static ProjectRepository instance;
 
     private LiveData<List<ProjectWithDetails>> projects;
     private MutableLiveData<ProjectWithDetails> selectedProject;
 
-    public static ProjectRepository getInstance(Application application) {
-        if(instance == null) {
-            synchronized (ProjectRepository.class) {
-                if(instance == null) {
-                    instance = new ProjectRepository(application);
-                }
-            }
-        }
-        return instance;
-    }
-
     @SuppressLint("StaticFieldLeak")
-    private ProjectRepository(Application application) {
+    protected BaseRepository(Application application) {
         AppDatabase database = AppDatabase.getInstance(application.getApplicationContext());
 
         projectListDao = database.projectListDao();
 
         projects = projectListDao.getProjects();
         selectedProject = new MutableLiveData<>();
-    }
-
-    public void insertProjectWithDetails(ProjectWithDetails projectWithDetails){
-        new InsertAsyncTask().execute(projectWithDetails);
     }
 
     public void insertOption(Option option, int projectId){
@@ -66,7 +49,7 @@ public class ProjectRepository {
     }
 
     public LiveData<List<ProjectWithDetails>> getProjects(){
-        Timber.d("GetProjects called");
+        Timber.d("Getting projects from Room database");
         return projects;
     }
 
@@ -78,19 +61,20 @@ public class ProjectRepository {
         return projectListDao.loadOptionById(id);
     }
 
-    public void insert(final ProjectWithDetails project){
-        new InsertAsyncTask().execute(project);
+    public void insertProjectWithDetails(final ProjectWithDetails project){
+        Timber.d("Inserting Project: %s into Room database", project.getProject().getName());
+        new InsertProjectWithDetailsAsyncTask().execute(project);
     }
 
-    public void delete(final ProjectWithDetails project){
-        new DeleteAsyncTask().execute(project);
+    public void deleteProjectWithDetails(final ProjectWithDetails project){
+        new DeleteProjectWithDetailsAsyncTask().execute(project);
     }
 
     public void deleteOption(final Option option){
         new DeleteOptionAsyncTask().execute(option);
     }
 
-    private static class InsertAsyncTask extends AsyncTask<ProjectWithDetails,Void,Void> {
+    private static class InsertProjectWithDetailsAsyncTask extends AsyncTask<ProjectWithDetails,Void,Void> {
 
         @Override
         protected Void doInBackground(ProjectWithDetails... projectWithDetails) {
@@ -108,7 +92,7 @@ public class ProjectRepository {
         }
     }
 
-    private static class DeleteAsyncTask extends AsyncTask<ProjectWithDetails, Void, Void>{
+    private static class DeleteProjectWithDetailsAsyncTask extends AsyncTask<ProjectWithDetails, Void, Void>{
 
         @Override
         protected Void doInBackground(ProjectWithDetails... projects) {

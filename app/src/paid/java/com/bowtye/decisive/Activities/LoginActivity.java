@@ -1,5 +1,6 @@
 package com.bowtye.decisive.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,6 +31,7 @@ import timber.log.Timber;
 public class LoginActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_SIGN_IN = 10;
+    public static final int SIGN_OUT = 11;
 
     @BindView(R.id.bt_google_sign_in)
     SignInButton mSignInButton;
@@ -45,10 +47,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
-
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -93,12 +91,24 @@ public class LoginActivity extends AppCompatActivity {
                 // ...
             }
         }
+        if(requestCode == SIGN_OUT) {
+            signOut();
+        }
     }
 
     public void signIn(){
         Intent intent = mGoogleSignInClient.getSignInIntent();
         Timber.d("Starting sign in");
         startActivityForResult(intent, REQUEST_CODE_SIGN_IN);
+    }
+
+    private void signOut() {
+        // Firebase sign out
+        FirebaseAuth.getInstance().signOut();
+
+        // Google sign out
+        mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                task -> Timber.d("Signed out"));
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
@@ -126,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
         if(user != null) {
             Timber.d("Signed in with user: %s", user.getDisplayName());
             Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, SIGN_OUT);
         }
     }
 }

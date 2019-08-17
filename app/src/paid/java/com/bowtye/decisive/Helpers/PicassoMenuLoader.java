@@ -1,4 +1,4 @@
-package com.bowtye.decisive;
+package com.bowtye.decisive.Helpers;
 
 import android.content.Context;
 import android.graphics.Bitmap;

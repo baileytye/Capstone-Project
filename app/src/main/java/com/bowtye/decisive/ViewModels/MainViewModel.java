@@ -51,7 +51,7 @@ public class MainViewModel extends AndroidViewModel {
                 }
             }
         }
-        mRepo.insert(p);
+        mRepo.insertProjectWithDetails(p);
     }
 
     public void insertDummyProject() {
@@ -96,6 +96,6 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void deleteProject(ProjectWithDetails p) {
-        mRepo.delete(p);
+        mRepo.deleteProjectWithDetails(p);
     }
 }

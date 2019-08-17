@@ -20,6 +20,12 @@ public class Project implements Parcelable {
     private String name;
     private Boolean hasPrice;
 
+    @Ignore
+    private String firebaseId;
+
+    @Ignore
+    public Project(){}
+
     public Project(int id, String name, Boolean hasPrice) {
         this.id = id;
         this.name = name;
@@ -30,6 +36,14 @@ public class Project implements Parcelable {
     public Project(String name, Boolean hasPrice) {
         this.name = name;
         this.hasPrice = hasPrice;
+    }
+
+    public String getFirebaseId() {
+        return firebaseId;
+    }
+
+    public void setFirebaseId(String firebaseId) {
+        this.firebaseId = firebaseId;
     }
 
     public int getId() {
@@ -61,19 +75,19 @@ public class Project implements Parcelable {
         return 0;
     }
 
-    @Ignore
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
         dest.writeString(this.name);
         dest.writeValue(this.hasPrice);
+        dest.writeString(this.firebaseId);
     }
 
-    @Ignore
     protected Project(Parcel in) {
         this.id = in.readInt();
         this.name = in.readString();
         this.hasPrice = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.firebaseId = in.readString();
     }
 
     public static final Creator<Project> CREATOR = new Creator<Project>() {
