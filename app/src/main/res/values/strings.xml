@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Decisive</string>
+    <!--<string name="app_name">Decisive</string>-->
     <string name="title_activity_add_option">Add Option</string>
 
     <!--Menu Strings-->

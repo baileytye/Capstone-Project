@@ -3,7 +3,7 @@ package com.bowtye.decisive.Activities;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,7 +33,6 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_DELETE_OPTION;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_EDIT_PROJECT;
@@ -43,13 +42,13 @@ import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_OPTION_ID;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT_ID;
 
-public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.OptionItemClickListener {
+public abstract class BaseProjectDetails extends AppCompatActivity implements DetailsAdapter.OptionItemClickListener {
 
-    private static final int ADD_OPTION_REQUEST_CODE = 877;
-    private static final int EDIT_OPTION_REQUEST_CODE = 92;
+    protected static final int ADD_OPTION_REQUEST_CODE = 877;
+    protected static final int EDIT_OPTION_REQUEST_CODE = 92;
 
     public static final int RESULT_DELETED = 10;
-    private static final int EDIT_PROJECT_REQUEST_CODE = 12;
+    protected static final int EDIT_PROJECT_REQUEST_CODE = 12;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -62,15 +61,15 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
     @BindView(R.id.tv_empty_options)
     TextView mEmptyOptionsTextView;
 
-    private RecyclerView.LayoutManager mLayoutManager;
-    private DetailsAdapter mAdapter;
-    private ProjectWithDetails mProject;
-    private int mProjectId;
-    private DetailsViewModel mViewModel;
+    protected RecyclerView.LayoutManager mLayoutManager;
+    protected DetailsAdapter mAdapter;
+    protected ProjectWithDetails mProject;
+    protected int mProjectId;
+    protected DetailsViewModel mViewModel;
 
-    private boolean mItemAdded = false;
-    private boolean mItemDeleted = false;
-    private int mItemSelected = -1;
+    protected boolean mItemAdded = false;
+    protected boolean mItemDeleted = false;
+    protected int mItemSelected = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +105,11 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
             case R.id.action_edit_project:
                 startAddProjectActivity();
                 return true;
+            case R.id.action_delete_project:
+                mViewModel.getProject(mProjectId).removeObservers(this);
+                mViewModel.deleteProject(mProject);
+                finishAfterTransition();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -123,7 +127,6 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
                 mViewModel.insertOption(o, mProjectId);
 
                 //TODO: Add calculate ratings
-                Timber.d("Project: %s inserted into the database", (o != null) ? o.getName() : "NULL");
             }
         } else if (requestCode == EDIT_OPTION_REQUEST_CODE) {
             if (data != null && data.hasExtra(EXTRA_DELETE_OPTION)) {
@@ -141,7 +144,7 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
         }
     }
 
-    private void prepareViews() {
+    protected void prepareViews() {
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -165,37 +168,7 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
         });
     }
 
-    private void prepareViewModel() {
-
-        mViewModel = ViewModelProviders.of(this).get(DetailsViewModel.class);
-        mViewModel.getProject(mProjectId).observe(this, projectWithDetails -> {
-            Timber.d("Livedata Updated");
-            mProject = projectWithDetails;
-            mAdapter.setProject(mProject);
-            if (mItemAdded) {
-                mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
-                mItemAdded = false;
-            } else if (mItemDeleted) {
-                mAdapter.notifyItemRemoved(mItemSelected);
-                mItemDeleted = false;
-            } else {
-                mAdapter.notifyDataSetChanged();
-            }
-
-            setEmptyMessageVisibility();
-
-            mToolbarLayout.setTitle(mProject.getProject().getName());
-
-            if (mProject.getOptionList() != null && mProject.getRequirementList() != null) {
-                Timber.d("Number of requirements loaded: %d",
-                        ((this.mProject.getRequirementList() != null) ? this.mProject.getRequirementList().size() : 0));
-                Timber.d("Number of options loaded: %d",
-                        ((this.mProject.getOptionList() != null) ? this.mProject.getOptionList().size() : 0));
-            }
-        });
-    }
-
-    void setEmptyMessageVisibility() {
+    protected void setEmptyMessageVisibility() {
         if ((mProject == null) || (mProject.getOptionList().size() == 0)) {
             mEmptyOptionsTextView.setVisibility(View.VISIBLE);
         } else {
@@ -218,7 +191,7 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
                 ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 
-    void startAddProjectActivity() {
+    protected void startAddProjectActivity() {
         Intent intent = new Intent(getApplicationContext(), AddProjectActivity.class);
         intent.putExtra(EXTRA_EDIT_PROJECT, mProject);
         Transition transition = new Slide(Gravity.TOP);
@@ -227,4 +200,6 @@ public class ProjectDetails extends AppCompatActivity implements DetailsAdapter.
         startActivityForResult(intent, EDIT_PROJECT_REQUEST_CODE,
                 ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
+
+    abstract void prepareViewModel();
 }

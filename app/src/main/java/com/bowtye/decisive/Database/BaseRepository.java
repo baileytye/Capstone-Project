@@ -22,7 +22,7 @@ public class BaseRepository {
     private MutableLiveData<ProjectWithDetails> selectedProject;
 
     @SuppressLint("StaticFieldLeak")
-    protected BaseRepository(Application application) {
+    BaseRepository(Application application) {
         AppDatabase database = AppDatabase.getInstance(application.getApplicationContext());
 
         projectListDao = database.projectListDao();
@@ -33,6 +33,12 @@ public class BaseRepository {
 
     public void insertOption(Option option, int projectId){
         option.setProjectId(projectId);
+        Timber.d("Project: %s inserted into Room database", option.getName());
+        new InsertOptionAsyncTask().execute(option);
+    }
+
+    public void updateOption(Option option, int position){
+        Timber.d("Project: %s updating into Room database", option.getName());
         new InsertOptionAsyncTask().execute(option);
     }
 
@@ -54,10 +60,12 @@ public class BaseRepository {
     }
 
     public LiveData<ProjectWithDetails> getSelectedProject(int id){
+        Timber.d("Getting selected project from Room database");
         return projectListDao.loadProjectById(id);
     }
 
     public LiveData<Option> getSelectedOption(int id){
+        Timber.d("Getting selected option from Room database");
         return projectListDao.loadOptionById(id);
     }
 
@@ -67,6 +75,7 @@ public class BaseRepository {
     }
 
     public void deleteProjectWithDetails(final ProjectWithDetails project){
+        Timber.d("Deleting project from Room database");
         new DeleteProjectWithDetailsAsyncTask().execute(project);
     }
 

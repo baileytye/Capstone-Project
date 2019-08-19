@@ -8,27 +8,21 @@ import android.transition.Transition;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.Adapters.MainAdapter;
-import com.bowtye.decisive.BuildConfig;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ViewModels.MainViewModel;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 import java.util.Objects;
@@ -41,7 +35,7 @@ import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_EDIT_PROJECT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_NEW_PROJECT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT_ID;
 
-public class BaseMainActivity extends AppCompatActivity
+public abstract class BaseMainActivity extends AppCompatActivity
         implements MainAdapter.ProjectItemClickListener {
 
     public static final int ADD_PROJECT_REQUEST_CODE = 3423;
@@ -60,7 +54,7 @@ public class BaseMainActivity extends AppCompatActivity
     private MainAdapter mAdapter;
     private MainViewModel mViewModel;
 
-    private List<ProjectWithDetails> mProjects;
+    protected List<ProjectWithDetails> mProjects;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,16 +81,7 @@ public class BaseMainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_clear) {
-            mViewModel.clearProjects();
-            return true;
-        } else if(id == R.id.action_delete_option){
-            mViewModel.clearOptions();
-            return true;
-        } else if (id == R.id.action_delete_requirement){
-            mViewModel.clearRequirements();
-            return true;
-        } else if(id == R.id.action_insert_dummy){
+        if(id == R.id.action_insert_dummy){
             mViewModel.insertDummyProject();
             return true;
         }

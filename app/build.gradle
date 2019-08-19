@@ -32,11 +32,13 @@ android {
     flavorDimensions 'version'
     productFlavors {
         paid {
+            resValue "string", "app_name", "Decisive+"
             dimension = 'version'
             applicationIdSuffix ".paid"
             versionNameSuffix "-paid"
         }
         free {
+            resValue "string", "app_name", "Decisive"
             dimension = 'version'
             applicationIdSuffix ".free"
             versionNameSuffix "-free"

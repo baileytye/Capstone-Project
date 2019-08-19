@@ -6,23 +6,6 @@
         android:orderInCategory="100"
         android:title="Sign out"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/action_clear"
-        android:orderInCategory="100"
-        android:title="Clear Projects"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_delete_option"
-        android:orderInCategory="101"
-        android:title="Delete Option"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_delete_requirement"
-        android:orderInCategory="101"
-        android:title="Delete Requirement"
-        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_insert_dummy"

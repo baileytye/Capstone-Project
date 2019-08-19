@@ -9,14 +9,10 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.bowtye.decisive.Database.ProjectRepository;
 import com.bowtye.decisive.Models.Option;
-import com.bowtye.decisive.Models.Requirement;
-
-import java.util.List;
 
 public class OptionDetailsViewModel extends AndroidViewModel {
 
     private ProjectRepository mRepo;
-    private List<Requirement> mRequirements;
     private LiveData<Option> mOption;
 
     public OptionDetailsViewModel(@NonNull Application application) {
@@ -42,6 +38,10 @@ public class OptionDetailsViewModel extends AndroidViewModel {
 
     public void deleteOption(Option option){
         mRepo.deleteOption(option);
+    }
+
+    public void updateOption(Option option, int position){
+        mRepo.updateOption(option, position);
     }
 
 }

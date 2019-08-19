@@ -11,11 +11,11 @@ import com.bowtye.decisive.Database.ProjectRepository;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 
-public class DetailsViewModel extends AndroidViewModel {
-    private LiveData<ProjectWithDetails> mProject;
-    private ProjectRepository mRepo;
+public class BaseDetailsViewModel extends AndroidViewModel {
+    LiveData<ProjectWithDetails> mProject;
+    ProjectRepository mRepo;
 
-    public DetailsViewModel(@NonNull Application application) {
+    BaseDetailsViewModel(@NonNull Application application) {
         super(application);
         mRepo = ProjectRepository.getInstance(application);
     }
@@ -26,7 +26,6 @@ public class DetailsViewModel extends AndroidViewModel {
             loadProject(id);
         }
         return mProject;
-
     }
 
     public void insertProjectWithDetails(ProjectWithDetails p) {
@@ -53,6 +52,10 @@ public class DetailsViewModel extends AndroidViewModel {
 
     public void deleteOption(Option option){
         mRepo.deleteOption(option);
+    }
+
+    public void deleteProject(ProjectWithDetails p) {
+        mRepo.deleteProjectWithDetails(p);
     }
 
 }

@@ -1,7 +1,10 @@
 package com.bowtye.decisive.Activities;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,6 +19,8 @@ import timber.log.Timber;
 import static com.bowtye.decisive.Activities.LoginActivity.SIGN_OUT;
 
 public class MainActivity extends BaseMainActivity{
+
+    public static final String EXTRA_FIREBASE_ID = "extra_firebase_id";
 
     private FirebaseUser mUser;
 
@@ -55,4 +60,16 @@ public class MainActivity extends BaseMainActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onProjectItemClicked(int position) {
+        if(mUser == null){
+            super.onProjectItemClicked(position);
+        } else {
+            Intent intent = new Intent(getApplicationContext(), ProjectDetails.class);
+            intent.putExtra(EXTRA_FIREBASE_ID, mProjects.get(position).getProject().getFirebaseId());
+
+            getWindow().setExitTransition(new Slide(Gravity.START));
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        }
+    }
 }
