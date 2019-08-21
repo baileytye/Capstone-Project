@@ -247,20 +247,20 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                         .fit()
                         .centerCrop()
                         .into(mPicturesImageView);
-                mPicturesImageView.setOnClickListener(null);
             } else {
                 setPlaceholderImage();
             }
         } else {
             mToolbarLayout.setTitle("Add option");
-            if (!mOption.getImagePath().equals("")) {
-                mPicturesImageView.setImageURI(Uri.parse(currentPhotoPath));
-                mPicturesImageView.setOnClickListener(null);
-            } else {
-                setPlaceholderImage();
-            }
+            setPlaceholderImage();
             mAdapter = new AddOptionAdapter(mRequirements, mOption, isEdit, this);
         }
+
+        mPicturesImageView.setOnClickListener(view -> {
+            mSheetDialog = new BottomSheetFragment(this);
+            FragmentManager fm = getSupportFragmentManager();
+            mSheetDialog.show(fm, "modalSheetDialog");
+        });
 
         //Not sure if these are efficient or not to detect changes
         GenericTextWatcher watcher = new GenericTextWatcher();
@@ -275,11 +275,6 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
 
     private void setPlaceholderImage() {
         mPicturesImageView.setImageResource(R.drawable.ic_add_a_photo_24dp);
-        mPicturesImageView.setOnClickListener(view -> {
-            mSheetDialog = new BottomSheetFragment(this);
-            FragmentManager fm = getSupportFragmentManager();
-            mSheetDialog.show(fm, "modalSheetDialog");
-        });
     }
 
     private int validateAndSave() {

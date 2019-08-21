@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

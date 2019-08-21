@@ -11,6 +11,8 @@ import com.bowtye.decisive.Database.ProjectRepository;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 
+import timber.log.Timber;
+
 public class BaseDetailsViewModel extends AndroidViewModel {
     LiveData<ProjectWithDetails> mProject;
     ProjectRepository mRepo;
@@ -31,6 +33,7 @@ public class BaseDetailsViewModel extends AndroidViewModel {
     public void insertProjectWithDetails(ProjectWithDetails p) {
         if((p != null) && (p.getOptionList().size() > 0) &&
                 (p.getOptionList().get(0).getRequirementValues().size() < p.getRequirementList().size())){
+            Timber.d("Resizing requirement value arrays in options");
             for(int i = 0; i < p.getOptionList().size(); i++){
 
                 for(int j = p.getOptionList().get(i).getRequirementValues().size();

@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.bowtye.decisive.Helpers.ProjectModelConverter;
 import com.bowtye.decisive.Models.Option;
+import com.bowtye.decisive.Models.ProjectFirebase;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 
 public class DetailsViewModel extends BaseDetailsViewModel {
@@ -29,5 +31,10 @@ public class DetailsViewModel extends BaseDetailsViewModel {
 
     public void deleteOptionFirebase(Option option,int position){
         mRepo.deleteOptionFirebase(option, position);
+    }
+
+    public void uploadImagesToFirebase(ProjectWithDetails projectWithDetails){
+        mRepo.uploadImagesToFirebase(ProjectModelConverter.projectWithDetailsToProjectFirebase(projectWithDetails,
+                projectWithDetails.getProject().getFirebaseId()));
     }
 }

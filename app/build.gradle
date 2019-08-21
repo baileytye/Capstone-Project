@@ -67,9 +67,10 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timber_version"
 
     paidImplementation "com.google.android.gms:play-services-auth:$play_services_version"
-    paidImplementation 'com.google.firebase:firebase-auth:18.1.0'
-    paidImplementation 'com.google.firebase:firebase-core:17.0.1'
-    paidImplementation 'com.google.firebase:firebase-firestore:20.2.0'
+    paidImplementation 'com.google.firebase:firebase-auth:19.0.0'
+    paidImplementation 'com.google.firebase:firebase-core:17.1.0'
+    paidImplementation 'com.google.firebase:firebase-firestore:21.0.0'
+    paidImplementation 'com.google.firebase:firebase-storage:19.0.0'
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 

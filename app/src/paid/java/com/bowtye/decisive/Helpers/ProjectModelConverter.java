@@ -63,7 +63,7 @@ public class ProjectModelConverter {
         }
     }
 
-    private static List<Option> optionFirebaseToOptionList(List<OptionFirebase> optionFirebaseList) {
+    public static List<Option> optionFirebaseToOptionList(List<OptionFirebase> optionFirebaseList) {
 
         if (optionFirebaseList != null) {
             List<Option> optionList = new ArrayList<>();
@@ -84,7 +84,7 @@ public class ProjectModelConverter {
         }
     }
 
-    private static List<OptionFirebase> optionToOptionFirebaseList(List<Option> optionList, String projectId) {
+    public static List<OptionFirebase> optionToOptionFirebaseList(List<Option> optionList, String projectId) {
 
         if (optionList != null) {
             List<OptionFirebase> optionFirebaseList = new ArrayList<>();

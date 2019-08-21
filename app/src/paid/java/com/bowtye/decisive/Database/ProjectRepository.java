@@ -1,22 +1,33 @@
 package com.bowtye.decisive.Database;
 
 import android.app.Application;
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.bowtye.decisive.Helpers.FileUtils;
 import com.bowtye.decisive.Helpers.ProjectModelConverter;
 import com.bowtye.decisive.Models.Option;
+import com.bowtye.decisive.Models.OptionFirebase;
 import com.bowtye.decisive.Models.ProjectFirebase;
 import com.bowtye.decisive.Models.ProjectWithDetails;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +42,10 @@ public class ProjectRepository extends BaseRepository {
     private MutableLiveData<List<ProjectWithDetails>> projects;
     private MutableLiveData<ProjectWithDetails> selectedProject;
     private MutableLiveData<Option> selectedOption;
+    private ListenerRegistration mSelectedOptionRegestration;
+    private ListenerRegistration mSelectedProjectRegestration;
 
     private static final String PROJECT_COLLECTION = "projects";
-    private static final String OPTION_COLLECTION = "options";
-    private static final String REQUIREMENT_COLLECTION = "requirements";
 
     public static ProjectRepository getInstance(Application application) {
         if (instance == null) {
@@ -104,11 +115,21 @@ public class ProjectRepository extends BaseRepository {
             Timber.d("Removing option in firebase");
             if(selectedProject.getValue() != null) {
 
-                List<Option> options = selectedProject.getValue().getOptionList();
+                mSelectedOptionRegestration.remove();
+
+                List<Option> options = new ArrayList<>(selectedProject.getValue().getOptionList());
+
                 options.remove(position);
 
-                new UpdateOptionAsyncTask(selectedProject.getValue().getProject().getFirebaseId())
-                        .execute(options);
+                if(!option.getImagePath().equals("")){
+                    deleteImage(option.getName());
+                }
+
+                List<OptionFirebase> optionsFirebase = ProjectModelConverter.optionToOptionFirebaseList(
+                        options,
+                        selectedProject.getValue().getProject().getFirebaseId());
+
+                updateOptionList(optionsFirebase);
             }
         }
     }
@@ -124,11 +145,15 @@ public class ProjectRepository extends BaseRepository {
             Timber.d("Updating option in firebase");
             if(selectedProject.getValue() != null) {
 
-                List<Option> options = selectedProject.getValue().getOptionList();
+                List<Option> options = new ArrayList<>(selectedProject.getValue().getOptionList());
+
                 options.set(position, option);
 
-                new UpdateOptionAsyncTask(selectedProject.getValue().getProject().getFirebaseId())
-                        .execute(options);
+                List<OptionFirebase> optionsFirebase = ProjectModelConverter.optionToOptionFirebaseList(
+                        options,
+                        selectedProject.getValue().getProject().getFirebaseId());
+
+                updateOptionList(optionsFirebase);
             }
         }
     }
@@ -142,19 +167,27 @@ public class ProjectRepository extends BaseRepository {
             return super.getSelectedOption(id);
         } else {
             if (selectedProject.getValue() != null) {
+
                 DocumentReference projectReference = firebaseDb.collection(PROJECT_COLLECTION)
                         .document(selectedProject.getValue().getProject().getFirebaseId());
-                projectReference.addSnapshotListener((value, e) -> {
+
+                mSelectedOptionRegestration = projectReference.addSnapshotListener((value, e) -> {
                     if (e != null) {
                         Timber.w("Listener of firebase projects failed");
                         selectedProject.setValue(null);
+                        return;
                     }
 
                     if (value != null) {
                         ProjectFirebase projectFirebase = value.toObject(ProjectFirebase.class);
                         ProjectWithDetails projectWithDetails = ProjectModelConverter.projectFirebaseToProjectWithDetails(projectFirebase);
 
-                        selectedOption.setValue(Objects.requireNonNull(projectWithDetails).getOptionList().get(id));
+                        //Not sure why I need these checks, can't figure it out, but it fixes two errors:
+                        //Deleting only option crash, and seeing details after adding a requirement crash
+                        if(projectWithDetails != null && !(projectWithDetails.getOptionList().size() == 0)) {
+                            selectedOption.setValue(projectWithDetails.getOptionList().get(id));
+                        }
+
                     } else {
                         Timber.w("Firestore value is null");
                     }
@@ -215,7 +248,7 @@ public class ProjectRepository extends BaseRepository {
 
             DocumentReference projectReference = firebaseDb.collection(PROJECT_COLLECTION).document(firebaseId);
 
-            projectReference.addSnapshotListener((value, e) -> {
+            mSelectedProjectRegestration = projectReference.addSnapshotListener((value, e) -> {
                 if (e != null) {
                     Timber.w("Listener of firebase projects failed");
                     selectedProject.setValue(null);
@@ -225,7 +258,24 @@ public class ProjectRepository extends BaseRepository {
                     ProjectFirebase projectFirebase = value.toObject(ProjectFirebase.class);
                     ProjectWithDetails projectWithDetails = ProjectModelConverter.projectFirebaseToProjectWithDetails(projectFirebase);
 
+//                    if(projectWithDetails != null) {
+//                        for (Option option : projectWithDetails.getOptionList()) {
+//
+//                            if(!option.getName().equals("")) {
+//                                StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images/users/" +
+//                                        Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()
+//                                        + "/" + option.getName() + ".jpg");
+//
+//                                imageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+//                                    option.setImagePath(uri.toString());
+//                                    Timber.d("Set image path to: %s", uri.toString());
+//                                }).addOnFailureListener(er -> Timber.d("Failed to fetch image url"));
+//                            }
+//                        }
+//                    }
+
                     selectedProject.setValue(projectWithDetails);
+
                 } else {
                     Timber.w("Firestore value is null");
                 }
@@ -258,43 +308,103 @@ public class ProjectRepository extends BaseRepository {
         if (user == null) {
             super.deleteProjectWithDetails(project);
         } else {
+            if(mSelectedProjectRegestration != null){
+                mSelectedProjectRegestration.remove();
+            }
+
+            ProjectFirebase projectFirebase =
+                    ProjectModelConverter.projectWithDetailsToProjectFirebase(project, user.getUid());
+
             Timber.d("Deleting project from firebase");
-            new DeleteProjectAsyncTask().execute(project.getProject().getFirebaseId());
+            new DeleteProjectAsyncTask().execute(projectFirebase);
             selectedProject.setValue(null);
         }
     }
 
-    private static class UpdateOptionAsyncTask extends AsyncTask<List<Option>,Void,Void >{
+    private void updateOptionList(List<OptionFirebase> options){
+        DocumentReference projectDocumentRef;
 
-        private String mProjectId;
+        Timber.d("Option list being updated");
+        projectDocumentRef =
+                FirebaseFirestore.getInstance().collection(PROJECT_COLLECTION).document(
+                        Objects.requireNonNull(selectedProject.getValue()).getProject().getFirebaseId());
 
-        public UpdateOptionAsyncTask(String projectId){
-            mProjectId = projectId;
-        }
-
-        @SafeVarargs
-        @Override
-        protected final Void doInBackground(List<Option>... lists) {
-
-            DocumentReference projectDocumentRef;
-            List<Option> options = lists[0];
-
-            Timber.d("Option being updated");
-            projectDocumentRef =
-                    FirebaseFirestore.getInstance().collection(PROJECT_COLLECTION).document(mProjectId);
-            projectDocumentRef.update("options", options)
+        projectDocumentRef.update("options", options)
                 .addOnSuccessListener(d -> Timber.d("Successfully updated options"))
                 .addOnFailureListener(e -> Timber.e("Failed to update options %s", e.getMessage()));
+    }
+
+    private static void deleteImage(String name){
+        StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images/users/" +
+                Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()
+                + "/" + name + ".jpg");
+
+        imageReference.delete();
+    }
+
+    public void uploadImagesToFirebase(ProjectFirebase projectFirebase){
+        new UploadImageUrlsAsyncTask().execute(projectFirebase);
+    }
+
+    private static class UploadImageUrlsAsyncTask extends AsyncTask<ProjectFirebase, Void, Void>{
+
+        @Override
+        protected Void doInBackground(ProjectFirebase... projectFirebases) {
+
+            Timber.d("Uploading images to firebase");
+
+            ProjectFirebase projectFirebase = projectFirebases[0];
+
+            List<OptionFirebase> tempOptions = new ArrayList<>(projectFirebase.getOptions());
+
+            List<Task<Uri>> tasks = new ArrayList<>();
+            List<StorageTask<UploadTask.TaskSnapshot>> uploadTasks = new ArrayList<>();
+
+            for(OptionFirebase option : tempOptions) {
+
+                if(!option.getImagePath().equals("")) {
+
+                    StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images/users/" +
+                            Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()
+                            + "/" + option.getName() + ".jpg");
+
+                    if (!option.getImagePath().substring(0, 4).equals("http")) {
+                        FileUtils.rotateFile(null, Uri.parse(option.getImagePath()));
+
+                        uploadTasks.add(imageReference.putFile(Uri.parse(option.getImagePath())).addOnSuccessListener(taskSnapshot -> {
+                            tasks.add(imageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                                option.setImagePath(uri.toString());
+                                Timber.d("Set firebase image url to %s", uri.toString());
+                            }));
+                        }));
+                    }
+                }
+            }
+
+            Tasks.whenAll(uploadTasks).addOnSuccessListener(aVoid -> Tasks.whenAll(tasks).addOnSuccessListener(v -> {
+                Timber.d("Image paths finished updating, updating options");
+                DocumentReference projectDocumentRef;
+
+                projectDocumentRef =
+                        FirebaseFirestore.getInstance().collection(PROJECT_COLLECTION).document(
+                                projectFirebase.getProjectId());
+
+                projectDocumentRef.update("options", tempOptions)
+                        .addOnSuccessListener(d -> Timber.d("Successfully updated options"))
+                        .addOnFailureListener(e -> Timber.e("Failed to update options %s", e.getMessage()));
+            }));
 
             return null;
         }
     }
 
-    private static class DeleteProjectAsyncTask extends AsyncTask<String, Void, Void> {
+
+    private static class DeleteProjectAsyncTask extends AsyncTask<ProjectFirebase, Void, Void> {
 
         @Override
-        protected Void doInBackground(String... strings) {
-            String projectId = strings[0];
+        protected Void doInBackground(ProjectFirebase... projectFirebases) {
+            ProjectFirebase projectFirebase = projectFirebases[0];
+            String projectId = projectFirebases[0].getProjectId();
 
             DocumentReference projectRef = FirebaseFirestore.getInstance().collection(PROJECT_COLLECTION).document(projectId);
             projectRef.delete()
@@ -303,6 +413,13 @@ public class ProjectRepository extends BaseRepository {
                                     projectId, e.getMessage()))
                     .addOnSuccessListener(
                             documentReference -> Timber.d("Successfully deleted %s from firebase", projectId));
+
+            for(OptionFirebase option : projectFirebase.getOptions()){
+
+                if(!option.getImagePath().equals("")) {
+                    deleteImage(option.getName());
+                }
+            }
             return null;
         }
     }
@@ -336,7 +453,6 @@ public class ProjectRepository extends BaseRepository {
                             documentReference -> {
                                 Timber.d("Successfully added %s to firebase", projectFirebase.getName());
                             });
-
             return null;
         }
     }

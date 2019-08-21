@@ -16,6 +16,7 @@ import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.VerticalSpaceItemDecoration;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -53,6 +54,10 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
 
     public void setProject(ProjectWithDetails p) {
         mProject = p;
+    }
+
+    public void clearRecyclerPool(){
+        sharedPool.clear();
     }
 
     class DetailsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

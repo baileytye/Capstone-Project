@@ -53,21 +53,30 @@ public class ProjectDetails extends BaseProjectDetails{
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        mViewModel.uploadImagesToFirebase(mProject);
+    }
+
+    @Override
     void prepareViewModel() {
+        Timber.d("Preparing view model project details");
         mViewModel = ViewModelProviders.of(this).get(DetailsViewModel.class);
         mViewModel.getProjectFirebase(mProjectId, mFirebaseId).observe(this, projectWithDetails -> {
             Timber.d("Livedata Updated");
             mProject = projectWithDetails;
+            mAdapter.clearRecyclerPool();
+            mRecyclerView.getRecycledViewPool().clear();
             mAdapter.setProject(mProject);
-            if (mItemAdded) {
-                mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
-                mItemAdded = false;
-            } else if (mItemDeleted) {
-                mAdapter.notifyItemRemoved(mItemSelected);
-                mItemDeleted = false;
-            } else {
+//            if (mItemAdded) {
+//                mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
+//                mItemAdded = false;
+//            } else if (mItemDeleted) {
+//                mAdapter.notifyItemRemoved(mItemSelected);
+//                mItemDeleted = false;
+//            } else {
                 mAdapter.notifyDataSetChanged();
-            }
+//            }
 
             setEmptyMessageVisibility();
 
