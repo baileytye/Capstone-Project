@@ -55,7 +55,9 @@ public class ProjectDetails extends BaseProjectDetails{
     @Override
     protected void onStop() {
         super.onStop();
-        mViewModel.uploadImagesToFirebase(mProject);
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            mViewModel.uploadImagesToFirebase(mProject);
+        }
     }
 
     @Override

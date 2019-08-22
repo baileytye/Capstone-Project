@@ -27,6 +27,7 @@
     <color name="black">#000000</color>
 
     <color name="transparent">#00000000</color>
+    <color name="transparentWhite">#1affffff</color>
 
     <!--Rating Colors-->
     <color name="green500">#4CAF50</color>

@@ -39,7 +39,6 @@
     <string name="hint_price">Price</string>
     <string name="hint_weight">Weight</string>
 
-
     <!--Button Labels-->
     <string name="button_advanced">Advanced</string>
     <string name="button_remove">Remove</string>
@@ -58,8 +57,9 @@
     <string name="content_description_delete_requirement">Delete requirement</string>
     <string name="content_description_save_or_edit">save or edit</string>
     <string name="content_description_thumbs_up_or_down">Thumbs up or down</string>
-    <string name="leave_without_saving_dialog_message">Leave without saving?</string>
 
+    <!--Dialog Messages-->
+    <string name="leave_without_saving_dialog_message">Leave without saving?</string>
 
     <!--Requirement Arrays-->
     <string-array name="type_array">
