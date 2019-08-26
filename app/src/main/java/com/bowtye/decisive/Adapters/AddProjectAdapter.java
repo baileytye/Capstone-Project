@@ -55,7 +55,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
         notifyItemChanged(position);
     }
 
-    private void removeAt(int position) {
+    public void removeAt(int position) {
         mRequirements.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mRequirements.size() - 1);

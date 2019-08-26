@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bowtye.decisive.Adapters.DetailsAdapter;
+import com.bowtye.decisive.Helpers.RatingUtils;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
@@ -29,10 +30,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_DELETE_OPTION;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_EDIT_PROJECT;
@@ -42,7 +45,10 @@ import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_OPTION_ID;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT_ID;
 
-public abstract class BaseProjectDetails extends AppCompatActivity implements DetailsAdapter.OptionItemClickListener {
+public abstract class BaseProjectDetails extends AppCompatActivity implements
+        DetailsAdapter.OptionItemClickListener,
+        RatingUtils.CalculateRatingsOfProjectAsyncTask.ProjectResultAsyncCallback,
+        RatingUtils.CalculateRatingOfOptionAsyncTask.OptionResultAsyncCallback {
 
     protected static final int ADD_OPTION_REQUEST_CODE = 877;
     protected static final int EDIT_OPTION_REQUEST_CODE = 92;
@@ -120,13 +126,12 @@ public abstract class BaseProjectDetails extends AppCompatActivity implements De
         if ((requestCode == ADD_OPTION_REQUEST_CODE) && (resultCode == RESULT_OK)) {
             if (data != null && data.hasExtra(EXTRA_OPTION)) {
                 Option o = data.getParcelableExtra(EXTRA_OPTION);
-                if (mProject.getOptionList() == null) {
-                    mProject.setOptionList(new ArrayList<>());
-                }
-                mItemAdded = true;
-                mViewModel.insertOption(o, mProjectId);
 
-                //TODO: Add calculate ratings
+                //Don't think this is needed but if a bug appears this could be why
+//                if (mProject.getOptionList() == null) {
+//                    mProject.setOptionList(new ArrayList<>());
+//                }
+                new RatingUtils.CalculateRatingOfOptionAsyncTask(this, mProject.getRequirementList()).execute(o);
             }
         } else if (requestCode == EDIT_OPTION_REQUEST_CODE) {
             if (data != null && data.hasExtra(EXTRA_DELETE_OPTION)) {
@@ -138,8 +143,9 @@ public abstract class BaseProjectDetails extends AppCompatActivity implements De
             }
         } else if (requestCode == EDIT_PROJECT_REQUEST_CODE && resultCode == RESULT_OK) {
             if (data != null && data.hasExtra(EXTRA_NEW_PROJECT)) {
-                ProjectWithDetails p = data.getParcelableExtra(EXTRA_NEW_PROJECT);
-                mViewModel.insertProjectWithDetails(p);
+                ProjectWithDetails projectWithDetails = data.getParcelableExtra(EXTRA_NEW_PROJECT);
+                mViewModel.resizeOptionValuesList(projectWithDetails);
+                new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
             }
         }
     }
@@ -202,4 +208,18 @@ public abstract class BaseProjectDetails extends AppCompatActivity implements De
     }
 
     abstract void prepareViewModel();
+
+    @Override
+    public void updateProjectAfterCalculatingRatings(ProjectWithDetails projectWithDetails) {
+        mViewModel.insertProjectWithDetails(projectWithDetails);
+        Timber.d("Project: %s updated in database", (projectWithDetails != null)
+                ? projectWithDetails.getProject().getName() : "NULL");
+    }
+
+
+    @Override
+    public void updateOptionAfterCalculatingRatings(Option option) {
+        mItemAdded = true;
+        mViewModel.insertOption(option, mProjectId);
+    }
 }

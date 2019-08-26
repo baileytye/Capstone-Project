@@ -22,6 +22,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bowtye.decisive.Adapters.RequirementsAdapter;
+import com.bowtye.decisive.Helpers.RatingUtils;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.Models.Requirement;
@@ -45,7 +46,7 @@ import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_OPTION;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_OPTION_ID;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT;
 
-public class OptionDetails extends AppCompatActivity {
+public class OptionDetails extends AppCompatActivity implements RatingUtils.CalculateRatingOfOptionAsyncTask.OptionResultAsyncCallback {
 
     public static final int EDIT_OPTION_REQUEST_CODE = 234;
 
@@ -144,8 +145,7 @@ public class OptionDetails extends AppCompatActivity {
                     case RESULT_OK:
                         Timber.d("Received option from add ");
                         mOption = data.getParcelableExtra(EXTRA_OPTION);
-                        mViewModel.updateOption(mOption, mOptionId);
-                        //TODO: add calculate ratings
+                        new RatingUtils.CalculateRatingOfOptionAsyncTask(this, mRequirements).execute(mOption);
                         break;
                 }
             }
@@ -206,5 +206,10 @@ public class OptionDetails extends AppCompatActivity {
                 fillData();
             }
         });
+    }
+
+    @Override
+    public void updateOptionAfterCalculatingRatings(Option option) {
+        mViewModel.updateOption(mOption, mOptionId);
     }
 }

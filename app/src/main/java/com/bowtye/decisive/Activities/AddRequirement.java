@@ -39,6 +39,8 @@ public class AddRequirement extends AppCompatActivity {
     public static final int VALIDATION_NAME_ERROR = -2;
     public static final int VALIDATION_WEIGHT_ERROR = -3;
 
+    public static final int RESULT_REQ_DELETED = 2;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.toolbar_layout)
@@ -134,7 +136,15 @@ public class AddRequirement extends AppCompatActivity {
                         etWeight.requestFocus();
                         break;
                 }
-            return true;
+                return true;
+            case R.id.action_delete_requirement:
+                if(isEdit){
+                    Intent out = new Intent();
+                    out.putExtra(EXTRA_REQUIREMENT, mRequirement);
+                    setResult(RESULT_REQ_DELETED, out);
+                }
+                finishAfterTransition();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

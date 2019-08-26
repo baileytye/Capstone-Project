@@ -2,7 +2,12 @@ package com.bowtye.decisive.Helpers;
 
 import android.os.AsyncTask;
 
+import com.bowtye.decisive.Models.Option;
+import com.bowtye.decisive.Models.Project;
+import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.Models.Requirement;
+
+import org.jetbrains.annotations.Async;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +15,13 @@ import java.util.List;
 
 public class RatingUtils {
 
+    /**
+     * Calculates the rating of a requirement
+     * @param expected expected vale
+     * @param actual actual value
+     * @param moreIsBetter higher number better
+     * @return rating of requirement
+     */
     public static Float calculateRequirementRating(Double expected, Double actual, Boolean moreIsBetter){
         float rating;
 
@@ -29,6 +41,12 @@ public class RatingUtils {
         return (rating > 5) ? 5 : rating;
     }
 
+    /**
+     * Calculates the ratings of each requirement within an option
+     * @param requirements requirements of option
+     * @param values actual values of each requirement
+     * @return calculated ratings of all requirements
+     */
     public static List<Float> calculateAllRequirementRatings(List<Requirement> requirements, List<Double> values){
 
         List<Float> ratings = new ArrayList<>(Collections.nCopies(requirements.size(), (float) 0));
@@ -43,6 +61,12 @@ public class RatingUtils {
         return ratings;
     }
 
+    /**
+     * Calculates the rating of an option given the calculated requirement ratings
+     * @param requirementRatings calculated requirement ratings
+     * @param requirements requirements of option
+     * @return rating of option
+     */
     public static Float calculateOptionRating(List<Float>requirementRatings, List<Requirement> requirements){
         float rating = 0;
         float weightTotal = 0;
@@ -53,6 +77,70 @@ public class RatingUtils {
         }
 
         return rating / weightTotal;
+    }
+
+    public static class CalculateRatingsOfProjectAsyncTask extends AsyncTask<ProjectWithDetails, Void, ProjectWithDetails>{
+        ProjectResultAsyncCallback callback;
+
+        public CalculateRatingsOfProjectAsyncTask(ProjectResultAsyncCallback callback){
+            this.callback = callback;
+        }
+
+        @Override
+        protected ProjectWithDetails doInBackground(ProjectWithDetails... projectWithDetails) {
+            ProjectWithDetails project = projectWithDetails[0];
+
+            for(Option option : project.getOptionList()){
+                option.setRating(
+                    RatingUtils.calculateOptionRating(
+                      calculateAllRequirementRatings(project.getRequirementList(), option.getRequirementValues()),
+                      project.getRequirementList()
+                    )
+                );
+            }
+            return project;
+        }
+
+        @Override
+        protected void onPostExecute(ProjectWithDetails projectWithDetails) {
+            callback.updateProjectAfterCalculatingRatings(projectWithDetails);
+        }
+
+        public interface ProjectResultAsyncCallback{
+            void updateProjectAfterCalculatingRatings(ProjectWithDetails projectWithDetails);
+        }
+    }
+
+    public static class CalculateRatingOfOptionAsyncTask extends AsyncTask<Option, Void, Option>{
+
+        OptionResultAsyncCallback callback;
+        List<Requirement> requirements;
+
+        public CalculateRatingOfOptionAsyncTask(OptionResultAsyncCallback callback, List<Requirement> requirements){
+            this.callback = callback;
+            this.requirements = requirements;
+        }
+
+        @Override
+        protected Option doInBackground(Option... options) {
+            Option option = options[0];
+            option.setRating(
+                    RatingUtils.calculateOptionRating(
+                            calculateAllRequirementRatings(requirements, option.getRequirementValues()),
+                            requirements
+                    )
+            );
+            return option;
+        }
+
+        @Override
+        protected void onPostExecute(Option option) {
+            callback.updateOptionAfterCalculatingRatings(option);
+        }
+
+        public interface OptionResultAsyncCallback{
+            void updateOptionAfterCalculatingRatings(Option option);
+        }
     }
 
     public static class CalculateRatingsAsyncTask extends AsyncTask<Void, Void, List<Float>> {

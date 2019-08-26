@@ -7,4 +7,9 @@
         android:id="@+id/action_save"/>
     <item android:title="Reset"
         app:showAsAction="never"/>
+    <item
+        android:title="Delete"
+        android:id="@+id/action_delete_requirement"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_delete_24dp"/>
 </menu>

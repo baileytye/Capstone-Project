@@ -48,6 +48,9 @@ public abstract class ProjectListDao {
     abstract void deleteOption(Option option);
 
     @Delete
+    abstract void deleteRequirement(Requirement requirement);
+
+    @Delete
     abstract void deleteProject(Project project);
 
     @Query("DELETE FROM option WHERE projectId = :id")

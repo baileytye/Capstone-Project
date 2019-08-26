@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.bowtye.decisive.Database.ProjectRepository;
+import com.bowtye.decisive.Helpers.RatingUtils;
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.Project;
 import com.bowtye.decisive.Models.ProjectWithDetails;
@@ -40,7 +41,7 @@ public class MainViewModel extends AndroidViewModel {
         return mProjects;
     }
 
-    public void insertProjectWithDetails(ProjectWithDetails p) {
+    public void resizeOptionValuesList(ProjectWithDetails p){
         if((p != null) && (p.getOptionList().size() > 0) &&
                 (p.getOptionList().get(0).getRequirementValues().size() < p.getRequirementList().size())){
             for(int i = 0; i < p.getOptionList().size(); i++){
@@ -51,6 +52,9 @@ public class MainViewModel extends AndroidViewModel {
                 }
             }
         }
+    }
+
+    public void insertProjectWithDetails(ProjectWithDetails p) {
         mRepo.insertProjectWithDetails(p);
     }
 
@@ -70,7 +74,14 @@ public class MainViewModel extends AndroidViewModel {
 
         List<Double> requirementValues = new ArrayList<>(Arrays.asList(1.0, 2.0, 0.0));
 
-        Option option1 = new Option("House 1", 100000, (float) 2.3, false, requirementValues, "First test house", "");
+        Option option1 = new Option("House 1", 100000, (float) 0, false, requirementValues, "First test house", "");
+
+        option1.setRating(
+                RatingUtils.calculateOptionRating(
+                        RatingUtils.calculateAllRequirementRatings(requirements, requirementValues),
+                        requirements
+                )
+        );
 
         Project p = new Project("House", false);
 

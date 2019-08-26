@@ -36,6 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static com.bowtye.decisive.Activities.AddRequirement.RESULT_REQ_DELETED;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_EDIT_PROJECT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_EDIT_REQUIREMENT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_NEW_PROJECT;
@@ -126,12 +127,24 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
                 itemChanged = true;
             }
         } else if (requestCode == EDIT_REQUIREMENT_REQUEST_CODE && data != null) {
-            if (data.hasExtra(EXTRA_REQUIREMENT) && resultCode == RESULT_OK) {
+            if (data.hasExtra(EXTRA_REQUIREMENT)) {
+
                 Requirement requirement = data.getParcelableExtra(EXTRA_REQUIREMENT);
-                for (Option option : mProject.getOptionList()) {
-                    option.getRequirementValues().set(mPositionClicked, (double) 0);
+
+                switch (resultCode) {
+                    case RESULT_OK:
+                        for (Option option : mProject.getOptionList()) {
+                            option.getRequirementValues().set(mPositionClicked, (double) 0);
+                        }
+                        mAdapter.overideRequirement(requirement, mPositionClicked);
+                        break;
+                    case RESULT_REQ_DELETED:
+                        mAdapter.removeAt(mPositionClicked);
+                        for(Option option : mProject.getOptionList()){
+                            option.getRequirementValues().remove(mPositionClicked);
+                        }
+                        break;
                 }
-                mAdapter.overideRequirement(requirement, mPositionClicked);
                 itemChanged = true;
             }
         }

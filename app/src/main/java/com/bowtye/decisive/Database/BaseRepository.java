@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.bowtye.decisive.Models.Option;
 import com.bowtye.decisive.Models.ProjectWithDetails;
+import com.bowtye.decisive.Models.Requirement;
 
 import java.util.List;
 
@@ -83,10 +84,15 @@ public class BaseRepository {
         new DeleteOptionAsyncTask().execute(option);
     }
 
+    public void deleteRequirement(final Requirement requirement){
+
+    }
+
     private static class InsertProjectWithDetailsAsyncTask extends AsyncTask<ProjectWithDetails,Void,Void> {
 
         @Override
         protected Void doInBackground(ProjectWithDetails... projectWithDetails) {
+            projectListDao.deleteRequirementsWithProjectId(projectWithDetails[0].getProject().getId());
             projectListDao.insertProjectWithDetails(projectWithDetails[0]);
             return null;
         }

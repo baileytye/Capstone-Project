@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.Adapters.MainAdapter;
+import com.bowtye.decisive.Helpers.RatingUtils;
 import com.bowtye.decisive.Models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ViewModels.MainViewModel;
@@ -36,7 +37,8 @@ import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_NEW_PROJECT;
 import static com.bowtye.decisive.Helpers.ExtraLabels.EXTRA_PROJECT_ID;
 
 public abstract class BaseMainActivity extends AppCompatActivity
-        implements MainAdapter.ProjectItemClickListener {
+        implements MainAdapter.ProjectItemClickListener,
+        RatingUtils.CalculateRatingsOfProjectAsyncTask.ProjectResultAsyncCallback {
 
     public static final int ADD_PROJECT_REQUEST_CODE = 3423;
 
@@ -112,10 +114,9 @@ public abstract class BaseMainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if ((requestCode == ADD_PROJECT_REQUEST_CODE) && (resultCode == RESULT_OK)) {
             if (data != null && data.hasExtra(EXTRA_NEW_PROJECT)) {
-                ProjectWithDetails p = data.getParcelableExtra(EXTRA_NEW_PROJECT);
-                mViewModel.insertProjectWithDetails(p);
-                //TODO: Add calculate ratings for newly added requirements
-                Timber.d("Project: %s inserted into the database", (p != null) ? p.getProject().getName() : "NULL");
+                ProjectWithDetails projectWithDetails = data.getParcelableExtra(EXTRA_NEW_PROJECT);
+                mViewModel.resizeOptionValuesList(projectWithDetails);
+                new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
             }
         }
     }
@@ -166,4 +167,11 @@ public abstract class BaseMainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void updateProjectAfterCalculatingRatings(ProjectWithDetails projectWithDetails) {
+        mViewModel.insertProjectWithDetails(projectWithDetails);
+
+        Timber.d("Project: %s inserted into the database", (projectWithDetails != null)
+                ? projectWithDetails.getProject().getName() : "NULL");
+    }
 }
