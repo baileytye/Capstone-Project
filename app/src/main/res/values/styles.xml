@@ -15,6 +15,11 @@
     <style name="AppTheme" parent="BaseTheme">
     </style>
 
+    <style name="LicenseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+    </style>
+
     <!--AppbarLayout Style-->
     <style name="MyAppbarLayoutStyle" parent="AppTheme.AppBarOverlay">
         <!--<item name="elevation">0dp</item>-->

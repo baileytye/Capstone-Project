@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 
 android {
     signingConfigs {
@@ -60,6 +61,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.0.0'
     implementation 'androidx.navigation:navigation-ui:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.preference:preference:1.0.0'
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
     implementation "com.jakewharton:butterknife:$butterknife_version"
@@ -95,3 +98,4 @@ if (getGradle().getStartParameter().getTaskRequests()
         .toString().contains("Paid")) {
     apply plugin: 'com.google.gms.google-services'
 }
+

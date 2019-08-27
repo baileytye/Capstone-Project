@@ -26,4 +26,6 @@
     <dimen name="text_input_layer_padding">8dp</dimen>
     <dimen name="recycler_view_padding">8dp</dimen>
 
+    <dimen name="toolbar_elevation_pinned">4dp</dimen>
+
 </resources>

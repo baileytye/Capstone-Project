@@ -3,7 +3,7 @@
     <item>
         <objectAnimator
             android:propertyName="elevation"
-            android:valueTo="4dp"
+            android:valueTo="@dimen/toolbar_elevation_pinned"
             android:valueType="floatType" />
     </item>
 </selector>

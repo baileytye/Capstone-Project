@@ -14,13 +14,14 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:label="@string/title_activity_settings" />
         <activity android:name=".ui.addRequirement.AddRequirement" />
         <activity
             android:name=".ui.ratings.RatingsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity android:name=".ui.optionDetails.OptionDetails" />
-
         <activity
             android:name=".ui.addOption.AddOption"
             android:label="@string/title_activity_add_option"
@@ -30,6 +31,13 @@
             android:name=".ui.addProject.AddProjectActivity"
             android:configChanges="orientation"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/LicenseTheme"/>
+
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/LicenseTheme" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -45,7 +53,6 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

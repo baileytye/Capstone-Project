@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.models.ProjectWithDetails;
 import com.bowtye.decisive.R;
+import com.bowtye.decisive.ui.settings.SettingsActivity;
 import com.bowtye.decisive.utils.RatingUtils;
 import com.bowtye.decisive.ui.addProject.AddProjectActivity;
 import com.bowtye.decisive.ui.projectDetails.ProjectDetailsActivity;
@@ -90,11 +91,14 @@ public class BaseHomeFragment extends Fragment implements HomeAdapter.ProjectIte
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.action_insert_dummy){
-            mViewModel.insertDummyProject();
-            return true;
+        switch (id){
+            case R.id.action_insert_dummy:
+                mViewModel.insertDummyProject();
+                return true;
+            case R.id.action_settings:
+                Objects.requireNonNull(getActivity()).startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
