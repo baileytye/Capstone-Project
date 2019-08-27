@@ -1,6 +1,9 @@
 <resources>
     <!--<string name="app_name">Decisive</string>-->
     <string name="title_activity_add_option">Add Option</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_templates">Templates</string>
 
     <!--Menu Strings-->
     <string name="menu_home">Home</string>
@@ -68,7 +71,6 @@
         <item>Checkbox</item>
         <item>Above/Below Avg</item>
     </string-array>
-
     <string-array name="importance_array">
         <item>High</item>
         <item>Normal</item>
@@ -76,7 +78,6 @@
         <item>Custom</item>
         <item>Exclude</item>
     </string-array>
-
     <string-array name="averages">
         <item>Far Above Average</item>
         <item>Above Average</item>
@@ -84,7 +85,6 @@
         <item>Below Average</item>
         <item>Far Below Average</item>
     </string-array>
-
     <string-array name="dummy_requirements">
         <item>Requirement 1</item>
         <item>Requirement 2</item>

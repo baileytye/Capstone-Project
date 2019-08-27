@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Activities.AddOption"
+    tools:context=".ui.addOption.AddOption"
     tools:showIn="@layout/activity_add_option">
 
     <androidx.constraintlayout.widget.ConstraintLayout

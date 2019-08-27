@@ -2,20 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.bowtye.decisive.Activities.SignUpActivity"></activity>
-        <activity android:name="com.bowtye.decisive.Activities.LoginActivity">
+        <activity android:name="com.bowtye.decisive.ui.signUp.SignUpActivity">
+        </activity>
+        <activity android:name="com.bowtye.decisive.ui.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.bowtye.decisive.Activities.MainActivity"
-            android:label="@string/app_name"></activity>
-    </application>
 
-    <uses-permission android:name="android.permission.INTERNET" />
+        <activity android:name="com.bowtye.decisive.ui.main.MainActivity"/>
+    </application>
 
 </manifest>

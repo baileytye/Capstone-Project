@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Activities.AddProjectActivity"
+    tools:context=".ui.addProject.AddProjectActivity"
     tools:menu="@menu/add_project">
 
     <include layout="@layout/toolbar" />

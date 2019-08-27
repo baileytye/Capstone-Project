@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        tools:context=".Activities.SignUpActivity">
+        tools:context=".ui.signUp.SignUpActivity">
 
         <Button
             android:id="@+id/bt_sign_up"
