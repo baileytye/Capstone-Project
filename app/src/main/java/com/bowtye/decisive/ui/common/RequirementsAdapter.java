@@ -105,9 +105,9 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
 
             if(mShowThumb) {
                 if (Double.compare(value, requirement.getExpected()) >= 0) {
-                    mThumbImageView.setImageResource(R.drawable.ic_thumb_up_24dp);
+                    mThumbImageView.setImageResource(R.drawable.ic_arrow_drop_up_24dp);
                 } else {
-                    mThumbImageView.setImageResource(R.drawable.ic_thumb_down_24dp);
+                    mThumbImageView.setImageResource(R.drawable.ic_arrow_drop_down_24dp);
                 }
             } else {
                 mThumbImageView.setVisibility(View.GONE);

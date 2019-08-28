@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:clickable="false">
 
     <ImageView
         android:id="@+id/iv_thumb"
@@ -22,7 +23,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/placeholder_requirement_label"
-        android:textAppearance="@style/CardSubHeadingTextStyle"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tv_requirement_value"
         app:layout_constraintHorizontal_bias="0.5"
@@ -36,7 +39,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:gravity="bottom"
+        android:text="@string/hint_value"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constraintBottom_toBottomOf="@+id/tv_requirement_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -49,6 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/tv_requirement_name"
         app:layout_constraintStart_toEndOf="@+id/tv_requirement_name"
         app:layout_constraintTop_toTopOf="@+id/tv_requirement_name"
@@ -63,6 +69,7 @@
         android:layout_marginStart="12dp"
         android:clickable="false"
         android:focusable="false"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/tv_requirement_name"
         app:layout_constraintStart_toEndOf="@+id/tv_requirement_name"
         app:layout_constraintTop_toTopOf="@+id/tv_requirement_name" />

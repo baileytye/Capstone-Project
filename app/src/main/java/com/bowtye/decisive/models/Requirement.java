@@ -86,6 +86,26 @@ public class Requirement implements Parcelable {
         return AVERAGE;
     }
 
+    public static String getImportanceString(Importance importance, Context context){
+
+        String [] importanceLabels = context.getResources().getStringArray(R.array.importance_array);
+
+        switch (importance){
+            case high:
+                return importanceLabels[0];
+            case normal:
+                return importanceLabels[1];
+            case low:
+                return importanceLabels[2];
+            case custom:
+                return importanceLabels[3];
+            case exclude:
+                return importanceLabels[4];
+        }
+
+        return importanceLabels[1];
+    }
+
     /**
      * Converts the numerical value to a string representation of averaging labels
      * @param value will be converted to int, which is save since values are only -2 to 2

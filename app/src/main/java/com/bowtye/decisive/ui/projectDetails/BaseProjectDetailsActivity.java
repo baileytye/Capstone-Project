@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bowtye.decisive.ui.addProject.AddProjectActivity;
+import com.bowtye.decisive.ui.common.VerticalSpaceItemDecoration;
 import com.bowtye.decisive.ui.optionDetails.OptionDetails;
 import com.bowtye.decisive.utils.RatingUtils;
 import com.bowtye.decisive.models.Option;
@@ -159,6 +160,9 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new ProjectDetailsAdapter(mProject, this);
         mRecyclerView.setAdapter(mAdapter);
+        VerticalSpaceItemDecoration dividerItemDecoration = new VerticalSpaceItemDecoration(
+                (int) getResources().getDimension(R.dimen.requirement_item_separation));
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         mFab.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), AddOption.class);

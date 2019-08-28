@@ -14,6 +14,8 @@ import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.Requirement;
 import com.bowtye.decisive.R;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,12 +30,14 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.RatingsV
     private Option mOption;
     private List<Requirement> mRequirements;
     private List<Float> mRatings;
+    private List<Float> mPointsTowardTotal;
 
 
     public RatingsAdapter(List<Requirement> requirements, Option option) {
         mOption = option;
         mRequirements = requirements;
         mRatings = new ArrayList<>(Collections.nCopies(mRequirements.size(), (float) 0));
+        mPointsTowardTotal = new ArrayList<>(Collections.nCopies(mRequirements.size(), (float) 0));
     }
 
     @NonNull
@@ -55,6 +59,10 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.RatingsV
 
     public List<Float> getRatings(){
         return mRatings;
+    }
+
+    public void setPointsTowardTotal(List<Float> pointsTowardTotal){
+        mPointsTowardTotal = pointsTowardTotal;
     }
 
     public void setRatings(List<Float> ratings){
@@ -85,6 +93,12 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.RatingsV
         ImageView mRequirementValueCheckBox;
         @BindView(R.id.tv_requirement_rating)
         TextView mRequirementRatingTextView;
+        @BindView(R.id.tv_weight)
+        TextView mWeightTextView;
+        @BindView(R.id.label_weight)
+        TextView mWeightLabel;
+        @BindView(R.id.iv_rating_arrow)
+        ImageView mRatingArrowImageView;
 
         public RatingsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -100,7 +114,23 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.RatingsV
 
             mRequirementRatingTextView.setText(String.format(Locale.getDefault(),"%.2f",
                     mRatings.get(getAdapterPosition())));
-            //TODO set priority, and label, and points toward total
+            mPriorityTextView.setText(
+                    Requirement.getImportanceString(requirement.getImportance(), itemView.getContext()));
+            if(requirement.getImportance() == Requirement.Importance.exclude){
+                mWeightLabel.setVisibility(View.VISIBLE);
+                mWeightTextView.setVisibility(View.VISIBLE);
+                mWeightTextView.setText(String.valueOf(requirement.getWeight()));
+            } else {
+                mWeightLabel.setVisibility(View.GONE);
+                mWeightTextView.setVisibility(View.GONE);
+            }
+
+
+            mRatingArrowImageView.setImageResource((mRatings.get(getAdapterPosition()) < 5)
+                    ? R.drawable.ic_arrow_drop_down_24dp
+                    : R.drawable.ic_arrow_drop_up_24dp);
+
+            mPointsTowardTotalTextView.setText(String.format(Locale.getDefault(),"%.2f",mPointsTowardTotal.get(getAdapterPosition())));
         }
 
         void setRequirementVisibilityAndValues(Requirement requirement, Double value, Double expected) {

@@ -6,11 +6,17 @@ import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.ProjectWithDetails;
 import com.bowtye.decisive.models.Requirement;
 
+import org.jetbrains.annotations.Async;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class RatingUtils {
+
+
+    public static final int POINTS_TOWARD_TOTAL = 1;
+    public static final int RATINGS = 0;
 
     /**
      * Calculates the rating of a requirement
@@ -75,6 +81,46 @@ public class RatingUtils {
 
         return rating / weightTotal;
     }
+
+    public static List<Float> calculatePointsTowardTotal(List<Requirement> requirements, List<Float> ratings){
+        float weightTotal = 0;
+        List<Float> pointsTowardTotals = new ArrayList<>();
+
+        for(Requirement requirement : requirements){
+            weightTotal += requirement.getWeight();
+        }
+
+        for (int i = 0; i < requirements.size(); i++){
+            pointsTowardTotals.add(
+                    (ratings.get(i) * requirements.get(i).getWeight().floatValue()) /weightTotal
+            );
+        }
+        return pointsTowardTotals;
+    }
+
+    public static class CalculatePointsTowardTotalsAsyncTask extends AsyncTask<Void, Void, List<Float>>{
+
+        List<Requirement> mRequirements;
+        List<Float> mRatings;
+        RatingResultAsyncCallback callback;
+
+        public CalculatePointsTowardTotalsAsyncTask(List<Requirement> requirements, List<Float> ratings, RatingResultAsyncCallback callback){
+            mRequirements = requirements;
+            mRatings = ratings;
+            this.callback = callback;
+        }
+
+        @Override
+        protected List<Float> doInBackground(Void... voids) {
+            return calculatePointsTowardTotal(mRequirements, mRatings);
+        }
+
+        @Override
+        protected void onPostExecute(List<Float> floats) {
+            callback.updateUIWithRatingResults(floats, POINTS_TOWARD_TOTAL);
+        }
+    }
+
 
     public static class CalculateRatingsOfProjectAsyncTask extends AsyncTask<ProjectWithDetails, Void, ProjectWithDetails>{
         ProjectResultAsyncCallback callback;
@@ -160,12 +206,12 @@ public class RatingUtils {
 
         @Override
         protected void onPostExecute(List<Float> floats) {
-            callback.updateUIWithRatingResults(floats);
+            callback.updateUIWithRatingResults(floats, RATINGS);
         }
     }
 
     public interface RatingResultAsyncCallback{
-        void updateUIWithRatingResults(List<Float> ratings);
+        void updateUIWithRatingResults(List<Float> ratings, int code);
     }
 
 }

@@ -36,6 +36,7 @@ import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -180,7 +181,7 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
         mToolbarLayout.setTitle(mOption.getName());
 
         mPriceTextView.setText("$" + mOption.getPrice());
-        mRatingTextView.setText(String.valueOf(mOption.getRating()));
+        mRatingTextView.setText(String.format(Locale.getDefault(), "%.2f", mOption.getRating()));
         mRatingBar.setRating(mOption.getRating());
         mNotesTextInputEditText.setText(mOption.getNotes());
 

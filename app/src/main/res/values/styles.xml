@@ -15,6 +15,7 @@
     <style name="AppTheme" parent="BaseTheme">
     </style>
 
+    <!--License Activity Theme    -->
     <style name="LicenseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -22,16 +23,12 @@
 
     <!--AppbarLayout Style-->
     <style name="MyAppbarLayoutStyle" parent="AppTheme.AppBarOverlay">
-        <!--<item name="elevation">0dp</item>-->
-        <!--<item name="android:padding">8dp</item>-->
         <item name="android:background">@color/white</item>
     </style>
 
     <!--Toolbar Style-->
     <style name="MyToolbarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Light</item>
-        <!--<item name="android:background">@drawable/toolbar</item>-->
-        <!--<item name="elevation">4dp</item>-->
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
     </style>
@@ -46,6 +43,11 @@
         <item name="backgroundTint">@color/white</item>
         <item name="rippleColor">@color/grey4</item>
         <item name="android:tint">@color/colorPrimary</item>
+    </style>
+
+    <!--Rating Bar Small Style-->
+    <style name="MyRatingBarStyleSmall" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="android:progressTint">@color/colorPrimary</item>
     </style>
 
     <!--Button Style-->

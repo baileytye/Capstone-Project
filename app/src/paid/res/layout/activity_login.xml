@@ -32,11 +32,11 @@
             android:background="@drawable/bg_card"
             android:backgroundTint="@color/transparentWhite"
             android:fontFamily="sans-serif-light"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:text="@string/app_name_without_plus"
-            android:textSize="60sp"
             android:textColor="@color/white"
+            android:textSize="60sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline2" />
@@ -81,15 +81,15 @@
         <Button
             android:id="@+id/bt_sign_in"
             style="@style/MyButtonStyle"
-            android:layout_width="260dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="@string/button_sign_in"
             android:backgroundTint="@color/grey300"
+            android:text="@string/button_sign_in"
             android:textAppearance="@style/ButtonTextStyle"
             app:layout_constraintBottom_toTopOf="@+id/bt_google_sign_in"
-            app:layout_constraintEnd_toEndOf="@+id/bt_google_sign_in"
-            app:layout_constraintStart_toStartOf="@+id/bt_google_sign_in"
+            app:layout_constraintEnd_toEndOf="@+id/email_and_password"
+            app:layout_constraintStart_toStartOf="@+id/email_and_password"
             app:layout_constraintTop_toBottomOf="@+id/bt_forgot_password" />
 
         <Button
@@ -112,7 +112,7 @@
         <include
             android:id="@+id/email_and_password"
             layout="@layout/layout_email_and_password"
-            android:layout_width="260dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintRight_toRightOf="@id/label_title"
             app:layout_constraintLeft_toLeftOf="@id/label_title"
@@ -122,13 +122,13 @@
 
         <com.shobhitpuri.custombuttons.GoogleSignInButton
             android:id="@+id/bt_google_sign_in"
-            android:layout_width="260dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:elevation="0dp"
             app:layout_constraintBottom_toTopOf="@+id/bt_sign_up"
-            app:layout_constraintEnd_toEndOf="@+id/bt_sign_up"
-            app:layout_constraintStart_toStartOf="@+id/bt_sign_up"
+            app:layout_constraintEnd_toEndOf="@+id/bt_sign_in"
+            app:layout_constraintStart_toStartOf="@+id/bt_sign_in"
             app:layout_constraintTop_toBottomOf="@+id/bt_sign_in" />
 
         <androidx.constraintlayout.widget.Guideline

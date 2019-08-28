@@ -31,6 +31,8 @@ import timber.log.Timber;
 
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_OPTION;
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_PROJECT;
+import static com.bowtye.decisive.utils.RatingUtils.POINTS_TOWARD_TOTAL;
+import static com.bowtye.decisive.utils.RatingUtils.RATINGS;
 
 public class RatingsActivity extends AppCompatActivity implements RatingUtils.RatingResultAsyncCallback {
 
@@ -104,15 +106,21 @@ public class RatingsActivity extends AppCompatActivity implements RatingUtils.Ra
     }
 
     @Override
-    public void updateUIWithRatingResults(List<Float> ratings) {
-        mAdapter.setRatings(ratings);
-        mAdapter.notifyDataSetChanged();
-        mOption.setRating(RatingUtils.calculateOptionRating(
-                ratings, mRequirements)
-        );
+    public void updateUIWithRatingResults(List<Float> ratings, int code) {
 
-        mRatingTextView.setText(String.format(Locale.getDefault(), "%.2f", mOption.getRating()));
-        mOptionRatingBar.setRating(mOption.getRating());
+        if(code == RATINGS) {
+            mAdapter.setRatings(ratings);
+            mOption.setRating(RatingUtils.calculateOptionRating(
+                    ratings, mRequirements)
+            );
+
+            mRatingTextView.setText(String.format(Locale.getDefault(), "%.2f", mOption.getRating()));
+            mOptionRatingBar.setRating(mOption.getRating());
+            new RatingUtils.CalculatePointsTowardTotalsAsyncTask(mRequirements, ratings, this).execute();
+        } else if (code == POINTS_TOWARD_TOTAL){
+            mAdapter.setPointsTowardTotal(ratings);
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
 
