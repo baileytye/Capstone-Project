@@ -1,17 +1,14 @@
 package com.bowtye.decisive.ui.projectDetails;
 
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,51 +19,123 @@ import com.bowtye.decisive.ui.common.VerticalSpaceItemDecoration;
 import com.bowtye.decisive.ui.common.RequirementsAdapter;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.Locale;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAdapter.DetailsViewHolder> {
+public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAdapter.ViewHolder> {
     RecyclerView.RecycledViewPool sharedPool = new RecyclerView.RecycledViewPool();
+
+    private static final int TYPE_SUMMARY = 0;
+    private static final int TYPE_OPTION = 1;
 
     private ProjectWithDetails mProject;
     private OptionItemClickListener mClickCallback;
+    private boolean displaySummary;
 
     public ProjectDetailsAdapter(ProjectWithDetails project, OptionItemClickListener clickCallback) {
         mProject = project;
         mClickCallback = clickCallback;
+
+        setDisplaySummary();
     }
 
     @NonNull
     @Override
-    public DetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_option, parent, false);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view;
 
-        return new DetailsViewHolder(v);
+        switch (viewType){
+            case TYPE_SUMMARY:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_project_summary, parent, false);
+                return new SummaryViewHolder(view);
+            default:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_option, parent, false);
+                return new DetailsViewHolder(view);
+
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DetailsViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind();
     }
 
     @Override
     public int getItemCount() {
-        return (mProject == null) || (mProject.getOptionList() == null) ? 0 : mProject.getOptionList().size();
+        if(mProject == null || mProject.getOptionList() == null){
+            return 0;
+        } else {
+            if(displaySummary){
+                return mProject.getOptionList().size() + 1;
+            } else {
+                return mProject.getOptionList().size();
+            }
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(position == 0 && displaySummary){
+            return TYPE_SUMMARY;
+        } else {
+            return TYPE_OPTION;
+        }
     }
 
     public void setProject(ProjectWithDetails p) {
         mProject = p;
+        setDisplaySummary();
     }
 
     public void clearRecyclerPool(){
         sharedPool.clear();
     }
 
-    class DetailsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private void setDisplaySummary(){
+        if(mProject != null && mProject.getOptionList() != null){
+            displaySummary = mProject.getOptionList().size() > 1;
+        }
+    }
+
+    private int getHighestRatedIndex(){
+        int index = 0;
+        Float highest = (float) 0;
+        for(int i = 0; i < mProject.getOptionList().size() ; i++){
+            Option option = mProject.getOptionList().get(i);
+            if(option.getRating() > highest){
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    private int getLowestRatedIndex(){
+        int index = 0;
+        Float lowest = (float) 5;
+        for(int i = 0; i < mProject.getOptionList().size() ; i++){
+            Option option = mProject.getOptionList().get(i);
+            if(option.getRating() < lowest){
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    public abstract class ViewHolder extends RecyclerView.ViewHolder{
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        abstract void bind();
+    }
+
+    class DetailsViewHolder extends ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.cardView)
         CardView mCardView;
@@ -100,7 +169,9 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
         }
 
         void bind() {
-            Option o = mProject.getOptionList().get(getAdapterPosition());
+
+            int index = (displaySummary) ? getAdapterPosition() - 1 : getAdapterPosition();
+            Option o = mProject.getOptionList().get(index);
             if (o.getImagePath().equals("")) {
                 mItemHeaderImageView.setVisibility(View.GONE);
             } else {
@@ -130,13 +201,56 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
             }
 
             RequirementsAdapter adapter = new RequirementsAdapter(mProject.getRequirementList(),
-                    mProject.getOptionList().get(getAdapterPosition()).getRequirementValues(), false);
+                    o.getRequirementValues(), false);
             mRequirementsRecyclerView.setAdapter(adapter);
         }
 
         @Override
         public void onClick(View view) {
-            mClickCallback.onOptionItemClicked(getAdapterPosition());
+            mClickCallback.onOptionItemClicked(displaySummary ? getAdapterPosition() - 1 : getAdapterPosition());
+        }
+    }
+
+    class SummaryViewHolder extends ViewHolder {
+
+        @BindView(R.id.tv_highest_name)
+        TextView mHighestNameTextView;
+        @BindView(R.id.tv_lowest_name)
+        TextView mLowestNameTextView;
+        @BindView(R.id.include_highest_rating)
+        View mHighestRatedInclude;
+        @BindView(R.id.include_lowest_rating)
+        View mLowestRatedInclude;
+
+        TextView mHighestRatingTextView;
+        RatingBar mHighestOptionRatingBar;
+        TextView mLowestRatingTextView;
+        RatingBar mLowestOptionRatingBar;
+
+        public SummaryViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+
+            mHighestOptionRatingBar = mHighestRatedInclude.findViewById(R.id.rb_option_rating);
+            mHighestRatingTextView = mHighestRatedInclude.findViewById(R.id.tv_rating);
+            mLowestOptionRatingBar = mLowestRatedInclude.findViewById(R.id.rb_option_rating);
+            mLowestRatingTextView = mLowestRatedInclude.findViewById(R.id.tv_rating);
+        }
+
+        public void bind(){
+            int highestIndex = getHighestRatedIndex();
+            int lowestIndex = getLowestRatedIndex();
+            Option highestOption = mProject.getOptionList().get(highestIndex);
+            Option lowestOption = mProject.getOptionList().get(lowestIndex);
+
+            mHighestNameTextView.setText(highestOption.getName());
+            mHighestRatingTextView.setText(String.format(Locale.getDefault(), "%.2f", highestOption.getRating()));
+            mHighestOptionRatingBar.setRating(highestOption.getRating());
+
+            mLowestNameTextView.setText(lowestOption.getName());
+            mLowestRatingTextView.setText(String.format(Locale.getDefault(), "%.2f", lowestOption.getRating()));
+            mLowestOptionRatingBar.setRating(lowestOption.getRating());
+
         }
     }
 

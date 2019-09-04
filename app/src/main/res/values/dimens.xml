@@ -32,4 +32,6 @@
     <!--Floating action button-->
     <dimen name="design_fab_image_size" tools:override="true">36dp</dimen>
 
+    <dimen name="widget_margin">8dp</dimen>
+
 </resources>

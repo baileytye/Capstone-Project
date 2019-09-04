@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:background="@color/white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.addOption.AddOption"
     tools:showIn="@layout/activity_add_option">
@@ -40,7 +41,7 @@
             android:id="@+id/iv_pictures"
             android:layout_width="0dp"
             android:layout_height="240dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/bg_card_with_ripple"
             android:contentDescription="@string/content_description_option_images"
             android:scaleType="center"
@@ -65,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Price"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 

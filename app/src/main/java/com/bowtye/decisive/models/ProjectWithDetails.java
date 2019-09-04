@@ -7,6 +7,8 @@ import androidx.room.Embedded;
 import androidx.room.Ignore;
 import androidx.room.Relation;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 public class ProjectWithDetails implements Parcelable {
@@ -52,6 +54,17 @@ public class ProjectWithDetails implements Parcelable {
     public void setRequirementList(List<Requirement> requirementList) {
         this.requirementList = requirementList;
     }
+
+    public String serialize(){
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
+    static public ProjectWithDetails create(String serializedData){
+        Gson gson = new Gson();
+        return gson.fromJson(serializedData, ProjectWithDetails.class);
+    }
+
 
     @Override
     public int describeContents() {

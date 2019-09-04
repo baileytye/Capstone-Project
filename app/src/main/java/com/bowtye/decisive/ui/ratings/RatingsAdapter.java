@@ -116,7 +116,7 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.RatingsV
                     mRatings.get(getAdapterPosition())));
             mPriorityTextView.setText(
                     Requirement.getImportanceString(requirement.getImportance(), itemView.getContext()));
-            if(requirement.getImportance() == Requirement.Importance.exclude){
+            if(requirement.getImportance() == Requirement.Importance.custom){
                 mWeightLabel.setVisibility(View.VISIBLE);
                 mWeightTextView.setVisibility(View.VISIBLE);
                 mWeightTextView.setText(String.valueOf(requirement.getWeight()));

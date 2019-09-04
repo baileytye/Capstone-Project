@@ -161,7 +161,7 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
         mAdapter = new ProjectDetailsAdapter(mProject, this);
         mRecyclerView.setAdapter(mAdapter);
         VerticalSpaceItemDecoration dividerItemDecoration = new VerticalSpaceItemDecoration(
-                (int) getResources().getDimension(R.dimen.requirement_item_separation));
+                (int) getResources().getDimension(R.dimen.recycler_item_separation));
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         mFab.setOnClickListener(view -> {
