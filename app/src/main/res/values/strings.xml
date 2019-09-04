@@ -69,8 +69,8 @@
     <string name="label_widget_warning">Note: projects require atleast two options to be used as a widget.</string>
     <string name="placeholder_highest">Highest</string>
     <string name="placeholder_lowest">Lowest</string>
-    <string name="label_lowest">Lowest:</string>
-    <string name="label_highest">Highest:</string>
+    <string name="label_lowest">Lowest</string>
+    <string name="label_highest">Highest</string>
     <string name="label_summary">Summary</string>
 
 </resources>

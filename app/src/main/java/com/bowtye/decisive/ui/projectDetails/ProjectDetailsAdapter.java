@@ -1,14 +1,20 @@
 package com.bowtye.decisive.ui.projectDetails;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,8 +24,6 @@ import com.bowtye.decisive.R;
 import com.bowtye.decisive.ui.common.VerticalSpaceItemDecoration;
 import com.bowtye.decisive.ui.common.RequirementsAdapter;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.Locale;
 
@@ -151,11 +155,20 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
         TextView mRatingTextView;
         @BindView(R.id.rb_option_rating)
         RatingBar mOptionRatingBar;
+        @BindView(R.id.iv_requirements_expand)
+        ImageView mExpandRequirementsImageView;
+
+        int maxHeight;
+        int recyclerHeight;
+        boolean isExpanded;
 
         DetailsViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
             mCardView.setOnClickListener(this);
+
+            Timber.d("Constructor called");
 
             mRequirementsRecyclerView.setHasFixedSize(true);
             LinearLayoutManager layoutManager = new LinearLayoutManager(itemView.getContext());
@@ -166,12 +179,42 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
             VerticalSpaceItemDecoration dividerItemDecoration = new VerticalSpaceItemDecoration(
                     (int)itemView.getContext().getResources().getDimension(R.dimen.requirement_item_separation));
             mRequirementsRecyclerView.addItemDecoration(dividerItemDecoration);
+            updateHeights();
+        }
+
+        void updateHeights(){
+            //Need to set visibility of recycler to get measured before shrinking it
+            mRequirementsRecyclerView.setVisibility(View.INVISIBLE);
+
+            mCardView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+                @Override
+                public boolean onPreDraw() {
+                    mCardView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                    recyclerHeight = mRequirementsRecyclerView.getHeight();
+                    Timber.d("Recycler height: %d", recyclerHeight);
+                    if(isExpanded) {
+                        mRequirementsRecyclerView.setVisibility(View.VISIBLE);
+                    } else {
+                        mRequirementsRecyclerView.setVisibility(View.GONE);
+                    }
+                    maxHeight = mCardView.getHeight();
+                    Timber.d("maxHeight: %d", maxHeight);
+                    Timber.d("isExpanded: %b", isExpanded);
+
+                    return true;
+                }
+            });
         }
 
         void bind() {
 
             int index = (displaySummary) ? getAdapterPosition() - 1 : getAdapterPosition();
             Option o = mProject.getOptionList().get(index);
+
+            Timber.d("Bind called for: %s", o.getName());
+
             if (o.getImagePath().equals("")) {
                 mItemHeaderImageView.setVisibility(View.GONE);
             } else {
@@ -203,6 +246,62 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
             RequirementsAdapter adapter = new RequirementsAdapter(mProject.getRequirementList(),
                     o.getRequirementValues(), false);
             mRequirementsRecyclerView.setAdapter(adapter);
+
+            mExpandRequirementsImageView.setOnClickListener(view -> toggleRequirements());
+
+        }
+
+        public void toggleRequirements(){
+
+            if(!isExpanded){
+                mRequirementsRecyclerView.setVisibility(View.VISIBLE);
+                Timber.d("Expanding, maxHeight: %d, rec height: %d", maxHeight, recyclerHeight);
+                expandView(maxHeight);
+                isExpanded = true;
+                mExpandRequirementsImageView.setImageResource(R.drawable.ic_keyboard_arrow_up_24dp);
+                mExpandRequirementsImageView.setColorFilter(ContextCompat.getColor(itemView.getContext(), R.color.grey500));
+            } else {
+                Timber.d("Collapsing maxHeight: %d, rec height: %d", maxHeight, mRequirementsRecyclerView.getHeight());
+                mRequirementsRecyclerView.setVisibility(View.GONE);
+                collapseView();
+                isExpanded = false;
+                mExpandRequirementsImageView.setImageResource(R.drawable.ic_keyboard_arrow_down_24dp);
+                mExpandRequirementsImageView.setColorFilter(ContextCompat.getColor(itemView.getContext(), R.color.grey500));
+            }
+        }
+
+        private void collapseView() {
+
+            ValueAnimator animCollapse = ValueAnimator.ofInt(mCardView.getMeasuredHeightAndState(),
+                    maxHeight - recyclerHeight);
+            animCollapse.addUpdateListener(valueAnimator -> {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = mCardView.getLayoutParams();
+                layoutParams.height = val;
+                mCardView.setLayoutParams(layoutParams);
+            });
+            animCollapse.start();
+        }
+        private void expandView(int height) {
+
+            ValueAnimator animExpand = ValueAnimator.ofInt(mCardView.getMeasuredHeightAndState(),
+                    height);
+            ObjectAnimator animAlpha = ObjectAnimator.ofFloat(mRequirementsRecyclerView, "alpha", 0f, 1f);
+            animAlpha.setInterpolator(new AccelerateInterpolator());
+
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.setDuration(300);
+            animatorSet.playTogether(animExpand, animAlpha);
+
+            animExpand.addUpdateListener(valueAnimator -> {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = mCardView.getLayoutParams();
+                layoutParams.height = val;
+                mCardView.setLayoutParams(layoutParams);
+            });
+
+            animatorSet.start();
+
         }
 
         @Override

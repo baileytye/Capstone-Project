@@ -66,10 +66,21 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity{
         mViewModel = ViewModelProviders.of(this).get(ProjectDetailsViewModel.class);
         mViewModel.getProjectFirebase(mProjectId, mFirebaseId).observe(this, projectWithDetails -> {
             Timber.d("Livedata Updated");
+
+            //TODO: add load screens here
+
+            if(mProject != null && mProject.getRequirementList().size() != projectWithDetails.getRequirementList().size()){
+                mRecyclerView.setAdapter(null);
+                mAdapter = new ProjectDetailsAdapter(projectWithDetails, this);
+                mRecyclerView.setAdapter(mAdapter);
+            } else {
+                mAdapter.clearRecyclerPool();
+                mRecyclerView.getRecycledViewPool().clear();
+                mAdapter.setProject(projectWithDetails);
+            }
+
             mProject = projectWithDetails;
-            mAdapter.clearRecyclerPool();
-            mRecyclerView.getRecycledViewPool().clear();
-            mAdapter.setProject(mProject);
+
 //            if (mItemAdded) {
 //                mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
 //                mItemAdded = false;

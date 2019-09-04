@@ -11,17 +11,31 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity {
         mViewModel = ViewModelProviders.of(this).get(ProjectDetailsViewModel.class);
         mViewModel.getProject(mProjectId).observe(this, projectWithDetails -> {
             Timber.d("Livedata Updated");
-            mProject = projectWithDetails;
-            mAdapter.setProject(mProject);
-            if (mItemAdded) {
-                mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
-                mItemAdded = false;
-            } else if (mItemDeleted) {
-                mAdapter.notifyItemRemoved(mItemSelected);
-                mItemDeleted = false;
-            } else {
+            //TODO: add load screens here
+
+            if(mProject != null && mProject.getRequirementList().size() != projectWithDetails.getRequirementList().size()){
+                mRecyclerView.setAdapter(null);
+                mAdapter = new ProjectDetailsAdapter(projectWithDetails, this);
+                mRecyclerView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
+            } else {
+                mAdapter.clearRecyclerPool();
+                mRecyclerView.getRecycledViewPool().clear();
+                mAdapter.setProject(projectWithDetails);
+
+                if (mItemAdded) {
+                    mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
+                    mItemAdded = false;
+                } else if (mItemDeleted) {
+                    mAdapter.notifyItemRemoved(mItemSelected);
+                    mItemDeleted = false;
+                } else {
+                    mAdapter.notifyDataSetChanged();
+                }
             }
+
+            mProject = projectWithDetails;
+
 
             setEmptyMessageVisibility();
 
