@@ -157,7 +157,7 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
             case android.R.id.home:
                 if (itemChanged) {
                     ViewUtils.showWarningDialog(
-                            getResources().getString(R.string.leave_without_saving_dialog_message),
+                            getResources().getString(R.string.dialog_leave_without_saving),
                             this, this);
                 } else {
                     finishAfterTransition();

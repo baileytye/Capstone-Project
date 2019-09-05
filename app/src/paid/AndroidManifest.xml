@@ -7,7 +7,7 @@
     <application tools:ignore="GoogleAppIndexingWarning">
         <activity android:name="com.bowtye.decisive.ui.signUp.SignUpActivity">
         </activity>
-        <activity android:name="com.bowtye.decisive.ui.login.LoginActivity">
+        <activity android:name="com.bowtye.decisive.ui.login.LoginActivity" android:theme="@style/LoginTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

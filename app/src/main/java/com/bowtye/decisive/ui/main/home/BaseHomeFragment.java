@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -58,12 +59,14 @@ public class BaseHomeFragment extends Fragment implements HomeAdapter.ProjectIte
     RecyclerView mRecyclerView;
     @BindView(R.id.toolbar_layout)
     CollapsingToolbarLayout mToolbarLayout;
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
 
     private RecyclerView.LayoutManager mLayoutManager;
     private HomeAdapter mAdapter;
     private HomeViewModel mViewModel;
 
-    protected List<ProjectWithDetails> mProjects;
+    List<ProjectWithDetails> mProjects;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -113,11 +116,24 @@ public class BaseHomeFragment extends Fragment implements HomeAdapter.ProjectIte
         }
     }
 
+    private void setIsLoading(boolean isLoading){
+        if(isLoading){
+            mProgressBar.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
+
+        } else {
+            mProgressBar.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void prepareViews() {
+        setIsLoading(true);
+
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         (Objects.requireNonNull(activity)).setSupportActionBar(mToolbar);
         Objects.requireNonNull(activity.getSupportActionBar()).setDisplayShowTitleEnabled(true);
-        mToolbarLayout.setTitle("Projects");
+        mToolbarLayout.setTitle(getString(R.string.title_projects));
 
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -146,6 +162,7 @@ public class BaseHomeFragment extends Fragment implements HomeAdapter.ProjectIte
             Timber.d("Updating Livedata");
             mAdapter.setProjects(projectWithDetails);
             mAdapter.notifyDataSetChanged();
+            setIsLoading(false);
         });
     }
 

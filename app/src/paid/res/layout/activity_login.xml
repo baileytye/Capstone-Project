@@ -29,6 +29,7 @@
             android:id="@+id/label_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="150dp"
             android:background="@drawable/bg_card"
             android:backgroundTint="@color/transparentWhite"
             android:fontFamily="sans-serif-light"
@@ -39,14 +40,7 @@
             android:textSize="60sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline2" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.4" />
+            app:layout_constraintTop_toTopOf="@+id/background" />
 
         <Button
             android:id="@+id/bt_continue_offline"
@@ -103,7 +97,6 @@
             android:text="@string/label_forgot_your_password"
             android:textAppearance="@style/ButtonTextStyle"
             android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/bt_sign_in"
             app:layout_constraintEnd_toEndOf="@+id/bt_sign_in"
             app:layout_constraintStart_toStartOf="@+id/bt_sign_in"
             app:layout_constraintTop_toBottomOf="@+id/email_and_password" />
@@ -114,10 +107,10 @@
             layout="@layout/layout_email_and_password"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintRight_toRightOf="@id/label_title"
+            android:layout_marginTop="64dp"
             app:layout_constraintLeft_toLeftOf="@id/label_title"
-            app:layout_constraintTop_toBottomOf="@id/guideline4"
-            />
+            app:layout_constraintRight_toRightOf="@id/label_title"
+            app:layout_constraintTop_toBottomOf="@+id/label_title" />
 
 
         <com.shobhitpuri.custombuttons.GoogleSignInButton
@@ -137,6 +130,17 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.20" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

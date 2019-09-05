@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.bowtye.decisive.ui.login.LoginActivity;
 import com.bowtye.decisive.ui.projectDetails.ProjectDetailsActivity;
 import com.bowtye.decisive.utils.PicassoMenuLoader;
 import com.bowtye.decisive.R;
@@ -20,11 +21,10 @@ import java.util.Objects;
 
 import timber.log.Timber;
 
-import static com.bowtye.decisive.ui.login.LoginActivity.SIGN_OUT;
-
 public class HomeFragment extends BaseHomeFragment {
 
     public static final String EXTRA_FIREBASE_ID = "extra_firebase_id";
+    public static final String EXTRA_SIGN_OUT = "extra_sign_out";
 
     private FirebaseUser mUser;
 
@@ -41,10 +41,16 @@ public class HomeFragment extends BaseHomeFragment {
         super.onCreateOptionsMenu(menu, inflater);
 
         //TODO: fix bug where picture does not load sometimes
-        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             Timber.d("Setting user image");
             PicassoMenuLoader menuLoader = new PicassoMenuLoader(menu.getItem(0), getActivity());
             Picasso.get().load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()).into(menuLoader);
+        } else {
+            MenuItem item = menu.findItem(R.id.action_sign_out);
+            item.setTitle(R.string.menu_sign_in_title);
+
+            item = menu.findItem(R.id.action_profile);
+            item.setVisible(false);
         }
     }
 
@@ -53,9 +59,10 @@ public class HomeFragment extends BaseHomeFragment {
 
         int id = item.getItemId();
 
-        if(id == R.id.action_sign_out){
-            Intent intent = new Intent();
-            Objects.requireNonNull(getActivity()).setResult(SIGN_OUT, intent);
+        if (id == R.id.action_sign_out) {
+            Intent intent = new Intent(this.getActivity(), LoginActivity.class);
+            intent.putExtra(EXTRA_SIGN_OUT, true);
+            Objects.requireNonNull(getActivity()).startActivity(intent);
             getActivity().finish();
             return true;
         }
@@ -65,7 +72,7 @@ public class HomeFragment extends BaseHomeFragment {
 
     @Override
     public void onProjectItemClicked(int position) {
-        if(mUser == null){
+        if (mUser == null) {
             super.onProjectItemClicked(position);
         } else {
             Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), ProjectDetailsActivity.class);

@@ -86,7 +86,7 @@
     </style>
 
     <!--Button Text Style-->
-    <style name="ButtonTextStyle" parent="@style/TextAppearance.AppCompat.Subhead">
+    <style name="ButtonTextStyle" parent="@style/TextAppearance.AppCompat.Medium">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">16sp</item>
     </style>

@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bowtye.decisive.ui.addProject.AddProjectActivity;
@@ -65,6 +66,8 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
     FloatingActionButton mFab;
     @BindView(R.id.tv_empty_options)
     TextView mEmptyOptionsTextView;
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
 
     protected RecyclerView.LayoutManager mLayoutManager;
     protected ProjectDetailsAdapter mAdapter;
@@ -126,10 +129,6 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
             if (data != null && data.hasExtra(EXTRA_OPTION)) {
                 Option o = data.getParcelableExtra(EXTRA_OPTION);
 
-                //Don't think this is needed but if a bug appears this could be why
-//                if (mProject.getOptionList() == null) {
-//                    mProject.setOptionList(new ArrayList<>());
-//                }
                 new RatingUtils.CalculateRatingOfOptionAsyncTask(this, mProject.getRequirementList()).execute(o);
             }
         } else if (requestCode == EDIT_OPTION_REQUEST_CODE) {
@@ -149,7 +148,20 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
         }
     }
 
+    protected void setIsLoading(boolean isLoading){
+        if(isLoading){
+            mProgressBar.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
+
+        } else {
+            mProgressBar.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
     protected void prepareViews() {
+        setIsLoading(true);
+
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -179,6 +191,7 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
     protected void setEmptyMessageVisibility() {
         if ((mProject == null) || (mProject.getOptionList().size() == 0)) {
             mEmptyOptionsTextView.setVisibility(View.VISIBLE);
+            setIsLoading(false);
         } else {
             mEmptyOptionsTextView.setVisibility(View.INVISIBLE);
         }

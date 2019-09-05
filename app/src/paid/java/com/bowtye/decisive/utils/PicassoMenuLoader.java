@@ -13,8 +13,8 @@ import com.squareup.picasso.Target;
 
 public class PicassoMenuLoader implements Target {
 
-    MenuItem mMenuItem;
-    Context mContext;
+    private MenuItem mMenuItem;
+    private Context mContext;
 
     public PicassoMenuLoader(MenuItem mMenuItem, Context context) {
         this.mMenuItem = mMenuItem;

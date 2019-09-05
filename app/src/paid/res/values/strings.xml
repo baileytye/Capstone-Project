@@ -2,6 +2,7 @@
     <string name="app_name_without_plus">Decisive.</string>
 
     <string name="menu_logout_title">Logout</string>
+    <string name="menu_sign_in_title">Sign in</string>
 
     <string name="default_web_client_id">78569816095-aak428906s8r9ld6d3jj3gd9bsc2n8ip.apps.googleusercontent.com</string>
 
@@ -10,6 +11,7 @@
 
     <string name="label_forgot_your_password">Forgot your password?</string>
 
+    <!--Button text-->
     <string name="button_sign_in">Sign in</string>
     <string name="button_don_t_have_an_account">Don\'t have an account?</string>
     <string name="button_continue_offline">Continue offline</string>
@@ -17,4 +19,14 @@
     <string name="button_sign_up">Sign up</string>
 
     <string name="content_description_login_background">login background</string>
+
+    <string name="pref_use_offline_key">use_offline</string>
+
+    <!--Dialog messages-->
+    <string name="dialog_enter_email_address">Enter email address!</string>
+    <string name="dialog_enter_password">Enter password!</string>
+    <string name="dialog_sign_in_failed">Sign in failed</string>
+    <string name="dialog_password_minimum_length_error">Password must be 6 characters long</string>
+    <string name="dialog_sign_in_failed_with_message">Sign in failed:</string>
+
 </resources>

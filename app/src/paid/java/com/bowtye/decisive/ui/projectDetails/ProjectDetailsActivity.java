@@ -67,8 +67,6 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity{
         mViewModel.getProjectFirebase(mProjectId, mFirebaseId).observe(this, projectWithDetails -> {
             Timber.d("Livedata Updated");
 
-            //TODO: add load screens here
-
             if(mProject != null && mProject.getRequirementList().size() != projectWithDetails.getRequirementList().size()){
                 mRecyclerView.setAdapter(null);
                 mAdapter = new ProjectDetailsAdapter(projectWithDetails, this);
@@ -94,6 +92,7 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity{
             setEmptyMessageVisibility();
 
             if(mProject != null) {
+                setIsLoading(false);
                 mToolbarLayout.setTitle(mProject.getProject().getName());
 
                 if (mProject.getOptionList() != null && mProject.getRequirementList() != null) {

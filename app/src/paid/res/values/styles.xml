@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LoginTheme" parent="AppTheme">
+        <item name="android:windowAnimationStyle">@style/Replace</item>
+    </style>
+
+    <style name="Replace">
+        <item name="android:activityOpenExitAnimation">@anim/anim_replace</item>
+        <item name="android:activityCloseEnterAnimation">@anim/anim_replace</item>
+        <item name="android:activityCloseExitAnimation">@anim/anim_replace</item>
+        <item name="android:taskOpenEnterAnimation">@anim/anim_replace</item>
+        <item name="android:taskOpenExitAnimation">@anim/anim_replace</item>
+    </style>
+</resources>

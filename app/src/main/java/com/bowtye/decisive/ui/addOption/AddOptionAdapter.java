@@ -96,18 +96,14 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
             switch (type) {
                 case starRating:
                     tvRatingRequirementName.setText(requirement.getName());
-                    if (mIsEdit) {
-                        rbValue.setRating(value.floatValue());
-                    }
+                    rbValue.setRating(value.floatValue());
                     rbValue.setOnRatingChangeListener((ratingBar, rating) -> {
                         mOption.getRequirementValues().set(getAdapterPosition(), (double) rating);
                         mCallback.requirementItemChanged();
                     });
                     break;
                 case checkbox:
-                    if (mIsEdit) {
-                        cbValue.setChecked(value == 1);
-                    }
+                    cbValue.setChecked(value == 1);
                     cbValue.setText(requirement.getName());
                     cbValue.setOnCheckedChangeListener((compoundButton, b) -> {
                         mOption.getRequirementValues().set(getAdapterPosition(), (b) ? 1.0 : 0.0);
@@ -115,11 +111,7 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
                     });
                     break;
                 case averaging:
-                    if (mIsEdit) {
-                        spAverages.setSelection(Requirement.getAveragingIndex(value, itemView.getContext()), false);
-                    } else {
-                        spAverages.setSelection(Requirement.getAveragingIndex(Requirement.AVERAGE, itemView.getContext()), false);
-                    }
+                    spAverages.setSelection(Requirement.getAveragingIndex(value, itemView.getContext()), false);
                     tvAveragesRequirementName.setText(requirement.getName());
                     spAverages.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
@@ -136,7 +128,7 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
                     });
                     break;
                 case number:
-                    if (mIsEdit) {
+                    if (mIsEdit || value != 0) {
                         etValue.setText(String.valueOf(value));
                     }
                     tilValue.setHint(requirement.getName());

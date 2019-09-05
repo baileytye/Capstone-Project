@@ -65,11 +65,12 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
 
     public static final int VALIDATION_OK = 55;
     public static final int VALIDATION_NAME_ERROR = -2;
-    public static final int VALIDATION_HOLDER_ERROR = -1;
 
     public static final int GALLERY_REQUEST_CODE = 2553;
     public static final int CAMERA_REQUEST_CODE = 1234;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
+    private static final String KEY_PHOTO_PATH = "key_photo_path";
+    private static final String KEY_OPTION = "key_option";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -122,6 +123,16 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 isEdit = true;
             }
         }
+
+        if(savedInstanceState != null){
+            if(savedInstanceState.containsKey(KEY_PHOTO_PATH)){
+                currentPhotoPath = savedInstanceState.getString(KEY_PHOTO_PATH);
+            }
+            if(savedInstanceState.containsKey(KEY_OPTION)){
+                mOption = savedInstanceState.getParcelable(KEY_OPTION);
+            }
+        }
+
         prepareViews();
     }
 
@@ -138,7 +149,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
             case android.R.id.home:
                 if (itemChanged) {
                     ViewUtils.showWarningDialog(
-                            getResources().getString(R.string.leave_without_saving_dialog_message),
+                            getResources().getString(R.string.dialog_leave_without_saving),
                             this, this);
                 } else {
                     finishAfterTransition();
@@ -147,12 +158,8 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
             case R.id.action_save:
                 switch (validateAndSave()) {
                     case VALIDATION_NAME_ERROR:
-                        ViewUtils.showErrorDialog("Save Option",
-                                "Please give this option a name", this);
-                        break;
-                    case VALIDATION_HOLDER_ERROR:
-                        ViewUtils.showErrorDialog("Save Option",
-                                "Please fill the requirement values", this);
+                        ViewUtils.showErrorDialog(getString(R.string.dialog_title_save_option),
+                                getString(R.string.dialog_give_option_a_name), this);
                         break;
                     case VALIDATION_OK:
                         Intent out = new Intent();
@@ -165,6 +172,18 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(currentPhotoPath != null){
+            outState.putString(KEY_PHOTO_PATH, currentPhotoPath);
+        }
+
+        outState.putParcelable(KEY_OPTION, mAdapter.getOption());
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Result code is RESULT_OK only if the user selects an Image
         if (resultCode == Activity.RESULT_OK)
@@ -234,11 +253,10 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         if (isEdit) {
-            mToolbarLayout.setTitle("Edit option");
+            mToolbarLayout.setTitle(getString(R.string.title_edit_option));
             mOptionNameEditText.setText(mOption.getName());
             mPriceEditText.setText(String.valueOf(mOption.getPrice()));
             mNotesEditText.setText(mOption.getNotes());
-            mAdapter = new AddOptionAdapter(mRequirements, mOption, isEdit, this);
 
             if (!mOption.getImagePath().equals("")) {
                 Picasso.get()
@@ -250,10 +268,15 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 setPlaceholderImage();
             }
         } else {
-            mToolbarLayout.setTitle("Add option");
-            setPlaceholderImage();
-            mAdapter = new AddOptionAdapter(mRequirements, mOption, isEdit, this);
+            mToolbarLayout.setTitle(getString(R.string.title_add_option));
+            if(currentPhotoPath != null) {
+                saveImageAndSetHeaderImage();
+            } else{
+                setPlaceholderImage();
+            }
         }
+
+        mAdapter = new AddOptionAdapter(mRequirements, mOption, isEdit, this);
 
         mPicturesImageView.setOnClickListener(view -> {
             mSheetDialog = new BottomSheetFragment(this);

@@ -2,10 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_sign_out"
+        android:id="@+id/action_profile"
         android:orderInCategory="1"
-        android:title="Sign out"
+        android:title="Profile"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_sign_out"
+        android:orderInCategory="4"
+        android:title="Sign out"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_insert_dummy"
