@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     signingConfigs {
@@ -72,11 +73,11 @@ dependencies {
 
     implementation "com.jakewharton.timber:timber:$timber_version"
 
-    paidImplementation "com.google.android.gms:play-services-auth:$play_services_version"
-    paidImplementation 'com.google.firebase:firebase-auth:19.0.0'
-    paidImplementation 'com.google.firebase:firebase-core:17.1.0'
-    paidImplementation 'com.google.firebase:firebase-firestore:21.0.0'
-    paidImplementation 'com.google.firebase:firebase-storage:19.0.0'
+    implementation "com.google.android.gms:play-services-auth:$play_services_version"
+    implementation 'com.google.firebase:firebase-auth:19.0.0'
+    implementation 'com.google.firebase:firebase-core:17.1.0'
+    implementation 'com.google.firebase:firebase-firestore:21.0.0'
+    implementation 'com.google.firebase:firebase-storage:19.0.0'
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
@@ -94,8 +95,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
-if (getGradle().getStartParameter().getTaskRequests()
-        .toString().contains("Paid")) {
-    apply plugin: 'com.google.gms.google-services'
-}
+
+
+
 

@@ -71,7 +71,7 @@ public class ProjectRepository extends BaseRepository {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (user == null) {
+        if (user == null || user.isAnonymous()) {
             super.insertProjectWithDetails(projectWithDetails);
         } else {
             ProjectFirebase projectFirebase =
@@ -86,7 +86,7 @@ public class ProjectRepository extends BaseRepository {
     public void insertOption(Option option, int projectId) {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user == null) {
+        if(user == null || user.isAnonymous()) {
             super.insertOption(option, projectId);
         } else {
 
@@ -109,7 +109,7 @@ public class ProjectRepository extends BaseRepository {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user == null) {
+        if(user == null || user.isAnonymous()) {
             super.deleteOption(option);
         } else {
             Timber.d("Removing option in firebase");
@@ -139,7 +139,7 @@ public class ProjectRepository extends BaseRepository {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user == null){
+        if(user == null || user.isAnonymous()){
             super.updateOption(option, position);
         } else {
             Timber.d("Updating option in firebase");
@@ -163,7 +163,7 @@ public class ProjectRepository extends BaseRepository {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user == null) {
+        if(user == null || user.isAnonymous()) {
             return super.getSelectedOption(id);
         } else {
             if (selectedProject.getValue() != null) {
@@ -204,7 +204,7 @@ public class ProjectRepository extends BaseRepository {
     public LiveData<List<ProjectWithDetails>> getProjects() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (user == null) {
+        if (user == null || user.isAnonymous()) {
             return super.getProjects();
         } else {
             Timber.d("Getting projects from firebase");
@@ -241,7 +241,7 @@ public class ProjectRepository extends BaseRepository {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user == null){
+        if(user == null || user.isAnonymous()){
             return super.getSelectedProject(id);
         } else {
             Timber.d("Getting project from Firebase with id %s", firebaseId);
@@ -258,22 +258,6 @@ public class ProjectRepository extends BaseRepository {
                     ProjectFirebase projectFirebase = value.toObject(ProjectFirebase.class);
                     ProjectWithDetails projectWithDetails = ProjectModelConverter.projectFirebaseToProjectWithDetails(projectFirebase);
 
-//                    if(projectWithDetails != null) {
-//                        for (Option option : projectWithDetails.getOptionList()) {
-//
-//                            if(!option.getName().equals("")) {
-//                                StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images/users/" +
-//                                        Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()
-//                                        + "/" + option.getName() + ".jpg");
-//
-//                                imageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-//                                    option.setImagePath(uri.toString());
-//                                    Timber.d("Set image path to: %s", uri.toString());
-//                                }).addOnFailureListener(er -> Timber.d("Failed to fetch image url"));
-//                            }
-//                        }
-//                    }
-
                     selectedProject.setValue(projectWithDetails);
 
                 } else {
@@ -289,7 +273,7 @@ public class ProjectRepository extends BaseRepository {
     public void clearTables() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (user == null) {
+        if (user == null || user.isAnonymous()) {
             super.clearTables();
         } else {
             CollectionReference projectsReference = firebaseDb.collection(PROJECT_COLLECTION);
@@ -305,7 +289,7 @@ public class ProjectRepository extends BaseRepository {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (user == null) {
+        if (user == null || user.isAnonymous()) {
             super.deleteProjectWithDetails(project);
         } else {
             if(mSelectedProjectRegestration != null){

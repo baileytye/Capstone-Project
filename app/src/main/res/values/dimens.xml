@@ -13,6 +13,7 @@
     <dimen name="card_heading_separation">28dp</dimen>
     <dimen name="card_margin_edges">4dp</dimen>
     <dimen name="card_corner_radius">5dp</dimen>
+    <dimen name="card_border_stroke_width" format="float">0.75dp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
 

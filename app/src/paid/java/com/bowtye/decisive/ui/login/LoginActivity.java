@@ -240,7 +240,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void checkAuthAndStartHomeActivity() {
-        if (mAuth.getCurrentUser() != null) {
+        if (mAuth.getCurrentUser() != null && !mAuth.getCurrentUser().isAnonymous()) {
             Timber.d("Signed in with user: %s", mAuth.getCurrentUser().getDisplayName());
             Intent intent = new Intent(this, MainActivity.class);
             startActivityForResult(intent, SIGN_OUT);

@@ -17,7 +17,10 @@ public class ProjectDetailsViewModel extends BaseProjectDetailsViewModel {
         super(application);
     }
 
-    public LiveData<ProjectWithDetails> getProjectFirebase(int id, String firebaseId){
+    public LiveData<ProjectWithDetails> getProjectFirebase(int id, String firebaseId, boolean isTemplate){
+        if(isTemplate){
+            return getProject(id, firebaseId, isTemplate);
+        }
         if(mProject == null){
             mProject = new MutableLiveData<>();
             loadProjectFirebase(id, firebaseId);

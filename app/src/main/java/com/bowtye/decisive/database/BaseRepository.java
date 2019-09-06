@@ -4,23 +4,39 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.os.AsyncTask;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.bowtye.decisive.models.Option;
+import com.bowtye.decisive.models.ProjectFirebase;
 import com.bowtye.decisive.models.ProjectWithDetails;
 import com.bowtye.decisive.models.Requirement;
+import com.bowtye.decisive.utils.ProjectModelConverter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
 
 public class BaseRepository {
 
+    private static final String TEMPLATES_COLLECTION = "templates";
     private static ProjectListDao projectListDao;
 
     private LiveData<List<ProjectWithDetails>> projects;
-    private MutableLiveData<ProjectWithDetails> selectedProject;
+    private MutableLiveData<List<ProjectWithDetails>> templates;
+    private MutableLiveData<ProjectWithDetails> selectedTemplate;
 
     @SuppressLint("StaticFieldLeak")
     BaseRepository(Application application) {
@@ -29,7 +45,7 @@ public class BaseRepository {
         projectListDao = database.projectListDao();
 
         projects = projectListDao.getProjects();
-        selectedProject = new MutableLiveData<>();
+        selectedTemplate = new MutableLiveData<>();
     }
 
     public void insertOption(Option option, int projectId){
@@ -60,9 +76,70 @@ public class BaseRepository {
         return projects;
     }
 
+    public LiveData<List<ProjectWithDetails>> getTemplates() {
+
+        if(templates == null) {
+            templates = new MutableLiveData<>();
+        }
+
+        Timber.d("Getting templates from firebase");
+
+        CollectionReference templatesReference = FirebaseFirestore.getInstance().collection(TEMPLATES_COLLECTION);
+
+        Query query = templatesReference.orderBy("name");
+
+        query.addSnapshotListener((value, e) -> {
+            if (e != null) {
+                Timber.w("Listener of firebase projects failed");
+                templates.setValue(null);
+            }
+
+            List<ProjectWithDetails> temp = new ArrayList<>();
+            if (value != null) {
+                for (QueryDocumentSnapshot doc : value) {
+
+                    ProjectFirebase projectFirebase = doc.toObject(ProjectFirebase.class);
+                    ProjectWithDetails projectWithDetails = ProjectModelConverter.projectFirebaseToProjectWithDetails(projectFirebase);
+                    temp.add(projectWithDetails);
+                }
+                templates.setValue(temp);
+            } else {
+                Timber.w("Firestore value is null");
+            }
+        });
+
+        return templates;
+    }
+
     public LiveData<ProjectWithDetails> getSelectedProject(int id){
         Timber.d("Getting selected project from Room database");
         return projectListDao.loadProjectById(id);
+    }
+
+    public LiveData<ProjectWithDetails> getSelectedTemplate(int id, String firebaseId) {
+
+        Timber.d("Getting template from Firebase with id %s", firebaseId);
+
+        DocumentReference templateReference = FirebaseFirestore.getInstance().collection(TEMPLATES_COLLECTION).document(firebaseId);
+
+        templateReference.addSnapshotListener((value, e) -> {
+            if (e != null) {
+                Timber.w("Listener of firebase projects failed");
+                selectedTemplate.setValue(null);
+            }
+
+            if (value != null) {
+                ProjectFirebase projectFirebase = value.toObject(ProjectFirebase.class);
+                ProjectWithDetails projectWithDetails = ProjectModelConverter.projectFirebaseToProjectWithDetails(projectFirebase);
+
+                selectedTemplate.setValue(projectWithDetails);
+
+            } else {
+                Timber.w("Firestore value is null");
+            }
+        });
+
+        return selectedTemplate;
     }
 
     public LiveData<Option> getSelectedOption(int id){

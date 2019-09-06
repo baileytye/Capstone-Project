@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.models.ProjectWithDetails;
 import com.bowtye.decisive.R;
+import com.bowtye.decisive.ui.main.MainViewModel;
 import com.bowtye.decisive.ui.settings.SettingsActivity;
 import com.bowtye.decisive.utils.RatingUtils;
 import com.bowtye.decisive.ui.addProject.AddProjectActivity;
@@ -64,7 +65,7 @@ public class BaseHomeFragment extends Fragment implements HomeAdapter.ProjectIte
 
     private RecyclerView.LayoutManager mLayoutManager;
     private HomeAdapter mAdapter;
-    private HomeViewModel mViewModel;
+    private MainViewModel mViewModel;
 
     List<ProjectWithDetails> mProjects;
 
@@ -156,11 +157,11 @@ public class BaseHomeFragment extends Fragment implements HomeAdapter.ProjectIte
 
 
     void prepareViewModel() {
-        mViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
-        mViewModel.getProjects().observe(this, projectWithDetails -> {
-            mProjects = projectWithDetails;
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mViewModel.getProjects().observe(this, projects -> {
+            mProjects = projects;
             Timber.d("Updating Livedata");
-            mAdapter.setProjects(projectWithDetails);
+            mAdapter.setProjects(projects);
             mAdapter.notifyDataSetChanged();
             setIsLoading(false);
         });

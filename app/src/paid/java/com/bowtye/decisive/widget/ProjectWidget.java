@@ -12,7 +12,8 @@ import com.bowtye.decisive.ui.projectDetails.ProjectDetailsActivity;
 
 import java.util.Locale;
 
-import static com.bowtye.decisive.ui.main.home.HomeFragment.EXTRA_FIREBASE_ID;
+import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_FIREBASE_ID;
+
 
 public class ProjectWidget extends  BaseProjectWidget {
 

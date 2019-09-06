@@ -44,6 +44,7 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_DELETE_OPTION;
+import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_IS_TEMPLATE;
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_OPTION;
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_OPTION_ID;
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_PROJECT;
@@ -79,6 +80,7 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
     List<Requirement> mRequirements;
     RequirementsAdapter mAdapter;
     OptionDetailsViewModel mViewModel;
+    boolean mIsTemplate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +100,9 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
                     mRequirements = mProject.getRequirementList();
                 }
             }
+            if(intent.hasExtra(EXTRA_IS_TEMPLATE)){
+                mIsTemplate = intent.getBooleanExtra(EXTRA_IS_TEMPLATE, false);
+            }
         }
         prepareViews();
         prepareViewModel();
@@ -107,6 +112,12 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.option_details, menu);
+
+        if(mIsTemplate){
+            menu.findItem(R.id.action_edit).setVisible(false);
+            menu.findItem(R.id.action_delete).setVisible(false);
+        }
+
         return true;
     }
 
@@ -198,16 +209,23 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
     }
 
     private void prepareViewModel(){
-        mViewModel = ViewModelProviders.of(this).get(OptionDetailsViewModel.class);
-        mViewModel.getOption(mOptionId).observe(this, option -> {
-            Timber.d("Option livedata updated");
-            if(option != null) {
-                mOption = option;
-                mAdapter.setRequirementValues(mOption.getRequirementValues());
-                mAdapter.notifyDataSetChanged();
-                fillData();
-            }
-        });
+        if(mIsTemplate){
+            mOption = mProject.getOptionList().get(mOptionId);
+            mAdapter.setRequirementValues(mOption.getRequirementValues());
+            mAdapter.notifyDataSetChanged();
+            fillData();
+        } else {
+            mViewModel = ViewModelProviders.of(this).get(OptionDetailsViewModel.class);
+            mViewModel.getOption(mOptionId).observe(this, option -> {
+                Timber.d("Option livedata updated");
+                if (option != null) {
+                    mOption = option;
+                    mAdapter.setRequirementValues(mOption.getRequirementValues());
+                    mAdapter.notifyDataSetChanged();
+                    fillData();
+                }
+            });
+        }
     }
 
     @Override

@@ -20,10 +20,10 @@ public class BaseProjectDetailsViewModel extends AndroidViewModel {
         mRepo = ProjectRepository.getInstance(application);
     }
 
-    public LiveData<ProjectWithDetails> getProject(int id){
+    public LiveData<ProjectWithDetails> getProject(int id, String firebaseId, boolean isTemplate){
         if(mProject == null){
             mProject = new MutableLiveData<>();
-            loadProject(id);
+            loadProject(id, firebaseId, isTemplate);
         }
         return mProject;
     }
@@ -49,8 +49,12 @@ public class BaseProjectDetailsViewModel extends AndroidViewModel {
         mRepo.insertOption(option, projectId);
     }
 
-    private void loadProject(int id){
-        mProject = mRepo.getSelectedProject(id);
+    private void loadProject(int id, String firebaseId, boolean isTemplate){
+        if(isTemplate){
+            mProject = mRepo.getSelectedTemplate(id, firebaseId);
+        } else {
+            mProject = mRepo.getSelectedProject(id);
+        }
     }
 
     public void deleteOption(Option option){

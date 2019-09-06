@@ -1,4 +1,4 @@
-package com.bowtye.decisive.ui.main.home;
+package com.bowtye.decisive.ui.main;
 
 import android.app.Application;
 
@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.bowtye.decisive.database.ProjectRepository;
+import com.bowtye.decisive.models.ProjectFirebase;
 import com.bowtye.decisive.utils.RatingUtils;
 import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.Project;
@@ -21,13 +22,14 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class HomeViewModel extends AndroidViewModel {
+public class MainViewModel extends AndroidViewModel {
 
     private LiveData<List<ProjectWithDetails>> mProjects;
     private final ProjectRepository mRepo;
+    private LiveData<List<ProjectWithDetails>> mTemplates;
 
 
-    public HomeViewModel(@NonNull Application application) {
+    public MainViewModel(@NonNull Application application) {
         super(application);
         mRepo = ProjectRepository.getInstance(application);
     }
@@ -39,6 +41,14 @@ public class HomeViewModel extends AndroidViewModel {
             loadProjects();
         }
         return mProjects;
+    }
+
+    public LiveData<List<ProjectWithDetails>> getTemplates() {
+        if(mTemplates == null) {
+            mTemplates = new MutableLiveData<>();
+            loadTemplates();
+        }
+        return mTemplates;
     }
 
     public void resizeOptionValuesList(ProjectWithDetails p){
@@ -92,6 +102,10 @@ public class HomeViewModel extends AndroidViewModel {
 
     private void loadProjects() {
         mProjects = mRepo.getProjects();
+    }
+
+    private void loadTemplates(){
+        mTemplates = mRepo.getTemplates();
     }
 
     public void clearProjects() {

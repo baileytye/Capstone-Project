@@ -3,9 +3,11 @@ package com.bowtye.decisive.ui.projectDetails;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.graphics.Outline;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -53,7 +55,7 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
 
-        switch (viewType){
+        switch (viewType) {
             case TYPE_SUMMARY:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_project_summary, parent, false);
                 return new SummaryViewHolder(view);
@@ -71,10 +73,10 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
 
     @Override
     public int getItemCount() {
-        if(mProject == null || mProject.getOptionList() == null){
+        if (mProject == null || mProject.getOptionList() == null) {
             return 0;
         } else {
-            if(displaySummary){
+            if (displaySummary) {
                 return mProject.getOptionList().size() + 1;
             } else {
                 return mProject.getOptionList().size();
@@ -84,7 +86,7 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0 && displaySummary){
+        if (position == 0 && displaySummary) {
             return TYPE_SUMMARY;
         } else {
             return TYPE_OPTION;
@@ -96,41 +98,41 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
         setDisplaySummary();
     }
 
-    public void clearRecyclerPool(){
+    public void clearRecyclerPool() {
         sharedPool.clear();
     }
 
-    private void setDisplaySummary(){
-        if(mProject != null && mProject.getOptionList() != null){
+    private void setDisplaySummary() {
+        if (mProject != null && mProject.getOptionList() != null) {
             displaySummary = mProject.getOptionList().size() > 1;
         }
     }
 
-    private int getHighestRatedIndex(){
+    private int getHighestRatedIndex() {
         int index = 0;
         Float highest = (float) 0;
-        for(int i = 0; i < mProject.getOptionList().size() ; i++){
+        for (int i = 0; i < mProject.getOptionList().size(); i++) {
             Option option = mProject.getOptionList().get(i);
-            if(option.getRating() > highest){
+            if (option.getRating() > highest) {
                 index = i;
             }
         }
         return index;
     }
 
-    private int getLowestRatedIndex(){
+    private int getLowestRatedIndex() {
         int index = 0;
         Float lowest = (float) 5;
-        for(int i = 0; i < mProject.getOptionList().size() ; i++){
+        for (int i = 0; i < mProject.getOptionList().size(); i++) {
             Option option = mProject.getOptionList().get(i);
-            if(option.getRating() < lowest){
+            if (option.getRating() < lowest) {
                 index = i;
             }
         }
         return index;
     }
 
-    public abstract class ViewHolder extends RecyclerView.ViewHolder{
+    public abstract class ViewHolder extends RecyclerView.ViewHolder {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -177,12 +179,12 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
             mRequirementsRecyclerView.setRecycledViewPool(sharedPool);
             mRequirementsRecyclerView.setOnClickListener(null);
             VerticalSpaceItemDecoration dividerItemDecoration = new VerticalSpaceItemDecoration(
-                    (int)itemView.getContext().getResources().getDimension(R.dimen.requirement_item_separation));
+                    (int) itemView.getContext().getResources().getDimension(R.dimen.requirement_item_separation));
             mRequirementsRecyclerView.addItemDecoration(dividerItemDecoration);
             updateHeights();
         }
 
-        void updateHeights(){
+        void updateHeights() {
             //Need to set visibility of recycler to get measured before shrinking it
             mRequirementsRecyclerView.setVisibility(View.INVISIBLE);
 
@@ -194,7 +196,7 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
 
                     recyclerHeight = mRequirementsRecyclerView.getHeight();
                     Timber.d("Recycler height: %d", recyclerHeight);
-                    if(isExpanded) {
+                    if (isExpanded) {
                         mRequirementsRecyclerView.setVisibility(View.VISIBLE);
                     } else {
                         mRequirementsRecyclerView.setVisibility(View.GONE);
@@ -215,9 +217,17 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
 
             Timber.d("Bind called for: %s", o.getName());
 
+            mItemHeaderImageView.setClipToOutline(true);
             if (o.getImagePath().equals("")) {
                 mItemHeaderImageView.setVisibility(View.GONE);
             } else {
+                mItemHeaderImageView.setOutlineProvider(new ViewOutlineProvider() {
+                    @Override
+                    public void getOutline(View view, Outline outline) {
+                        float cornerRadius = view.getContext().getResources().getDimension(R.dimen.card_corner_radius);
+                        outline.setRoundRect(0, 0, view.getWidth(), (int) (view.getHeight() + cornerRadius), cornerRadius);
+                    }
+                });
                 mItemHeaderImageView.setVisibility(View.VISIBLE);
                 Timber.d("Image selected for card project: %s", o.getImagePath());
                 Picasso.get()
@@ -251,9 +261,9 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
 
         }
 
-        public void toggleRequirements(){
+        public void toggleRequirements() {
 
-            if(!isExpanded){
+            if (!isExpanded) {
                 mRequirementsRecyclerView.setVisibility(View.VISIBLE);
                 Timber.d("Expanding, maxHeight: %d, rec height: %d", maxHeight, recyclerHeight);
                 expandView(maxHeight);
@@ -282,6 +292,7 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
             });
             animCollapse.start();
         }
+
         private void expandView(int height) {
 
             ValueAnimator animExpand = ValueAnimator.ofInt(mCardView.getMeasuredHeightAndState(),
@@ -336,7 +347,7 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
             mLowestRatingTextView = mLowestRatedInclude.findViewById(R.id.tv_rating);
         }
 
-        public void bind(){
+        public void bind() {
             int highestIndex = getHighestRatedIndex();
             int lowestIndex = getLowestRatedIndex();
             Option highestOption = mProject.getOptionList().get(highestIndex);

@@ -15,27 +15,12 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import timber.log.Timber;
 
-import static com.bowtye.decisive.ui.main.home.HomeFragment.EXTRA_FIREBASE_ID;
+import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_FIREBASE_ID;
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_DELETE_OPTION;
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_OPTION_ID;
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_PROJECT;
 
 public class ProjectDetailsActivity extends BaseProjectDetailsActivity{
-
-    private String mFirebaseId;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        if(intent != null){
-            if(intent.hasExtra(EXTRA_FIREBASE_ID)){
-                mFirebaseId = intent.getStringExtra(EXTRA_FIREBASE_ID);
-            }
-        }
-
-        super.onCreate(savedInstanceState);
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -55,7 +40,7 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity{
     @Override
     protected void onStop() {
         super.onStop();
-        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if(FirebaseAuth.getInstance().getCurrentUser() != null && !mIsTemplate && !FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
             mViewModel.uploadImagesToFirebase(mProject);
         }
     }
@@ -64,7 +49,7 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity{
     void prepareViewModel() {
         Timber.d("Preparing view model project details");
         mViewModel = ViewModelProviders.of(this).get(ProjectDetailsViewModel.class);
-        mViewModel.getProjectFirebase(mProjectId, mFirebaseId).observe(this, projectWithDetails -> {
+        mViewModel.getProjectFirebase(mProjectId, mFirebaseId, mIsTemplate).observe(this, projectWithDetails -> {
             Timber.d("Livedata Updated");
 
             if(mProject != null && mProject.getRequirementList().size() != projectWithDetails.getRequirementList().size()){
@@ -93,7 +78,9 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity{
 
             if(mProject != null) {
                 setIsLoading(false);
-                mToolbarLayout.setTitle(mProject.getProject().getName());
+                mToolbarLayout.setTitle((mIsTemplate)
+                        ? "Template: " + mProject.getProject().getName()
+                        : mProject.getProject().getName());
 
                 if (mProject.getOptionList() != null && mProject.getRequirementList() != null) {
                     Timber.d("Number of requirements loaded: %d",
@@ -108,7 +95,7 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity{
 
     @Override
     public void onOptionItemClicked(int position) {
-        if(FirebaseAuth.getInstance().getCurrentUser() == null){
+        if(FirebaseAuth.getInstance().getCurrentUser() == null || mIsTemplate){
             super.onOptionItemClicked(position);
             return;
         }

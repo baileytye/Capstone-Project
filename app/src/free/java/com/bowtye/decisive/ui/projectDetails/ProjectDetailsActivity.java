@@ -9,7 +9,7 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity {
     protected void prepareViewModel(){
 
         mViewModel = ViewModelProviders.of(this).get(ProjectDetailsViewModel.class);
-        mViewModel.getProject(mProjectId).observe(this, projectWithDetails -> {
+        mViewModel.getProject(mProjectId, mFirebaseId, mIsTemplate).observe(this, projectWithDetails -> {
             Timber.d("Livedata Updated");
 
             if(mProject != null && mProject.getRequirementList().size() != projectWithDetails.getRequirementList().size()){
@@ -40,7 +40,9 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity {
 
             if(mProject != null) {
                 setIsLoading(false);
-                mToolbarLayout.setTitle(mProject.getProject().getName());
+                mToolbarLayout.setTitle((mIsTemplate)
+                        ? "Template: " + mProject.getProject().getName()
+                        : mProject.getProject().getName());
 
                 if (mProject.getOptionList() != null && mProject.getRequirementList() != null) {
                     Timber.d("Number of requirements loaded: %d",

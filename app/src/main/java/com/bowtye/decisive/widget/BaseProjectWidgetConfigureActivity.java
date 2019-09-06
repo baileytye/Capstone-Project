@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.models.ProjectWithDetails;
-import com.bowtye.decisive.ui.main.home.HomeViewModel;
+import com.bowtye.decisive.ui.main.MainViewModel;
 
 import java.util.List;
 import java.util.Objects;
@@ -103,7 +103,7 @@ public abstract class BaseProjectWidgetConfigureActivity extends AppCompatActivi
     }
 
     void prepareViewModel() {
-        HomeViewModel mViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
+        MainViewModel mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         mViewModel.getProjects().observe(this, projectsWithDetails -> {
             mProjects = projectsWithDetails;
             Timber.d("Updating Livedata For Widget");

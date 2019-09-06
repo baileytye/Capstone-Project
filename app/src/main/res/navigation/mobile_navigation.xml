@@ -12,7 +12,7 @@
 
     <fragment
         android:id="@+id/navigation_templates"
-        android:name="com.bowtye.decisive.ui.main.templates.DashboardFragment"
+        android:name="com.bowtye.decisive.ui.main.templates.TemplatesFragment"
         tools:layout="@layout/fragment_templates" />
 
 </navigation>
