@@ -11,17 +11,18 @@ import com.bowtye.decisive.utils.PicassoMenuLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 import timber.log.Timber;
 
 import static com.bowtye.decisive.ui.main.home.HomeFragment.EXTRA_SIGN_OUT;
 
-public class TemplatesFragment extends BaseTemplatesFragment{
+public class TemplatesFragment extends BaseTemplatesFragment {
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+    public void onCreateOptionsMenu(@NotNull Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null && !FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {

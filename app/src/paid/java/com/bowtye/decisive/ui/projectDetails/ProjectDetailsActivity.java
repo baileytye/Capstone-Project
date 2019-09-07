@@ -2,7 +2,6 @@ package com.bowtye.decisive.ui.projectDetails;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.Bundle;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.view.Gravity;
@@ -11,21 +10,18 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.bowtye.decisive.ui.optionDetails.OptionDetails;
+import com.bowtye.decisive.utils.ExtraLabels;
+import com.bowtye.decisive.utils.RequestCode;
 import com.google.firebase.auth.FirebaseAuth;
 
 import timber.log.Timber;
 
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_FIREBASE_ID;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_DELETE_OPTION;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_OPTION_ID;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_PROJECT;
-
-public class ProjectDetailsActivity extends BaseProjectDetailsActivity{
+public class ProjectDetailsActivity extends BaseProjectDetailsActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == EDIT_OPTION_REQUEST_CODE) {
-            if (data != null && data.hasExtra(EXTRA_DELETE_OPTION)) {
+        if (requestCode == RequestCode.EDIT_OPTION_REQUEST_CODE) {
+            if (data != null && data.hasExtra(ExtraLabels.EXTRA_DELETE_OPTION)) {
                 switch (resultCode) {
                     case RESULT_DELETED:
                         mViewModel.deleteOptionFirebase(mProject.getOptionList().get(mItemSelected), mItemSelected);
@@ -40,7 +36,7 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity{
     @Override
     protected void onStop() {
         super.onStop();
-        if(FirebaseAuth.getInstance().getCurrentUser() != null && !mIsTemplate && !FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null && !mIsTemplate && !FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
             mViewModel.uploadImagesToFirebase(mProject);
         }
     }
@@ -52,7 +48,7 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity{
         mViewModel.getProjectFirebase(mProjectId, mFirebaseId, mIsTemplate).observe(this, projectWithDetails -> {
             Timber.d("Livedata Updated");
 
-            if(mProject != null && mProject.getRequirementList().size() != projectWithDetails.getRequirementList().size()){
+            if (mProject != null && mProject.getRequirementList().size() != projectWithDetails.getRequirementList().size()) {
                 mRecyclerView.setAdapter(null);
                 mAdapter = new ProjectDetailsAdapter(projectWithDetails, this);
                 mRecyclerView.setAdapter(mAdapter);
@@ -71,12 +67,12 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity{
 //                mAdapter.notifyItemRemoved(mItemSelected);
 //                mItemDeleted = false;
 //            } else {
-                mAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
 //            }
 
             setEmptyMessageVisibility();
 
-            if(mProject != null) {
+            if (mProject != null) {
                 setIsLoading(false);
                 mToolbarLayout.setTitle((mIsTemplate)
                         ? "Template: " + mProject.getProject().getName()
@@ -95,21 +91,21 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity{
 
     @Override
     public void onOptionItemClicked(int position) {
-        if(FirebaseAuth.getInstance().getCurrentUser() == null || mIsTemplate){
+        if (FirebaseAuth.getInstance().getCurrentUser() == null || mIsTemplate) {
             super.onOptionItemClicked(position);
             return;
         }
         Intent intent = new Intent(getApplicationContext(), OptionDetails.class);
 
-        intent.putExtra(EXTRA_OPTION_ID, position);
-        intent.putExtra(EXTRA_PROJECT, mProject);
+        intent.putExtra(ExtraLabels.EXTRA_OPTION_ID, position);
+        intent.putExtra(ExtraLabels.EXTRA_PROJECT, mProject);
 
         mItemSelected = position;
 
         Transition transition = new Slide(Gravity.START);
 
         getWindow().setExitTransition(transition);
-        startActivityForResult(intent, EDIT_OPTION_REQUEST_CODE,
+        startActivityForResult(intent, RequestCode.EDIT_OPTION_REQUEST_CODE,
                 ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 }

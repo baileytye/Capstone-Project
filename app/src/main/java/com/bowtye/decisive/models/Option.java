@@ -11,6 +11,7 @@ import androidx.room.TypeConverters;
 import com.bowtye.decisive.database.Converters;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity(tableName = "option")
@@ -28,6 +29,9 @@ public class Option implements Parcelable {
     private String notes;
     private String imagePath;
 
+    @TypeConverters(Converters.class)
+    private Date dateCreated;
+
     @Ignore
     public Option(String name, double price, Float rating, Boolean ruledOut,
                   List<Double> requirementValues, String notes, String imagePath) {
@@ -41,7 +45,7 @@ public class Option implements Parcelable {
     }
 
     public Option(int optionId, int projectId, String name, double price, Float rating, Boolean ruledOut,
-                  List<Double> requirementValues, String notes, String imagePath) {
+                  List<Double> requirementValues, String notes, String imagePath, Date dateCreated) {
         this.optionId = optionId;
         this.projectId = projectId;
         this.name = name;
@@ -51,6 +55,15 @@ public class Option implements Parcelable {
         this.requirementValues = requirementValues;
         this.notes = notes;
         this.imagePath = imagePath;
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public int getOptionId() {
@@ -130,18 +143,18 @@ public class Option implements Parcelable {
         return 0;
     }
 
-    @Ignore
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.optionId);
         dest.writeInt(this.projectId);
         dest.writeString(this.name);
         dest.writeDouble(this.price);
-        dest.writeFloat(this.rating);
+        dest.writeValue(this.rating);
         dest.writeValue(this.ruledOut);
         dest.writeList(this.requirementValues);
         dest.writeString(this.notes);
         dest.writeString(this.imagePath);
+        dest.writeLong(this.dateCreated != null ? this.dateCreated.getTime() : -1);
     }
 
     @Ignore
@@ -150,12 +163,14 @@ public class Option implements Parcelable {
         this.projectId = in.readInt();
         this.name = in.readString();
         this.price = in.readDouble();
-        this.rating = in.readFloat();
+        this.rating = (Float) in.readValue(Float.class.getClassLoader());
         this.ruledOut = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.requirementValues = new ArrayList<Double>();
+        this.requirementValues = new ArrayList<>();
         in.readList(this.requirementValues, Double.class.getClassLoader());
         this.notes = in.readString();
         this.imagePath = in.readString();
+        long tmpDateCreated = in.readLong();
+        this.dateCreated = tmpDateCreated == -1 ? null : new Date(tmpDateCreated);
     }
 
     public static final Creator<Option> CREATOR = new Creator<Option>() {

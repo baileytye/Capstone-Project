@@ -26,11 +26,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.models.ProjectWithDetails;
 import com.bowtye.decisive.R;
+import com.bowtye.decisive.ui.main.MainAdapter;
 import com.bowtye.decisive.ui.main.MainViewModel;
 import com.bowtye.decisive.ui.settings.SettingsActivity;
+import com.bowtye.decisive.utils.ExtraLabels;
 import com.bowtye.decisive.utils.RatingUtils;
 import com.bowtye.decisive.ui.addProject.AddProjectActivity;
 import com.bowtye.decisive.ui.projectDetails.ProjectDetailsActivity;
+import com.bowtye.decisive.utils.RequestCode;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -42,15 +45,10 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_EDIT_PROJECT;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_NEW_PROJECT;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_PROJECT_ID;
 
-public class BaseHomeFragment extends Fragment implements HomeAdapter.ProjectItemClickListener,
+public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectItemClickCallback,
+        HomeAdapter.ContextMenuClickCallback,
         RatingUtils.CalculateRatingsOfProjectAsyncTask.ProjectResultAsyncCallback {
-
-    public static final int ADD_PROJECT_REQUEST_CODE = 3423;
-
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -108,9 +106,9 @@ public class BaseHomeFragment extends Fragment implements HomeAdapter.ProjectIte
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if ((requestCode == ADD_PROJECT_REQUEST_CODE) && (resultCode == RESULT_OK)) {
-            if (data != null && data.hasExtra(EXTRA_NEW_PROJECT)) {
-                ProjectWithDetails projectWithDetails = data.getParcelableExtra(EXTRA_NEW_PROJECT);
+        if ((requestCode == RequestCode.ADD_PROJECT_REQUEST_CODE) && (resultCode == RESULT_OK)) {
+            if (data != null && data.hasExtra(ExtraLabels.EXTRA_NEW_PROJECT)) {
+                ProjectWithDetails projectWithDetails = data.getParcelableExtra(ExtraLabels.EXTRA_NEW_PROJECT);
                 mViewModel.resizeOptionValuesList(projectWithDetails);
                 new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
             }
@@ -139,7 +137,7 @@ public class BaseHomeFragment extends Fragment implements HomeAdapter.ProjectIte
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new HomeAdapter(null, this);
+        mAdapter = new HomeAdapter(null, this, this);
         mRecyclerView.setAdapter(mAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 LinearLayoutManager.VERTICAL);
@@ -170,7 +168,7 @@ public class BaseHomeFragment extends Fragment implements HomeAdapter.ProjectIte
     @Override
     public void onProjectItemClicked(int position) {
         Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), ProjectDetailsActivity.class);
-        intent.putExtra(EXTRA_PROJECT_ID, mProjects.get(position).getProject().getId());
+        intent.putExtra(ExtraLabels.EXTRA_PROJECT_ID, mProjects.get(position).getProject().getId());
 
         getActivity().getWindow().setExitTransition(new Slide(Gravity.START));
         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
@@ -182,7 +180,7 @@ public class BaseHomeFragment extends Fragment implements HomeAdapter.ProjectIte
     }
 
     @Override
-    public void onProjectEditMenuCLicked(int position) {
+    public void onProjectEditMenuClicked(int position) {
         startAddProjectActivity(position);
     }
 
@@ -190,12 +188,12 @@ public class BaseHomeFragment extends Fragment implements HomeAdapter.ProjectIte
     void startAddProjectActivity(int position) {
         Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), AddProjectActivity.class);
         if (position >= 0) {
-            intent.putExtra(EXTRA_EDIT_PROJECT, mProjects.get(position));
+            intent.putExtra(ExtraLabels.EXTRA_EDIT_PROJECT, mProjects.get(position));
         }
         Transition transition = new Slide(Gravity.TOP);
 
         getActivity().getWindow().setExitTransition(transition);
-        startActivityForResult(intent, ADD_PROJECT_REQUEST_CODE,
+        startActivityForResult(intent, RequestCode.ADD_PROJECT_REQUEST_CODE,
                 ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
     }
 

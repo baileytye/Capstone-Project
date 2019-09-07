@@ -55,15 +55,13 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
 
-        switch (viewType) {
-            case TYPE_SUMMARY:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_project_summary, parent, false);
-                return new SummaryViewHolder(view);
-            default:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_option, parent, false);
-                return new DetailsViewHolder(view);
-
+        if (viewType == TYPE_SUMMARY) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_project_summary, parent, false);
+            return new SummaryViewHolder(view);
         }
+
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_option, parent, false);
+        return new DetailsViewHolder(view);
     }
 
     @Override
@@ -98,7 +96,7 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
         setDisplaySummary();
     }
 
-    public void clearRecyclerPool() {
+    void clearRecyclerPool() {
         sharedPool.clear();
     }
 
@@ -132,9 +130,9 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
         return index;
     }
 
-    public abstract class ViewHolder extends RecyclerView.ViewHolder {
+    abstract class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
         }
 
@@ -242,7 +240,7 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
                 mItemPriceTextView.setVisibility(View.GONE);
             } else {
                 mItemPriceTextView.setVisibility(View.VISIBLE);
-                mItemPriceTextView.setText("$" + String.valueOf(o.getPrice()));
+                mItemPriceTextView.setText("$" + o.getPrice());
             }
 
 
@@ -261,7 +259,7 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
 
         }
 
-        public void toggleRequirements() {
+        void toggleRequirements() {
 
             if (!isExpanded) {
                 mRequirementsRecyclerView.setVisibility(View.VISIBLE);
@@ -337,7 +335,7 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
         TextView mLowestRatingTextView;
         RatingBar mLowestOptionRatingBar;
 
-        public SummaryViewHolder(@NonNull View itemView) {
+        SummaryViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 

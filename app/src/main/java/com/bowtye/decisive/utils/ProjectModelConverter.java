@@ -25,7 +25,7 @@ public class ProjectModelConverter {
 
         if (projectWithDetails != null) {
             ProjectFirebase projectFirebase = new ProjectFirebase();
-            projectFirebase.setDateCreated(null); //TODO: add date to other models and use that date
+            projectFirebase.setDateCreated(projectWithDetails.getProject().getDateCreated());
             projectFirebase.setHasPrice(projectWithDetails.getProject().getHasPrice());
             projectFirebase.setName(projectWithDetails.getProject().getName());
             projectFirebase.setOptions(optionToOptionFirebaseList(
@@ -50,7 +50,7 @@ public class ProjectModelConverter {
     public static ProjectWithDetails projectFirebaseToProjectWithDetails(ProjectFirebase projectFirebase) {
         if (projectFirebase != null) {
             ProjectWithDetails projectWithDetails = new ProjectWithDetails();
-            Project project = new Project(projectFirebase.getName(), projectFirebase.getHasPrice());
+            Project project = new Project(projectFirebase.getName(), projectFirebase.getHasPrice(), projectFirebase.getDateCreated());
             project.setFirebaseId(projectFirebase.getProjectId());
 
             projectWithDetails.setProject(project);

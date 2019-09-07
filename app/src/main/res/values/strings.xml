@@ -21,6 +21,12 @@
     <string name="menu_send">Send</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_help_and_feedback">Help and feedback</string>
+    <string name="menu_delete_project">Delete project</string>
+    <string name="menu_save_title">Save</string>
+    <string name="menu_reset_title">Reset</string>
+    <string name="menu_delete_title">Delete</string>
+    <string name="menu_insert_dummy">Insert Dummy</string>
+    <string name="menu_add_template_to_projects">Add template to projects</string>
 
     <string name="action_settings">Settings</string>
     <string name="action_delete_option">Delete</string>
@@ -68,6 +74,9 @@
     <string name="placeholder_rating">4.78</string>
     <string name="placeholder_highest">Highest</string>
     <string name="placeholder_lowest">Lowest</string>
+    <string name="placeholder_project_card_heading">Heading</string>
+    <string name="placeholder_date">Date</string>
+    <string name="placeholder_option_count">5</string>
 
     <!--Content Descriptions-->
     <string name="content_description_option_images">Option images</string>

@@ -64,8 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
             Preference license = findPreference("license");
-            license.setOnPreferenceClickListener(preference -> {
-//                startActivity(new Intent(getActivity(), LicenseActivity.class));
+            Objects.requireNonNull(license).setOnPreferenceClickListener(preference -> {
                 startActivity(new Intent(getActivity(), OssLicensesMenuActivity.class));
                 OssLicensesMenuActivity.setActivityTitle(getString(R.string.title_activity_license));
                 return true;

@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.bowtye.decisive.ui.login.LoginActivity;
 import com.bowtye.decisive.ui.projectDetails.ProjectDetailsActivity;
+import com.bowtye.decisive.utils.ExtraLabels;
 import com.bowtye.decisive.utils.PicassoMenuLoader;
 import com.bowtye.decisive.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,19 +22,14 @@ import java.util.Objects;
 
 import timber.log.Timber;
 
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_FIREBASE_ID;
-
 public class HomeFragment extends BaseHomeFragment {
 
     public static final String EXTRA_SIGN_OUT = "extra_sign_out";
 
-    private FirebaseUser mUser;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -41,8 +37,10 @@ public class HomeFragment extends BaseHomeFragment {
         // Inflate the menu; this adds items to the action bar if it is present.
         super.onCreateOptionsMenu(menu, inflater);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         //TODO: fix bug where picture does not load sometimes
-        if (mUser != null && !mUser.isAnonymous()) {
+        if (user != null && !user.isAnonymous()) {
             Timber.d("Setting user image");
             PicassoMenuLoader menuLoader = new PicassoMenuLoader(menu.getItem(0), getActivity());
             Picasso.get().load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()).into(menuLoader);
@@ -73,11 +71,14 @@ public class HomeFragment extends BaseHomeFragment {
 
     @Override
     public void onProjectItemClicked(int position) {
-        if (mUser == null) {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user == null || user.isAnonymous()) {
             super.onProjectItemClicked(position);
         } else {
             Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), ProjectDetailsActivity.class);
-            intent.putExtra(EXTRA_FIREBASE_ID, mProjects.get(position).getProject().getFirebaseId());
+            intent.putExtra(ExtraLabels.EXTRA_FIREBASE_ID, mProjects.get(position).getProject().getFirebaseId());
 
             getActivity().getWindow().setExitTransition(new Slide(Gravity.START));
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());

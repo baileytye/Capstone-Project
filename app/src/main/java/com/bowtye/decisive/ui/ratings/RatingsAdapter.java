@@ -57,15 +57,15 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.RatingsV
         return (mRequirements != null) ? mRequirements.size() : 0;
     }
 
-    public List<Float> getRatings(){
+    public List<Float> getRatings() {
         return mRatings;
     }
 
-    public void setPointsTowardTotal(List<Float> pointsTowardTotal){
+    public void setPointsTowardTotal(List<Float> pointsTowardTotal) {
         mPointsTowardTotal = pointsTowardTotal;
     }
 
-    public void setRatings(List<Float> ratings){
+    public void setRatings(List<Float> ratings) {
         mRatings = ratings;
     }
 
@@ -112,11 +112,11 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.RatingsV
             mRequirementNameTextView.setText(requirement.getName());
             mRatings.set(getAdapterPosition(), mRatings.get(getAdapterPosition()));
 
-            mRequirementRatingTextView.setText(String.format(Locale.getDefault(),"%.2f",
+            mRequirementRatingTextView.setText(String.format(Locale.getDefault(), "%.2f",
                     mRatings.get(getAdapterPosition())));
             mPriorityTextView.setText(
                     Requirement.getImportanceString(requirement.getImportance(), itemView.getContext()));
-            if(requirement.getImportance() == Requirement.Importance.custom){
+            if (requirement.getImportance() == Requirement.Importance.custom) {
                 mWeightLabel.setVisibility(View.VISIBLE);
                 mWeightTextView.setVisibility(View.VISIBLE);
                 mWeightTextView.setText(String.valueOf(requirement.getWeight()));
@@ -130,7 +130,7 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.RatingsV
                     ? R.drawable.ic_arrow_drop_down_24dp
                     : R.drawable.ic_arrow_drop_up_24dp);
 
-            mPointsTowardTotalTextView.setText(String.format(Locale.getDefault(),"%.2f",mPointsTowardTotal.get(getAdapterPosition())));
+            mPointsTowardTotalTextView.setText(String.format(Locale.getDefault(), "%.2f", mPointsTowardTotal.get(getAdapterPosition())));
         }
 
         void setRequirementVisibilityAndValues(Requirement requirement, Double value, Double expected) {

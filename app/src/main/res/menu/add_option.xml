@@ -4,12 +4,12 @@
 
     <item
         android:id="@+id/action_save"
-        android:title="Save"
-        app:showAsAction="always"
+        android:title="@string/menu_save_title"
+        app:showAsAction="ifRoom"
         />
     <item
         android:id="@+id/action_reset"
-        android:title="Reset"
+        android:title="@string/menu_reset_title"
         app:showAsAction="never"
         />
 </menu>

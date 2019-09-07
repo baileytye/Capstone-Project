@@ -6,6 +6,11 @@ import android.os.Parcelable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.bowtye.decisive.database.Converters;
+
+import java.util.Date;
 
 
 @Entity(tableName = "project")
@@ -17,22 +22,35 @@ public class Project implements Parcelable {
     private String name;
     private Boolean hasPrice;
 
+    @TypeConverters(Converters.class)
+    private Date dateCreated;
+
     @Ignore
     private String firebaseId;
 
     @Ignore
     public Project(){}
 
-    public Project(int id, String name, Boolean hasPrice) {
+    public Project(int id, String name, Boolean hasPrice, Date dateCreated) {
         this.id = id;
         this.name = name;
         this.hasPrice = hasPrice;
+        this.dateCreated = dateCreated;
     }
 
     @Ignore
-    public Project(String name, Boolean hasPrice) {
+    public Project(String name, Boolean hasPrice, Date date) {
         this.name = name;
         this.hasPrice = hasPrice;
+        this.dateCreated = date;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public String getFirebaseId() {
@@ -77,13 +95,17 @@ public class Project implements Parcelable {
         dest.writeInt(this.id);
         dest.writeString(this.name);
         dest.writeValue(this.hasPrice);
+        dest.writeLong(this.dateCreated != null ? this.dateCreated.getTime() : -1);
         dest.writeString(this.firebaseId);
     }
 
+    @Ignore
     protected Project(Parcel in) {
         this.id = in.readInt();
         this.name = in.readString();
         this.hasPrice = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        long tmpDateCreated = in.readLong();
+        this.dateCreated = tmpDateCreated == -1 ? null : new Date(tmpDateCreated);
         this.firebaseId = in.readString();
     }
 

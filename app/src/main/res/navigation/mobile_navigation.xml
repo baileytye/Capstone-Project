@@ -8,11 +8,25 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.bowtye.decisive.ui.main.home.HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_templates"
+            app:destination="@id/navigation_templates"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:launchSingleTop="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_templates"
         android:name="com.bowtye.decisive.ui.main.templates.TemplatesFragment"
-        tools:layout="@layout/fragment_templates" />
+        tools:layout="@layout/fragment_templates" >
+        <action
+            android:id="@+id/action_navigation_templates_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:launchSingleTop="true" />
+    </fragment>
 
 </navigation>

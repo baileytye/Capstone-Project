@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.bowtye.decisive.ui.ratings.RatingsActivity;
 import com.bowtye.decisive.ui.common.RequirementsAdapter;
+import com.bowtye.decisive.utils.ExtraLabels;
 import com.bowtye.decisive.utils.RatingUtils;
 import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.ProjectWithDetails;
@@ -30,6 +31,7 @@ import com.bowtye.decisive.models.Requirement;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ui.common.VerticalSpaceItemDecoration;
 import com.bowtye.decisive.ui.addOption.AddOption;
+import com.bowtye.decisive.utils.RequestCode;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.squareup.picasso.Picasso;
 
@@ -43,15 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_DELETE_OPTION;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_IS_TEMPLATE;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_OPTION;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_OPTION_ID;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_PROJECT;
-
 public class OptionDetails extends AppCompatActivity implements RatingUtils.CalculateRatingOfOptionAsyncTask.OptionResultAsyncCallback {
-
-    public static final int EDIT_OPTION_REQUEST_CODE = 234;
 
     public static final int RESULT_DELETED = 10;
 
@@ -90,18 +84,18 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        if(intent != null){
-            if(intent.hasExtra(EXTRA_OPTION_ID)){
-                mOptionId = intent.getIntExtra(EXTRA_OPTION_ID, -1);
+        if (intent != null) {
+            if (intent.hasExtra(ExtraLabels.EXTRA_OPTION_ID)) {
+                mOptionId = intent.getIntExtra(ExtraLabels.EXTRA_OPTION_ID, -1);
             }
-            if(intent.hasExtra(EXTRA_PROJECT)){
-                mProject = intent.getParcelableExtra(EXTRA_PROJECT);
-                if(mProject != null) {
+            if (intent.hasExtra(ExtraLabels.EXTRA_PROJECT)) {
+                mProject = intent.getParcelableExtra(ExtraLabels.EXTRA_PROJECT);
+                if (mProject != null) {
                     mRequirements = mProject.getRequirementList();
                 }
             }
-            if(intent.hasExtra(EXTRA_IS_TEMPLATE)){
-                mIsTemplate = intent.getBooleanExtra(EXTRA_IS_TEMPLATE, false);
+            if (intent.hasExtra(ExtraLabels.EXTRA_IS_TEMPLATE)) {
+                mIsTemplate = intent.getBooleanExtra(ExtraLabels.EXTRA_IS_TEMPLATE, false);
             }
         }
         prepareViews();
@@ -113,7 +107,7 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.option_details, menu);
 
-        if(mIsTemplate){
+        if (mIsTemplate) {
             menu.findItem(R.id.action_edit).setVisible(false);
             menu.findItem(R.id.action_delete).setVisible(false);
         }
@@ -124,25 +118,25 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
     @Override
     public boolean onOptionsItemSelected(@NotNull MenuItem item) {
 
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finishAfterTransition();
                 return true;
             case R.id.action_delete:
                 Intent out = new Intent();
-                out.putExtra(EXTRA_DELETE_OPTION, mOption);
+                out.putExtra(ExtraLabels.EXTRA_DELETE_OPTION, mOption);
                 setResult(RESULT_DELETED, out);
                 finishAfterTransition();
                 return true;
             case R.id.action_edit:
                 Intent intent = new Intent(getApplicationContext(), AddOption.class);
-                intent.putExtra(EXTRA_PROJECT, mProject);
-                intent.putExtra(EXTRA_OPTION, mOption);
+                intent.putExtra(ExtraLabels.EXTRA_PROJECT, mProject);
+                intent.putExtra(ExtraLabels.EXTRA_OPTION, mOption);
 
                 Transition transition = new Slide(Gravity.TOP);
 
                 getWindow().setExitTransition(transition);
-                startActivityForResult(intent, EDIT_OPTION_REQUEST_CODE,
+                startActivityForResult(intent, RequestCode.EDIT_OPTION_REQUEST_CODE,
                         ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
                 return true;
         }
@@ -152,12 +146,14 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == EDIT_OPTION_REQUEST_CODE){
-            if(data != null && data.hasExtra(EXTRA_OPTION)) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RequestCode.EDIT_OPTION_REQUEST_CODE) {
+            if (data != null && data.hasExtra(ExtraLabels.EXTRA_OPTION)) {
                 switch (resultCode) {
                     case RESULT_OK:
                         Timber.d("Received option from add ");
-                        mOption = data.getParcelableExtra(EXTRA_OPTION);
+                        mOption = data.getParcelableExtra(ExtraLabels.EXTRA_OPTION);
                         new RatingUtils.CalculateRatingOfOptionAsyncTask(this, mRequirements).execute(mOption);
                         break;
                 }
@@ -177,18 +173,18 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new RequirementsAdapter(mRequirements, null, true);
         mRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration((int)
-            getResources().getDimension(R.dimen.recycler_item_separation)));
+                getResources().getDimension(R.dimen.recycler_item_separation)));
         mRecyclerView.setAdapter(mAdapter);
 
         mRatingWithNumberView.setOnClickListener(view -> {
             Intent intent = new Intent(this.getApplicationContext(), RatingsActivity.class);
-            intent.putExtra(EXTRA_OPTION, mOption);
-            intent.putExtra(EXTRA_PROJECT, mProject);
+            intent.putExtra(ExtraLabels.EXTRA_OPTION, mOption);
+            intent.putExtra(ExtraLabels.EXTRA_PROJECT, mProject);
             startActivity(intent);
         });
     }
 
-    private void fillData(){
+    private void fillData() {
         mToolbarLayout.setTitle(mOption.getName());
 
         mPriceTextView.setText("$" + mOption.getPrice());
@@ -196,7 +192,7 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
         mRatingBar.setRating(mOption.getRating());
         mNotesTextInputEditText.setText(mOption.getNotes());
 
-        if(mOption.getImagePath().equals("")){
+        if (mOption.getImagePath().equals("")) {
             mOptionImageView.setVisibility(View.GONE);
         } else {
             mOptionImageView.setVisibility(View.VISIBLE);
@@ -208,8 +204,8 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
         }
     }
 
-    private void prepareViewModel(){
-        if(mIsTemplate){
+    private void prepareViewModel() {
+        if (mIsTemplate) {
             mOption = mProject.getOptionList().get(mOptionId);
             mAdapter.setRequirementValues(mOption.getRequirementValues());
             mAdapter.notifyDataSetChanged();

@@ -76,7 +76,7 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
         setContentView(R.layout.activity_add_project);
         ButterKnife.bind(this);
 
-        mProject = new ProjectWithDetails(new Project("", true), new ArrayList<>(), new ArrayList<>());
+        mProject = new ProjectWithDetails(new Project("", true, null), new ArrayList<>(), new ArrayList<>());
         Intent intent = getIntent();
 
         itemChanged = false;
@@ -118,6 +118,9 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == ADD_REQUIREMENT_REQUEST_CODE && data != null) {
             if (data.hasExtra(EXTRA_REQUIREMENT) && resultCode == RESULT_OK) {
                 Requirement requirement = data.getParcelableExtra(EXTRA_REQUIREMENT);

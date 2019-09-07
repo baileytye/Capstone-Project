@@ -21,11 +21,13 @@ import android.widget.TextView;
 import com.bowtye.decisive.ui.addProject.AddProjectActivity;
 import com.bowtye.decisive.ui.common.VerticalSpaceItemDecoration;
 import com.bowtye.decisive.ui.optionDetails.OptionDetails;
+import com.bowtye.decisive.utils.ExtraLabels;
 import com.bowtye.decisive.utils.RatingUtils;
 import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ui.addOption.AddOption;
+import com.bowtye.decisive.utils.RequestCode;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -37,26 +39,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_DELETE_OPTION;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_EDIT_PROJECT;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_IS_TEMPLATE;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_NEW_PROJECT;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_OPTION;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_OPTION_ID;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_PROJECT;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_PROJECT_ID;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_FIREBASE_ID;
-
 public abstract class BaseProjectDetailsActivity extends AppCompatActivity implements
         ProjectDetailsAdapter.OptionItemClickListener,
         RatingUtils.CalculateRatingsOfProjectAsyncTask.ProjectResultAsyncCallback,
         RatingUtils.CalculateRatingOfOptionAsyncTask.OptionResultAsyncCallback {
 
-    protected static final int ADD_OPTION_REQUEST_CODE = 877;
-    protected static final int EDIT_OPTION_REQUEST_CODE = 92;
-
     public static final int RESULT_DELETED = 10;
-    protected static final int EDIT_PROJECT_REQUEST_CODE = 12;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -91,16 +79,14 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
 
         Intent intent = getIntent();
         if (intent != null) {
-            if (intent.hasExtra(EXTRA_PROJECT_ID)) {
-                mProjectId = intent.getIntExtra(EXTRA_PROJECT_ID, -1);
+            if (intent.hasExtra(ExtraLabels.EXTRA_PROJECT_ID)) {
+                mProjectId = intent.getIntExtra(ExtraLabels.EXTRA_PROJECT_ID, -1);
             }
-            if(intent.hasExtra(EXTRA_IS_TEMPLATE)){
-                mIsTemplate = intent.getBooleanExtra(EXTRA_IS_TEMPLATE, false);
+            if(intent.hasExtra(ExtraLabels.EXTRA_IS_TEMPLATE)){
+                mIsTemplate = intent.getBooleanExtra(ExtraLabels.EXTRA_IS_TEMPLATE, false);
             }
-            if(intent != null){
-                if(intent.hasExtra(EXTRA_FIREBASE_ID)){
-                    mFirebaseId = intent.getStringExtra(EXTRA_FIREBASE_ID);
-                }
+            if(intent.hasExtra(ExtraLabels.EXTRA_FIREBASE_ID)){
+                mFirebaseId = intent.getStringExtra(ExtraLabels.EXTRA_FIREBASE_ID);
             }
         }
 
@@ -115,6 +101,8 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
         if(mIsTemplate){
             menu.findItem(R.id.action_edit_project).setVisible(false);
             menu.findItem(R.id.action_delete_project).setVisible(false);
+        } else {
+            menu.findItem(R.id.action_add_template).setVisible(false);
         }
 
         return true;
@@ -135,6 +123,12 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
                 mViewModel.deleteProject(mProject);
                 finishAfterTransition();
                 return true;
+            case R.id.action_add_template:
+                Intent out = new Intent();
+                out.putExtra(ExtraLabels.EXTRA_NEW_PROJECT, mProject);
+                setResult(RESULT_OK, out);
+                finish();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -142,23 +136,25 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if ((requestCode == ADD_OPTION_REQUEST_CODE) && (resultCode == RESULT_OK)) {
-            if (data != null && data.hasExtra(EXTRA_OPTION)) {
-                Option o = data.getParcelableExtra(EXTRA_OPTION);
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if ((requestCode == RequestCode.ADD_OPTION_REQUEST_CODE) && (resultCode == RESULT_OK)) {
+            if (data != null && data.hasExtra(ExtraLabels.EXTRA_OPTION)) {
+                Option o = data.getParcelableExtra(ExtraLabels.EXTRA_OPTION);
 
                 new RatingUtils.CalculateRatingOfOptionAsyncTask(this, mProject.getRequirementList()).execute(o);
             }
-        } else if (requestCode == EDIT_OPTION_REQUEST_CODE) {
-            if (data != null && data.hasExtra(EXTRA_DELETE_OPTION)) {
+        } else if (requestCode == RequestCode.EDIT_OPTION_REQUEST_CODE) {
+            if (data != null && data.hasExtra(ExtraLabels.EXTRA_DELETE_OPTION)) {
                 switch (resultCode) {
                     case RESULT_DELETED:
                         mViewModel.deleteOption(mProject.getOptionList().get(mItemSelected));
                         mItemDeleted = true;
                 }
             }
-        } else if (requestCode == EDIT_PROJECT_REQUEST_CODE && resultCode == RESULT_OK) {
-            if (data != null && data.hasExtra(EXTRA_NEW_PROJECT)) {
-                ProjectWithDetails projectWithDetails = data.getParcelableExtra(EXTRA_NEW_PROJECT);
+        } else if (requestCode == RequestCode.EDIT_PROJECT_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null && data.hasExtra(ExtraLabels.EXTRA_NEW_PROJECT)) {
+                ProjectWithDetails projectWithDetails = data.getParcelableExtra(ExtraLabels.EXTRA_NEW_PROJECT);
                 mViewModel.resizeOptionValuesList(projectWithDetails);
                 new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
             }
@@ -198,12 +194,12 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
         } else {
             mFab.setOnClickListener(view -> {
                 Intent intent = new Intent(getApplicationContext(), AddOption.class);
-                intent.putExtra(EXTRA_PROJECT, mProject);
+                intent.putExtra(ExtraLabels.EXTRA_PROJECT, mProject);
 
                 Transition transition = new Slide(Gravity.TOP);
 
                 getWindow().setExitTransition(transition);
-                startActivityForResult(intent, ADD_OPTION_REQUEST_CODE,
+                startActivityForResult(intent, RequestCode.ADD_OPTION_REQUEST_CODE,
                         ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
             });
         }
@@ -221,28 +217,28 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
     @Override
     public void onOptionItemClicked(int position) {
         Intent intent = new Intent(getApplicationContext(), OptionDetails.class);
-        intent.putExtra(EXTRA_OPTION_ID, (mIsTemplate)
+        intent.putExtra(ExtraLabels.EXTRA_OPTION_ID, (mIsTemplate)
                 ? position
                 : mProject.getOptionList().get(position).getOptionId());
-        intent.putExtra(EXTRA_PROJECT, mProject);
-        intent.putExtra(EXTRA_IS_TEMPLATE, mIsTemplate);
+        intent.putExtra(ExtraLabels.EXTRA_PROJECT, mProject);
+        intent.putExtra(ExtraLabels.EXTRA_IS_TEMPLATE, mIsTemplate);
 
         mItemSelected = position;
 
         Transition transition = new Slide(Gravity.START);
 
         getWindow().setExitTransition(transition);
-        startActivityForResult(intent, EDIT_OPTION_REQUEST_CODE,
+        startActivityForResult(intent, RequestCode.EDIT_OPTION_REQUEST_CODE,
                 ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 
     protected void startAddProjectActivity() {
         Intent intent = new Intent(getApplicationContext(), AddProjectActivity.class);
-        intent.putExtra(EXTRA_EDIT_PROJECT, mProject);
+        intent.putExtra(ExtraLabels.EXTRA_EDIT_PROJECT, mProject);
         Transition transition = new Slide(Gravity.TOP);
 
         getWindow().setExitTransition(transition);
-        startActivityForResult(intent, EDIT_PROJECT_REQUEST_CODE,
+        startActivityForResult(intent, RequestCode.EDIT_PROJECT_REQUEST_CODE,
                 ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 

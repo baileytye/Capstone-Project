@@ -13,13 +13,14 @@ import com.bowtye.decisive.models.Project;
 import com.bowtye.decisive.models.ProjectWithDetails;
 import com.bowtye.decisive.models.Requirement;
 
+import java.util.Date;
 import java.util.List;
 
 @Dao
 public abstract class ProjectListDao {
 
     @Transaction
-    @Query("SELECT * FROM project")
+    @Query("SELECT * FROM project ORDER BY dateCreated DESC")
     abstract LiveData<List<ProjectWithDetails>> getProjects();
 
     @Transaction
@@ -70,6 +71,8 @@ public abstract class ProjectListDao {
 
     @Transaction
     public void insertProjectWithDetails(ProjectWithDetails projectDetails){
+
+        projectDetails.getProject().setDateCreated(new Date());
         long id = insertProject(projectDetails.getProject());
 
         for(Option option: projectDetails.getOptionList()){

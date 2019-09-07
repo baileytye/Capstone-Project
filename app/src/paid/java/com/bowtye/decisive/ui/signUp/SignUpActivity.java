@@ -18,6 +18,8 @@ import com.bowtye.decisive.R;
 import com.bowtye.decisive.ui.main.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -55,30 +57,30 @@ public class SignUpActivity extends AppCompatActivity {
         String password = mPasswordEditText.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.dialog_enter_email_address, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.dialog_enter_password, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (password.length() < 6) {
-            Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.dialog_password_minimum_length_error, Toast.LENGTH_SHORT).show();
             return;
         }
 
         //create user
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
-                    Timber.d("Creating user with email: %s", task.getResult().getAdditionalUserInfo().getUsername());
                     // If sign in fails, display a message to the user. If sign in succeeds
                     // the auth state listener will be notified and logic to handle the
                     // signed in user can be handled in the listener.
                     if (!task.isSuccessful()) {
                         Timber.d("Authentication failed!");
                     } else {
+                        Timber.d("Creating user with email: %s", Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getAdditionalUserInfo()).getUsername());
                         startActivity(new Intent(this, MainActivity.class));
                         finish();
                     }

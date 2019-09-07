@@ -6,13 +6,13 @@ import timber.log.Timber;
 
 public class ProjectDetailsActivity extends BaseProjectDetailsActivity {
 
-    protected void prepareViewModel(){
+    protected void prepareViewModel() {
 
         mViewModel = ViewModelProviders.of(this).get(ProjectDetailsViewModel.class);
         mViewModel.getProject(mProjectId, mFirebaseId, mIsTemplate).observe(this, projectWithDetails -> {
             Timber.d("Livedata Updated");
 
-            if(mProject != null && mProject.getRequirementList().size() != projectWithDetails.getRequirementList().size()){
+            if (mProject != null && mProject.getRequirementList().size() != projectWithDetails.getRequirementList().size()) {
                 mRecyclerView.setAdapter(null);
                 mAdapter = new ProjectDetailsAdapter(projectWithDetails, this);
                 mRecyclerView.setAdapter(mAdapter);
@@ -38,7 +38,7 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity {
 
             setEmptyMessageVisibility();
 
-            if(mProject != null) {
+            if (mProject != null) {
                 setIsLoading(false);
                 mToolbarLayout.setTitle((mIsTemplate)
                         ? "Template: " + mProject.getProject().getName()

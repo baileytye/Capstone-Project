@@ -212,7 +212,7 @@ public class ProjectRepository extends BaseRepository {
             CollectionReference projectsReference = firebaseDb.collection(PROJECT_COLLECTION);
 
 
-            Query query = projectsReference.whereEqualTo("userId", user.getUid());
+            Query query = projectsReference.whereEqualTo("userId", user.getUid()).orderBy("dateCreated", Query.Direction.DESCENDING);
 
             query.addSnapshotListener((value, e) -> {
                 if (e != null) {

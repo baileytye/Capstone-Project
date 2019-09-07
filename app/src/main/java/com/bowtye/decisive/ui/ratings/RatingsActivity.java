@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bowtye.decisive.utils.ExtraLabels;
 import com.bowtye.decisive.utils.RatingUtils;
 import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.ProjectWithDetails;
@@ -29,8 +30,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_OPTION;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_PROJECT;
 import static com.bowtye.decisive.utils.RatingUtils.POINTS_TOWARD_TOTAL;
 import static com.bowtye.decisive.utils.RatingUtils.RATINGS;
 
@@ -60,11 +59,11 @@ public class RatingsActivity extends AppCompatActivity implements RatingUtils.Ra
 
         Intent intent = getIntent();
         if (intent != null) {
-            if (intent.hasExtra(EXTRA_OPTION)) {
-                mOption = intent.getParcelableExtra(EXTRA_OPTION);
+            if (intent.hasExtra(ExtraLabels.EXTRA_OPTION)) {
+                mOption = intent.getParcelableExtra(ExtraLabels.EXTRA_OPTION);
             }
-            if (intent.hasExtra(EXTRA_PROJECT)) {
-                ProjectWithDetails project = intent.getParcelableExtra(EXTRA_PROJECT);
+            if (intent.hasExtra(ExtraLabels.EXTRA_PROJECT)) {
+                ProjectWithDetails project = intent.getParcelableExtra(ExtraLabels.EXTRA_PROJECT);
                 if (project != null) {
                     mRequirements = project.getRequirementList();
                 }
@@ -76,7 +75,6 @@ public class RatingsActivity extends AppCompatActivity implements RatingUtils.Ra
 
     @Override
     public boolean onOptionsItemSelected(@NotNull MenuItem item) {
-
 
         if (item.getItemId() == android.R.id.home) {
             finishAfterTransition();
@@ -108,21 +106,20 @@ public class RatingsActivity extends AppCompatActivity implements RatingUtils.Ra
     @Override
     public void updateUIWithRatingResults(List<Float> ratings, int code) {
 
-        if(code == RATINGS) {
+        if (code == RATINGS) {
             mAdapter.setRatings(ratings);
             mOption.setRating(RatingUtils.calculateOptionRating(
-                    ratings, mRequirements)
-            );
+                    ratings, mRequirements));
 
             mRatingTextView.setText(String.format(Locale.getDefault(), "%.2f", mOption.getRating()));
             mOptionRatingBar.setRating(mOption.getRating());
+
             new RatingUtils.CalculatePointsTowardTotalsAsyncTask(mRequirements, ratings, this).execute();
-        } else if (code == POINTS_TOWARD_TOTAL){
+        } else if (code == POINTS_TOWARD_TOTAL) {
             mAdapter.setPointsTowardTotal(ratings);
         }
         mAdapter.notifyDataSetChanged();
     }
-
 
 
 }

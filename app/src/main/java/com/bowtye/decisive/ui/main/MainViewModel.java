@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.bowtye.decisive.database.ProjectRepository;
-import com.bowtye.decisive.models.ProjectFirebase;
 import com.bowtye.decisive.utils.RatingUtils;
 import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.Project;
@@ -93,7 +92,7 @@ public class MainViewModel extends AndroidViewModel {
                 )
         );
 
-        Project p = new Project("House", false);
+        Project p = new Project("House", false, null);
 
         ProjectWithDetails projectWithDetails = new ProjectWithDetails(p, Collections.singletonList(option1), requirements);
 

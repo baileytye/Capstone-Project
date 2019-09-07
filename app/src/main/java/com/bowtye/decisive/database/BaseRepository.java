@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
@@ -179,6 +180,7 @@ public class BaseRepository {
 
         @Override
         protected Void doInBackground(Option... options) {
+            options[0].setDateCreated(new Date());
             projectListDao.insertOption(options[0]);
             return null;
         }
