@@ -9,7 +9,7 @@ public class ProjectFirebase {
 
     private String name, userId, projectId;
     private Boolean hasPrice;
-    private @ServerTimestamp Date dateCreated;
+    private Date dateCreated;
 
     private List<RequirementFirebase> requirements;
     private List<OptionFirebase> options;

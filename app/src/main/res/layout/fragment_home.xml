@@ -9,9 +9,12 @@
 
     <include layout="@layout/content_home" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        style="@style/MyFabStyle"
-        app:srcCompat="@drawable/ic_add_24dp" />
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/fab"-->
+<!--        style="@style/MyFabStyle"-->
+<!--        app:srcCompat="@drawable/ic_add_24dp" />-->
+
+    <include layout="@layout/expandable_floating_action_button" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

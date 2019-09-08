@@ -15,10 +15,4 @@
         android:icon="@drawable/ic_delete_24dp"
         app:showAsAction="never"
         />
-    <item
-        android:id="@+id/action_add_template"
-        android:orderInCategory="5"
-        android:title="@string/menu_add_template_to_projects"
-        app:showAsAction="never"
-        />
 </menu>

@@ -48,8 +48,13 @@ public class HomeAdapter extends MainAdapter{
             super.bind(p);
 
             mDateTextView.setVisibility(View.VISIBLE);
-            String date = new SimpleDateFormat("E, dd MMM yyyy", Locale.ENGLISH).format(p.getProject().getDateCreated());
-            mDateTextView.setText(date);
+            if(p.getProject().getDateCreated() != null) {
+                String date = new SimpleDateFormat("E, dd MMM yyyy", Locale.ENGLISH).format(p.getProject().getDateCreated());
+                mDateTextView.setText(date);
+            } else {
+                mDateTextView.setText("Unknown date");
+            }
+
         }
 
         @Override

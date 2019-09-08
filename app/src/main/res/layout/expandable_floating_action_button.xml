@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/outside_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.9"
+        android:background="@color/white"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/label_new_project"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:padding="8dp"
+        android:text="@string/menu_new_project"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/fab_new_project"
+        app:layout_constraintEnd_toStartOf="@+id/fab_new_project"
+        app:layout_constraintTop_toTopOf="@+id/fab_new_project" />
+
+    <TextView
+        android:id="@+id/label_from_template"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:padding="8dp"
+        android:text="@string/menu_from_template"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_from_template"
+        app:layout_constraintEnd_toStartOf="@+id/fab_from_template"
+        app:layout_constraintTop_toTopOf="@+id/fab_from_template" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_new_project"
+        style="@style/MyFabMenuStyle"
+        android:visibility="invisible"
+        app:backgroundTint="@color/colorPrimaryLight"
+        app:layout_constraintBottom_toTopOf="@id/fab_from_template"
+        app:layout_constraintEnd_toEndOf="@+id/fab_from_template"
+        app:pressedTranslationZ="12dp"
+        app:srcCompat="@drawable/ic_add_24dp" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_from_template"
+        style="@style/MyFabMenuStyle"
+        android:visibility="invisible"
+        app:backgroundTint="@color/green500"
+        app:layout_constraintBottom_toTopOf="@id/fab"
+        app:layout_constraintEnd_toEndOf="@+id/fab"
+        app:pressedTranslationZ="12dp"
+        app:srcCompat="@drawable/ic_dashboard_black_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        style="@style/MyFabStyle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:pressedTranslationZ="12dp"
+        app:srcCompat="@drawable/ic_add_24dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

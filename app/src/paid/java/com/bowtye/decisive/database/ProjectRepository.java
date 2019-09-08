@@ -30,6 +30,7 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -70,6 +71,8 @@ public class ProjectRepository extends BaseRepository {
     public void insertProjectWithDetails(ProjectWithDetails projectWithDetails) {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        projectWithDetails.getProject().setDateCreated(new Date());
 
         if (user == null || user.isAnonymous()) {
             super.insertProjectWithDetails(projectWithDetails);

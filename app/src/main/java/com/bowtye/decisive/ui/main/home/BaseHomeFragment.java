@@ -12,7 +12,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,16 +59,29 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
     Toolbar mToolbar;
     @BindView(R.id.fab)
     FloatingActionButton mFab;
+    @BindView(R.id.fab_from_template)
+    FloatingActionButton mFabFromTemplate;
+    @BindView(R.id.fab_new_project)
+    FloatingActionButton mFabNewProject;
     @BindView(R.id.rv_main)
     RecyclerView mRecyclerView;
     @BindView(R.id.toolbar_layout)
     CollapsingToolbarLayout mToolbarLayout;
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
+    @BindView(R.id.label_from_template)
+    TextView mFromTemplateLabel;
+    @BindView(R.id.label_new_project)
+    TextView mNewProjectLabel;
+    @BindView(R.id.outside_layout)
+    View mOutsideLayout;
 
     private RecyclerView.LayoutManager mLayoutManager;
     private HomeAdapter mAdapter;
     private MainViewModel mViewModel;
+
+    private Animation fab_open, fab_close, fab_rotate, fab_anti_rotate, fade_in, fade_out;
+    private Boolean isOpen = false;
 
     List<ProjectWithDetails> mProjects;
 
@@ -93,7 +111,7 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.action_insert_dummy:
                 mViewModel.insertDummyProject();
                 return true;
@@ -106,17 +124,20 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if ((requestCode == RequestCode.ADD_PROJECT_REQUEST_CODE) && (resultCode == RESULT_OK)) {
-            if (data != null && data.hasExtra(ExtraLabels.EXTRA_NEW_PROJECT)) {
-                ProjectWithDetails projectWithDetails = data.getParcelableExtra(ExtraLabels.EXTRA_NEW_PROJECT);
-                mViewModel.resizeOptionValuesList(projectWithDetails);
-                new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
+        if ((requestCode == RequestCode.ADD_PROJECT_REQUEST_CODE)) {
+            if(resultCode == RESULT_OK) {
+                if (data != null && data.hasExtra(ExtraLabels.EXTRA_NEW_PROJECT)) {
+                    ProjectWithDetails projectWithDetails = data.getParcelableExtra(ExtraLabels.EXTRA_NEW_PROJECT);
+                    mViewModel.resizeOptionValuesList(projectWithDetails);
+                    new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
+                }
             }
+            closeFabMenu();
         }
     }
 
-    private void setIsLoading(boolean isLoading){
-        if(isLoading){
+    private void setIsLoading(boolean isLoading) {
+        if (isLoading) {
             mProgressBar.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.INVISIBLE);
 
@@ -144,15 +165,62 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
         dividerItemDecoration.setDrawable(Objects.requireNonNull(activity.getDrawable(R.drawable.divider)));
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        mFab.setOnClickListener(view -> {
-            startAddProjectActivity(-1);
+        fab_close = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.fab_close);
+        fab_open = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.fab_open);
+        fab_rotate = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.fab_rotate);
+        fab_anti_rotate = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.fab_anti_rotate);
+        fade_in = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.fade_in);
+        fade_out = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.fade_out);
 
+        isOpen = false;
+
+        mOutsideLayout.setOnClickListener(view -> closeFabMenu());
+
+        mFab.setOnClickListener(view -> {
+            if (isOpen) {
+                closeFabMenu();
+            } else {
+                openFabMenu();
+            }
+        });
+
+        mFabNewProject.setOnClickListener(view -> startAddProjectActivity(-1));
+
+        mFabFromTemplate.setOnClickListener(view -> {
+                NavHostFragment.findNavController(this).navigate(R.id.action_navigation_home_to_navigation_templates);
+                closeFabMenu();
         });
 
         Timber.d("Number of projects: %d", ((mProjects != null) ? mProjects.size() : 0));
     }
 
+    private void closeFabMenu(){
+        mOutsideLayout.startAnimation(fade_out);
+        mOutsideLayout.setClickable(false);
+        mFromTemplateLabel.startAnimation(fade_out);
+        mNewProjectLabel.startAnimation(fade_out);
+        mFabNewProject.startAnimation(fab_close);
+        mFabFromTemplate.startAnimation(fab_close);
+        mFab.startAnimation(fab_anti_rotate);
+        mFabFromTemplate.setClickable(false);
+        mFabNewProject.setClickable(false);
+        mFab.setColorFilter(getResources().getColor(R.color.white));
+        isOpen = false;
+    }
 
+    private void openFabMenu(){
+        mOutsideLayout.startAnimation(fade_in);
+        mOutsideLayout.setClickable(true);
+        mFromTemplateLabel.startAnimation(fade_in);
+        mNewProjectLabel.startAnimation(fade_in);
+        mFabNewProject.startAnimation(fab_open);
+        mFabFromTemplate.startAnimation(fab_open);
+        mFab.startAnimation(fab_rotate);
+        mFabNewProject.setClickable(true);
+        mFabFromTemplate.setClickable(true);
+        mFab.setColorFilter(getResources().getColor(R.color.grey100));
+        isOpen = true;
+    }
 
     void prepareViewModel() {
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);

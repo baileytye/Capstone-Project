@@ -37,6 +37,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.dimorinny.floatingtextbutton.FloatingTextButton;
 import timber.log.Timber;
 
 public abstract class BaseProjectDetailsActivity extends AppCompatActivity implements
@@ -54,6 +55,8 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
     RecyclerView mRecyclerView;
     @BindView(R.id.fab)
     FloatingActionButton mFab;
+    @BindView(R.id.floatin_button)
+    FloatingTextButton mFloatingButton;
     @BindView(R.id.tv_empty_options)
     TextView mEmptyOptionsTextView;
     @BindView(R.id.progressBar)
@@ -101,8 +104,6 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
         if(mIsTemplate){
             menu.findItem(R.id.action_edit_project).setVisible(false);
             menu.findItem(R.id.action_delete_project).setVisible(false);
-        } else {
-            menu.findItem(R.id.action_add_template).setVisible(false);
         }
 
         return true;
@@ -122,12 +123,6 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
                 mViewModel.getProject(mProjectId, null, false).removeObservers(this);
                 mViewModel.deleteProject(mProject);
                 finishAfterTransition();
-                return true;
-            case R.id.action_add_template:
-                Intent out = new Intent();
-                out.putExtra(ExtraLabels.EXTRA_NEW_PROJECT, mProject);
-                setResult(RESULT_OK, out);
-                finish();
                 return true;
         }
 
@@ -161,6 +156,13 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
         }
     }
 
+    private void addTemplate(){
+        Intent out = new Intent();
+        out.putExtra(ExtraLabels.EXTRA_NEW_PROJECT, mProject);
+        setResult(RESULT_OK, out);
+        finish();
+    }
+
     protected void setIsLoading(boolean isLoading){
         if(isLoading){
             mProgressBar.setVisibility(View.VISIBLE);
@@ -191,7 +193,9 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
 
         if(mIsTemplate) {
             mFab.hide();
+            mFloatingButton.setOnClickListener(view -> addTemplate());
         } else {
+            mFloatingButton.setVisibility(View.INVISIBLE);
             mFab.setOnClickListener(view -> {
                 Intent intent = new Intent(getApplicationContext(), AddOption.class);
                 intent.putExtra(ExtraLabels.EXTRA_PROJECT, mProject);
