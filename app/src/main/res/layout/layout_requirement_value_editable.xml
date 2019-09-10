@@ -4,13 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frame_values"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:showIn="@layout/content_add_option">
+    android:layout_height="wrap_content">
+
+    <CheckBox
+        android:id="@+id/cb_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:visibility="invisible"
+        android:text="Expected" />
 
     <FrameLayout
         android:id="@+id/frame_averages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:paddingStart="0.5dp"
         android:paddingEnd="0.5dp">
 
@@ -44,34 +52,12 @@
             android:textSize="12sp" />
     </FrameLayout>
 
-    <CheckBox
-        android:id="@+id/cb_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:text="Expected" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_value"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:boxStrokeColor="@color/colorPrimary">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Expected value"
-            android:inputType="number"
-            android:singleLine="true" />
-    </com.google.android.material.textfield.TextInputLayout>
-
     <FrameLayout
         android:id="@+id/frame_star_rating"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="0.5dp"
+        android:visibility="invisible"
         android:paddingEnd="0.5dp">
 
         <FrameLayout
@@ -82,11 +68,11 @@
 
             <me.zhanghai.android.materialratingbar.MaterialRatingBar
                 android:id="@+id/rb_value"
+                style="@style/Widget.MaterialRatingBar.RatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|start"
                 android:layout_marginStart="4dp"
-                style="@style/Widget.MaterialRatingBar.RatingBar"
                 android:numStars="5" />
 
         </FrameLayout>
@@ -103,6 +89,42 @@
             android:text="Requirement"
             android:textSize="12sp" />
     </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_value"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxStrokeColor="@color/colorPrimary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Expected value"
+                android:inputType="numberDecimal"
+                android:paddingEnd="64dp"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_unit"
+            android:focusable="false"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:gravity="end|center_vertical"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingEnd="8dp"
+            android:text="lbs" />
+
+    </RelativeLayout>
 
 
 </FrameLayout>

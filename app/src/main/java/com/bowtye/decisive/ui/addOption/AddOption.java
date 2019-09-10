@@ -36,6 +36,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -56,6 +57,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static com.bowtye.decisive.ui.addProject.AddProjectActivity.RESULT_TEMPLATE;
 import static com.bowtye.decisive.ui.common.BottomSheetFragment.CHOOSE_IMAGE;
 import static com.bowtye.decisive.ui.common.BottomSheetFragment.TAKE_PHOTO;
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_OPTION;
@@ -95,8 +97,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
     String currentPhotoPath;
 
     BottomSheetFragment mSheetDialog;
-    boolean isEdit;
-    boolean itemChanged;
+    boolean isEdit, itemChanged, mHasPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +117,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 if (p != null) {
                     mRequirements = p.getRequirementList();
                     mOption.setRequirementValues(new ArrayList<>(Collections.nCopies(mRequirements.size(), 0.0)));
+                    mHasPrice = p.getProject().getHasPrice();
                 }
             }
             if (intent.hasExtra(EXTRA_OPTION)) {
@@ -165,6 +167,20 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                         Intent out = new Intent();
                         out.putExtra(EXTRA_OPTION, mOption);
                         setResult(RESULT_OK, out);
+                        finishAfterTransition();
+                        return true;
+                }
+                //TODO: REMOVE WHEN DONE TEMPLATES
+            case R.id.action_save_template:
+                switch (validateAndSave()) {
+                    case VALIDATION_NAME_ERROR:
+                        ViewUtils.showErrorDialog(getString(R.string.dialog_title_save_option),
+                                getString(R.string.dialog_give_option_a_name), this);
+                        break;
+                    case VALIDATION_OK:
+                        Intent out = new Intent();
+                        out.putExtra(EXTRA_OPTION, mOption);
+                        setResult(RESULT_TEMPLATE, out);
                         finishAfterTransition();
                         return true;
                 }
@@ -290,7 +306,11 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         GenericTextWatcher watcher = new GenericTextWatcher();
         mOptionNameEditText.addTextChangedListener(watcher);
         mNotesEditText.addTextChangedListener(watcher);
-        mPriceEditText.addTextChangedListener(watcher);
+        if(mHasPrice) {
+            mPriceEditText.addTextChangedListener(watcher);
+        } else {
+            mPriceEditText.setVisibility(View.GONE);
+        }
 
         mRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration((int)
                 getResources().getDimension(R.dimen.recycler_item_separation)));
@@ -319,7 +339,9 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         } else {
             price = Double.parseDouble(priceString);
         }
-        mOption.setPrice(price);
+        if(mHasPrice) {
+            mOption.setPrice(price);
+        }
 
         mOption.setNotes(mNotesEditText.getText().toString());
 

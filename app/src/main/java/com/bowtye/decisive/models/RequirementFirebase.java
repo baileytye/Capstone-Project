@@ -2,7 +2,7 @@ package com.bowtye.decisive.models;
 
 public class RequirementFirebase {
 
-    private String name, notes;
+    private String name, notes, unit;
     private Requirement.Type type;
     private Requirement.Importance importance;
     private Double expected, weight;
@@ -12,7 +12,7 @@ public class RequirementFirebase {
     }
 
     public RequirementFirebase(String name, String notes, Requirement.Type type, Requirement.Importance importance,
-                               Double expected, Double weight, Boolean moreIsBetter) {
+                               Double expected, Double weight, Boolean moreIsBetter, String unit) {
         this.name = name;
         this.notes = notes;
         this.type = type;
@@ -20,6 +20,15 @@ public class RequirementFirebase {
         this.expected = expected;
         this.weight = weight;
         this.moreIsBetter = moreIsBetter;
+        this.unit = unit;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public String getName() {

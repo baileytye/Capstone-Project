@@ -44,10 +44,14 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class OptionDetails extends AppCompatActivity implements RatingUtils.CalculateRatingOfOptionAsyncTask.OptionResultAsyncCallback {
 
     public static final int RESULT_DELETED = 10;
+    private static final String OPTION_ID = "optionDetails";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -107,9 +111,10 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.option_details, menu);
 
+        //TODO: FIX AFTER TEMPLATES DONE
         if (mIsTemplate) {
             menu.findItem(R.id.action_edit).setVisible(false);
-            menu.findItem(R.id.action_delete).setVisible(false);
+//            menu.findItem(R.id.action_delete).setVisible(false);
         }
 
         return true;
@@ -182,12 +187,35 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
             intent.putExtra(ExtraLabels.EXTRA_PROJECT, mProject);
             startActivity(intent);
         });
+
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, OPTION_ID);
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem( new MaterialShowcaseView.Builder(this)
+                .setDismissOnTouch(true)
+                .setMaskColour(getResources().getColor(R.color.colorPrimaryDark))
+                .setShapePadding(32)
+                .setTitleText("Detailed Ratings")
+                .setTarget(mRatingWithNumberView)
+                .setDismissText("Got it")
+                .setContentText("Click here to see a detailed rating breakdown!")
+                .build());
+
+        sequence.start();
     }
 
     private void fillData() {
         mToolbarLayout.setTitle(mOption.getName());
 
-        mPriceTextView.setText("$" + mOption.getPrice());
+        if(mProject.getProject().getHasPrice()) {
+            mPriceTextView.setText("$" + mOption.getPrice());
+        } else {
+            mPriceTextView.setVisibility(View.INVISIBLE);
+        }
         mRatingTextView.setText(String.format(Locale.getDefault(), "%.2f", mOption.getRating()));
         mRatingBar.setRating(mOption.getRating());
         mNotesTextInputEditText.setText(mOption.getNotes());

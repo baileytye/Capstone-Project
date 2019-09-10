@@ -112,6 +112,7 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
         for (int i = 0; i < mProject.getOptionList().size(); i++) {
             Option option = mProject.getOptionList().get(i);
             if (option.getRating() > highest) {
+                highest = option.getRating();
                 index = i;
             }
         }
@@ -124,6 +125,7 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
         for (int i = 0; i < mProject.getOptionList().size(); i++) {
             Option option = mProject.getOptionList().get(i);
             if (option.getRating() < lowest) {
+                lowest = option.getRating();
                 index = i;
             }
         }

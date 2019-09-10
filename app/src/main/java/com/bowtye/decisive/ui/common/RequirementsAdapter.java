@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.models.Requirement;
 import com.bowtye.decisive.R;
+import com.bowtye.decisive.utils.StringUtils;
 
 import java.util.List;
 
@@ -100,15 +101,27 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
                     mRequirementValueTextView.setVisibility(View.VISIBLE);
                     mRequirementValueCheckBox.setVisibility(View.INVISIBLE);
                     mRequirementValueRatingBar.setVisibility(View.INVISIBLE);
-                    mRequirementValueTextView.setText(String.valueOf(value));
+                    mRequirementValueTextView.setText(itemView.getResources()
+                            .getString(R.string.concatenation_value_unit,
+                                    (value % 1 == 0) ? String.valueOf(value.intValue()): StringUtils.convertToTwoDecimals(value),
+                                    requirement.getUnit()));
             }
 
             if(mShowThumb) {
-                if (Double.compare(value, requirement.getExpected()) >= 0) {
-                    mThumbImageView.setImageResource(R.drawable.ic_arrow_drop_up_24dp);
+                if(requirement.getMoreIsBetter()){
+                    if (Double.compare(value, requirement.getExpected()) >= 0) {
+                        mThumbImageView.setImageResource(R.drawable.ic_arrow_drop_up_24dp);
+                    } else {
+                        mThumbImageView.setImageResource(R.drawable.ic_arrow_drop_down_24dp);
+                    }
                 } else {
-                    mThumbImageView.setImageResource(R.drawable.ic_arrow_drop_down_24dp);
+                    if (Double.compare(value, requirement.getExpected()) <= 0) {
+                        mThumbImageView.setImageResource(R.drawable.ic_arrow_drop_up_24dp);
+                    } else {
+                        mThumbImageView.setImageResource(R.drawable.ic_arrow_drop_down_24dp);
+                    }
                 }
+
             } else {
                 mThumbImageView.setVisibility(View.GONE);
             }

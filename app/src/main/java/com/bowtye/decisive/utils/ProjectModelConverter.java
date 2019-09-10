@@ -122,7 +122,8 @@ public class ProjectModelConverter {
                         requirementFirebase.getExpected(),
                         requirementFirebase.getNotes(),
                         requirementFirebase.getWeight(),
-                        requirementFirebase.getMoreIsBetter());
+                        requirementFirebase.getMoreIsBetter(),
+                        requirementFirebase.getUnit());
                 requirementList.add(r);
             }
 
@@ -145,7 +146,8 @@ public class ProjectModelConverter {
                                 requirement.getImportance(),
                                 requirement.getExpected(),
                                 requirement.getWeight(),
-                                requirement.getMoreIsBetter()
+                                requirement.getMoreIsBetter(),
+                                requirement.getUnit()
                         )
                 );
             }

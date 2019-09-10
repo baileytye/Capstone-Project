@@ -26,7 +26,7 @@
             android:layout_gravity="center|end|center_horizontal"
             android:ems="10"
             android:hint="@string/hint_value"
-            android:inputType="number" />
+            android:inputType="numberDecimal" />
 
         <CheckBox
             android:id="@+id/cb_requirement_value"

@@ -30,7 +30,7 @@ public class Requirement implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     private int reqId;
     private int projectId;
-    private String name;
+    private String name, unit;
 
     @TypeConverters(Converters.class)
     private Type type;
@@ -44,7 +44,7 @@ public class Requirement implements Parcelable {
 
     @Ignore
     public Requirement(String name, Type type, Importance importance, Double expected,
-                       String notes, Double weight, Boolean moreIsBetter) {
+                       String notes, Double weight, Boolean moreIsBetter, String unit) {
         this.name = name;
         this.type = type;
         this.importance = importance;
@@ -52,10 +52,11 @@ public class Requirement implements Parcelable {
         this.notes = notes;
         this.weight = weight;
         this.moreIsBetter = moreIsBetter;
+        this.unit = unit;
     }
 
     public Requirement(int reqId, int projectId, String name, Type type, Importance importance, Double expected,
-                       String notes, Double weight, Boolean moreIsBetter) {
+                       String notes, Double weight, Boolean moreIsBetter, String unit) {
         this.reqId = reqId;
         this.projectId = projectId;
         this.name = name;
@@ -65,6 +66,7 @@ public class Requirement implements Parcelable {
         this.notes = notes;
         this.weight = weight;
         this.moreIsBetter = moreIsBetter;
+        this.unit = unit;
     }
 
     public static double getAveragingValue(String averageString, Context context) {
@@ -145,6 +147,14 @@ public class Requirement implements Parcelable {
             default:
                 return 2;
         }
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public int getReqId() {
@@ -271,17 +281,17 @@ public class Requirement implements Parcelable {
         return 0;
     }
 
-    @Ignore
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.reqId);
         dest.writeInt(this.projectId);
         dest.writeString(this.name);
+        dest.writeString(this.unit);
         dest.writeInt(this.type == null ? -1 : this.type.ordinal());
         dest.writeInt(this.importance == null ? -1 : this.importance.ordinal());
-        dest.writeDouble(this.expected);
+        dest.writeValue(this.expected);
         dest.writeString(this.notes);
-        dest.writeDouble(this.weight);
+        dest.writeValue(this.weight);
         dest.writeValue(this.moreIsBetter);
     }
 
@@ -290,13 +300,14 @@ public class Requirement implements Parcelable {
         this.reqId = in.readInt();
         this.projectId = in.readInt();
         this.name = in.readString();
+        this.unit = in.readString();
         int tmpType = in.readInt();
         this.type = tmpType == -1 ? null : Type.values()[tmpType];
         int tmpImportance = in.readInt();
         this.importance = tmpImportance == -1 ? null : Importance.values()[tmpImportance];
-        this.expected = in.readDouble();
+        this.expected = (Double) in.readValue(Double.class.getClassLoader());
         this.notes = in.readString();
-        this.weight = in.readDouble();
+        this.weight = (Double) in.readValue(Double.class.getClassLoader());
         this.moreIsBetter = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }
 

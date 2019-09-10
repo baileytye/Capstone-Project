@@ -6,6 +6,7 @@
         <item>Checkbox</item>
         <item>Above/Below Avg</item>
     </string-array>
+
     <string-array name="importance_array">
         <item>High</item>
         <item>Normal</item>
@@ -13,6 +14,7 @@
         <item>Custom</item>
         <item>Exclude</item>
     </string-array>
+
     <string-array name="averages">
         <item>Far Above Average</item>
         <item>Above Average</item>
@@ -20,10 +22,16 @@
         <item>Below Average</item>
         <item>Far Below Average</item>
     </string-array>
+
     <string-array name="dummy_requirements">
         <item>Requirement 1</item>
         <item>Requirement 2</item>
         <item>Requirement 3</item>
         <item>Requirement 4</item>
+    </string-array>
+
+    <string-array name="More_less">
+        <item>More</item>
+        <item>Less</item>
     </string-array>
 </resources>

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.Requirement;
 import com.bowtye.decisive.R;
+import com.bowtye.decisive.utils.StringUtils;
 
 import org.w3c.dom.Text;
 
@@ -130,7 +131,7 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.RatingsV
                     ? R.drawable.ic_arrow_drop_down_24dp
                     : R.drawable.ic_arrow_drop_up_24dp);
 
-            mPointsTowardTotalTextView.setText(String.format(Locale.getDefault(), "%.2f", mPointsTowardTotal.get(getAdapterPosition())));
+            mPointsTowardTotalTextView.setText(StringUtils.convertToTwoDecimals(mPointsTowardTotal.get(getAdapterPosition()).doubleValue()));
         }
 
         void setRequirementVisibilityAndValues(Requirement requirement, Double value, Double expected) {

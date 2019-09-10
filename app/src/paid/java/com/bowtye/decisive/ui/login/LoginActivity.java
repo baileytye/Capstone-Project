@@ -61,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText mPasswordEditText;
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
+    @BindView(R.id.bt_forgot_password)
+    Button mForgotPasswordButton;
 
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;

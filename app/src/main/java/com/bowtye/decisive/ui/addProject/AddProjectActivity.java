@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bowtye.decisive.ui.addRequirement.AddRequirement;
@@ -35,6 +36,9 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 import static com.bowtye.decisive.ui.addRequirement.AddRequirement.RESULT_REQ_DELETED;
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_EDIT_PROJECT;
@@ -51,6 +55,10 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
     private static final int ADD_REQUIREMENT_REQUEST_CODE = 17;
     private static final int EDIT_REQUIREMENT_REQUEST_CODE = 18;
 
+    public static final int RESULT_TEMPLATE = 14;
+
+    private static final String ADD_PROJECT_ID = "addProject";
+
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.toolbar_layout)
@@ -63,6 +71,8 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
     RecyclerView mRecyclerView;
     @BindView(R.id.et_project_name)
     EditText mProjectNameEditText;
+    @BindView(R.id.sw_has_price)
+    Switch mHasPriceSwitch;
 
     private RecyclerView.LayoutManager mLayoutManager;
     private AddProjectAdapter mAdapter;
@@ -184,6 +194,25 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
                         break;
                 }
                 return true;
+                //TODO: REMOVE WHEN DONE TEMPLATES
+            case R.id.action_save_as_template:
+                switch (validateEntries()) {
+                    case VALIDATION_OK:
+                        Intent out = new Intent();
+                        out.putExtra(EXTRA_NEW_PROJECT, mProject);
+                        setResult(RESULT_TEMPLATE, out);
+                        finishAfterTransition();
+                        break;
+                    case VALIDATION_NAME_ERROR:
+                        ViewUtils.showErrorDialog("Save Project",
+                                "Please give this project a name", this);
+                        break;
+                    case VALIDATION_SAVE_REQ_ERROR:
+                        ViewUtils.showErrorDialog("Save Project",
+                                "Please save all requirements", this);
+                        break;
+                }
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -235,6 +264,26 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
             startActivityForResult(intent, ADD_REQUIREMENT_REQUEST_CODE,
                     ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
         });
+
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, ADD_PROJECT_ID);
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem(   new MaterialShowcaseView.Builder(this)
+                .setDismissOnTouch(true)
+                .setMaskColour(getResources().getColor(R.color.colorPrimaryDark))
+                .setShapePadding(128)
+                .setTarget(mFab)
+                .setTitleText("Requirements")
+                .setDismissText("Got it")
+                .setContentText("Give this project some requirements. " +
+                        "These will be used to calculate ratings for each option you add.")
+                .build());
+
+        sequence.start();
     }
 
     public void checkIfEmpty() {
@@ -261,6 +310,7 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
 
         mProject.getProject().setName(name);
         mProject.setRequirementList(mAdapter.getRequirements());
+        mProject.getProject().setHasPrice(mHasPriceSwitch.isChecked());
 
         return VALIDATION_OK;
     }

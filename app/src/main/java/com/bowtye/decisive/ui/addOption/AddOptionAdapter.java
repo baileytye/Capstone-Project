@@ -1,6 +1,7 @@
 package com.bowtye.decisive.ui.addOption;
 
 import android.text.Editable;
+import android.text.Selection;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,6 +85,8 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
         TextView tvRatingRequirementName;
         @BindView(R.id.frame_star_rating)
         FrameLayout frameStarRating;
+        @BindView(R.id.tv_unit)
+        TextView unitTextView;
 
         AddOptionRequirementViewHolder(@NonNull View itemView, Boolean isEdit) {
             super(itemView);
@@ -150,9 +153,14 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
 
                         @Override
                         public void afterTextChanged(Editable editable) {
-
                         }
                     });
+                    if(requirement.getUnit().equals("")){
+                        etValue.setPaddingRelative(etValue.getPaddingStart(), etValue.getPaddingTop(),
+                                (int)itemView.getResources().getDimension(R.dimen.text_input_edit_text_padding),
+                                etValue.getPaddingBottom());
+                    }
+                    unitTextView.setText(requirement.getUnit());
                     break;
             }
         }

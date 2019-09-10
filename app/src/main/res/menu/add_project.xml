@@ -9,4 +9,10 @@
         />
     <item android:title="@string/menu_reset_title"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_save_as_template"
+        android:title="Save as template"
+        app:showAsAction="never"
+        android:orderInCategory="100"/>
 </menu>

@@ -16,8 +16,9 @@ import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.bowtye.decisive.models.Requirement;
 import com.bowtye.decisive.R;
+import com.bowtye.decisive.models.Requirement;
+import com.bowtye.decisive.utils.RequestCode;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -47,8 +48,6 @@ public class AddRequirement extends AppCompatActivity {
     CollapsingToolbarLayout mToolbarLayout;
     @BindView(R.id.et_requirement_name)
     TextInputEditText etRequirementName;
-    @BindView(R.id.til_requirement_name)
-    TextInputLayout tilRequirementName;
     @BindView(R.id.sp_type)
     Spinner spType;
     @BindView(R.id.frame_type)
@@ -71,12 +70,18 @@ public class AddRequirement extends AppCompatActivity {
     TextInputEditText etExpected;
     @BindView(R.id.til_expected)
     TextInputLayout tilExpected;
-    @BindView(R.id.frame_expected)
-    FrameLayout frameExpected;
     @BindView(R.id.frame_expected_star_rating)
     FrameLayout frameExpectedStarRating;
     @BindView(R.id.rb_expected)
     RatingBar rbExpected;
+    @BindView(R.id.et_unit)
+    TextInputEditText etUnit;
+    @BindView(R.id.til_unit)
+    TextInputLayout tilUnit;
+    @BindView(R.id.sp_more_is_better)
+    Spinner spMoreIsBetter;
+    @BindView(R.id.frame_more_is_better)
+    FrameLayout frameMoreIsBetter;
 
 
     private Requirement mRequirement;
@@ -90,13 +95,13 @@ public class AddRequirement extends AppCompatActivity {
 
         mRequirement = new Requirement(
                 "", Requirement.Type.number, Requirement.Importance.normal,
-                0.0, "", 1.0, true
+                0.0, "", 1.0, true, ""
         );
         isEdit = false;
 
         Intent intent = getIntent();
-        if(intent != null){
-            if(intent.hasExtra(EXTRA_EDIT_REQUIREMENT)){
+        if (intent != null) {
+            if (intent.hasExtra(EXTRA_EDIT_REQUIREMENT)) {
                 mRequirement = intent.getParcelableExtra(EXTRA_EDIT_REQUIREMENT);
                 isEdit = true;
             }
@@ -119,7 +124,7 @@ public class AddRequirement extends AppCompatActivity {
                 finishAfterTransition();
                 return true;
             case R.id.action_save:
-                switch(validateAndSave()) {
+                switch (validateAndSave()) {
                     case VALIDATION_OK:
                         Timber.d("Result ok, adding requirement to intent out");
                         Intent out = new Intent();
@@ -138,7 +143,7 @@ public class AddRequirement extends AppCompatActivity {
                 }
                 return true;
             case R.id.action_delete_requirement:
-                if(isEdit){
+                if (isEdit) {
                     Intent out = new Intent();
                     out.putExtra(EXTRA_REQUIREMENT, mRequirement);
                     setResult(RESULT_REQ_DELETED, out);
@@ -150,7 +155,7 @@ public class AddRequirement extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void prepareViews(){
+    private void prepareViews() {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -163,39 +168,47 @@ public class AddRequirement extends AppCompatActivity {
         setListeners();
     }
 
-    private void setExpectedVisibility(){
-        switch(mRequirement.getType()){
+    private void setExpectedVisibility() {
+        switch (mRequirement.getType()) {
             case averaging:
                 cbExpected.setVisibility(View.INVISIBLE);
                 frameExpectedAverages.setVisibility(View.VISIBLE);
                 tilExpected.setVisibility(View.INVISIBLE);
                 frameExpectedStarRating.setVisibility(View.INVISIBLE);
+                frameMoreIsBetter.setVisibility(View.INVISIBLE);
+                tilUnit.setVisibility(View.INVISIBLE);
                 break;
             case checkbox:
                 cbExpected.setVisibility(View.VISIBLE);
                 frameExpectedAverages.setVisibility(View.INVISIBLE);
                 tilExpected.setVisibility(View.INVISIBLE);
                 frameExpectedStarRating.setVisibility(View.INVISIBLE);
+                frameMoreIsBetter.setVisibility(View.INVISIBLE);
+                tilUnit.setVisibility(View.INVISIBLE);
                 break;
             case starRating:
                 cbExpected.setVisibility(View.INVISIBLE);
                 frameExpectedAverages.setVisibility(View.INVISIBLE);
                 tilExpected.setVisibility(View.INVISIBLE);
                 frameExpectedStarRating.setVisibility(View.VISIBLE);
+                frameMoreIsBetter.setVisibility(View.INVISIBLE);
+                tilUnit.setVisibility(View.INVISIBLE);
                 break;
             case number:
                 cbExpected.setVisibility(View.INVISIBLE);
                 frameExpectedAverages.setVisibility(View.INVISIBLE);
                 tilExpected.setVisibility(View.VISIBLE);
                 frameExpectedStarRating.setVisibility(View.INVISIBLE);
+                frameMoreIsBetter.setVisibility(View.VISIBLE);
+                tilUnit.setVisibility(View.VISIBLE);
                 break;
         }
     }
 
-    private int validateAndSave(){
+    private int validateAndSave() {
         String name = Objects.requireNonNull(etRequirementName.getText()).toString();
 
-        if(name.equals("")){
+        if (name.equals("")) {
             return VALIDATION_NAME_ERROR;
         }
 
@@ -216,7 +229,7 @@ public class AddRequirement extends AppCompatActivity {
         mRequirement.setName(name);
 
         double customWeight = 0;
-        if(!Objects.requireNonNull(etWeight.getText()).toString().equals("")){
+        if (!Objects.requireNonNull(etWeight.getText()).toString().equals("")) {
             customWeight = Double.parseDouble(etWeight.getText().toString());
         }
 
@@ -224,6 +237,10 @@ public class AddRequirement extends AppCompatActivity {
         Requirement.Type type = Requirement.getTypeFromString(spType.getSelectedItem().toString());
         mRequirement.setType(type);
         mRequirement.setExpected(getExpectedValue(type));
+        if(type == Requirement.Type.number){
+            mRequirement.setUnit(Objects.requireNonNull(etUnit.getText()).toString());
+            mRequirement.setMoreIsBetter(spMoreIsBetter.getSelectedItemPosition() == 0);
+        }
     }
 
     /**
@@ -249,7 +266,7 @@ public class AddRequirement extends AppCompatActivity {
         }
     }
 
-    void setExpectedValue(Requirement requirement){
+    void setExpectedValue(Requirement requirement) {
         switch (requirement.getType()) {
             case checkbox:
                 cbExpected.setChecked(requirement.getExpected() == 1);
@@ -261,15 +278,17 @@ public class AddRequirement extends AppCompatActivity {
                 rbExpected.setRating(requirement.getExpected().floatValue());
                 break;
             default:
-                if(requirement.getExpected() != 0) {
+                if (requirement.getExpected() != 0) {
                     etExpected.setText(String.valueOf(requirement.getExpected()));
                 } else {
                     etExpected.setText("");
                 }
+                etUnit.setText(requirement.getUnit());
+                spMoreIsBetter.setSelection((requirement.getMoreIsBetter()) ? 0 : 1);
         }
     }
 
-    void setInitialValues(Requirement requirement){
+    void setInitialValues(Requirement requirement) {
 
         etRequirementName.setText(requirement.getName());
         etRequirementName.setError(null);
@@ -284,7 +303,7 @@ public class AddRequirement extends AppCompatActivity {
 
     }
 
-    void setListeners(){
+    void setListeners() {
 
         spImportance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

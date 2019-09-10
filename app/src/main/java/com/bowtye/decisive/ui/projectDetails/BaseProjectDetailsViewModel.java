@@ -9,7 +9,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.bowtye.decisive.database.ProjectRepository;
 import com.bowtye.decisive.models.Option;
+import com.bowtye.decisive.models.Project;
 import com.bowtye.decisive.models.ProjectWithDetails;
+import com.bowtye.decisive.utils.ProjectModelConverter;
 
 public class BaseProjectDetailsViewModel extends AndroidViewModel {
     LiveData<ProjectWithDetails> mProject;
@@ -32,6 +34,11 @@ public class BaseProjectDetailsViewModel extends AndroidViewModel {
         mRepo.insertProjectWithDetails(p);
     }
 
+    //TODO:DELETE WHEN DONE TEMPLATES
+    public void insertTemplate(ProjectWithDetails p){
+        mRepo.insertTemplate(p);
+    }
+
     public void resizeOptionValuesList(ProjectWithDetails p){
         if((p != null) && (p.getOptionList().size() > 0) &&
                 (p.getOptionList().get(0).getRequirementValues().size() < p.getRequirementList().size())){
@@ -49,6 +56,11 @@ public class BaseProjectDetailsViewModel extends AndroidViewModel {
         mRepo.insertOption(option, projectId);
     }
 
+    //TODO: REMOVE WHEN DONE TEMPLATES
+    public void insertOptionTemplate(Option option, int projectId){
+        mRepo.insertTemplateOption(option, projectId);
+    }
+
     private void loadProject(int id, String firebaseId, boolean isTemplate){
         if(isTemplate){
             mProject = mRepo.getSelectedTemplate(id, firebaseId);
@@ -59,6 +71,11 @@ public class BaseProjectDetailsViewModel extends AndroidViewModel {
 
     public void deleteOption(Option option){
         mRepo.deleteOption(option);
+    }
+
+    //TODO:DELETE WHEN DONE TEMPLATES
+    public void deleteOptionTemplate(Option option, int position){
+        mRepo.deleteOptionTemplate(option, position);
     }
 
     public void deleteProject(ProjectWithDetails p) {

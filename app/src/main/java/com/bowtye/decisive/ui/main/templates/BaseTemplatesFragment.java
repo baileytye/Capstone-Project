@@ -42,10 +42,15 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 import static android.app.Activity.RESULT_OK;
 
 public abstract class BaseTemplatesFragment extends Fragment implements MainAdapter.ProjectItemClickCallback {
+
+    private static final String TEMPLATES_ID = "templates";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -119,10 +124,31 @@ public abstract class BaseTemplatesFragment extends Fragment implements MainAdap
                 LinearLayoutManager.VERTICAL);
         dividerItemDecoration.setDrawable(Objects.requireNonNull(activity.getDrawable(R.drawable.divider)));
         mRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity(), TEMPLATES_ID);
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem(new MaterialShowcaseView.Builder(getActivity())
+                .setDismissOnTouch(true)
+                .setMaskColour(getResources().getColor(R.color.colorPrimaryDark))
+                .setShapePadding(128)
+                .setTarget(this.getView())
+                .setTitleText("Templates")
+                .withoutShape()
+                .setDismissText("Got it")
+                .setContentText("Templates are pre-made projects to give you some ideas on how to structure your own. " +
+                        "You can also add these to your projects and customize them to your liking!")
+                .build());
+
+        sequence.start();
     }
 
-    private void setIsLoading(boolean isLoading){
-        if(isLoading){
+    private void setIsLoading(boolean isLoading) {
+        if (isLoading) {
             mProgressBar.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.INVISIBLE);
 
@@ -134,7 +160,7 @@ public abstract class BaseTemplatesFragment extends Fragment implements MainAdap
 
     private void prepareViewModel() {
         setIsLoading(true);
-        if(FirebaseAuth.getInstance().getCurrentUser() == null){
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
 
             return;
         }

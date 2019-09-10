@@ -67,17 +67,22 @@ public class MainViewModel extends AndroidViewModel {
         mRepo.insertProjectWithDetails(p);
     }
 
+    //TODO: REMOVE WHEN DONE TEMPLATES
+    public void insertTemplate(ProjectWithDetails p){
+        mRepo.insertTemplate(p);
+    }
+
     public void insertDummyProject() {
         Timber.d("Inserting dummy project");
         Requirement r1 = new Requirement("Bedrooms",
                 Requirement.Type.number, Requirement.Importance.normal, 3.0,
-                "", Requirement.WEIGHT_NORMAL, true);
+                "", Requirement.WEIGHT_NORMAL, true, "Rooms");
         Requirement r2 = new Requirement("Outside Colors",
                 Requirement.Type.averaging, Requirement.Importance.normal, Requirement.AVERAGE,
-                "", Requirement.WEIGHT_NORMAL, true);
+                "", Requirement.WEIGHT_NORMAL, true, "");
         Requirement r3 = new Requirement("Garage",
                 Requirement.Type.checkbox, Requirement.Importance.high, 1.0,
-                "", Requirement.WEIGHT_HIGH, true);
+                "", Requirement.WEIGHT_HIGH, true, "");
 
         List<Requirement> requirements = new ArrayList<>(Arrays.asList(r1, r2, r3));
 

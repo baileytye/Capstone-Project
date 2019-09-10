@@ -20,6 +20,13 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        //TODO: REMOVE WHEN TEMPLATES DONE
+        if(mIsTemplate){
+            super.onActivityResult(requestCode, resultCode, data);
+            return;
+        }
+
         if (requestCode == RequestCode.EDIT_OPTION_REQUEST_CODE) {
             if (data != null && data.hasExtra(ExtraLabels.EXTRA_DELETE_OPTION)) {
                 switch (resultCode) {
@@ -88,10 +95,9 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity {
         });
     }
 
-
     @Override
     public void onOptionItemClicked(int position) {
-        if (FirebaseAuth.getInstance().getCurrentUser() == null || mIsTemplate) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null || mIsTemplate || FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
             super.onOptionItemClicked(position);
             return;
         }

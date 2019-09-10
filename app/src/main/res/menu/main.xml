@@ -14,4 +14,11 @@
         android:title="@string/action_settings"
         app:showAsAction="never"
         />
+
+    <item
+        android:id="@+id/action_reset_tutorial"
+        android:orderInCategory="99"
+        android:title="@string/action_reset_tutorial"
+        app:showAsAction="never"
+        />
 </menu>

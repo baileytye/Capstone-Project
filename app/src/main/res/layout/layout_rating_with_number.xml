@@ -13,15 +13,25 @@
         android:layout_gravity="center_vertical"
         android:layout_width="80dp"
         android:layout_height="16dp"
+        android:visibility="gone"
+        android:layout_marginEnd="16dp"
         android:numStars="5" />
 
     <TextView
         android:id="@+id/tv_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:text="@string/placeholder_rating"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="14sp"
         android:layout_gravity="center_vertical"/>
+
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:visibility="visible"
+        android:layout_marginStart="4dp"
+        android:tint="@color/colorPrimaryDark"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_star_24dp"/>
 </LinearLayout>

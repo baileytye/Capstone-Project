@@ -16,7 +16,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,12 +47,18 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 import static android.app.Activity.RESULT_OK;
+import static com.bowtye.decisive.ui.addProject.AddProjectActivity.RESULT_TEMPLATE;
 
 public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectItemClickCallback,
         HomeAdapter.ContextMenuClickCallback,
         RatingUtils.CalculateRatingsOfProjectAsyncTask.ProjectResultAsyncCallback {
+
+    public static final String HOME_ID = "home";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -81,7 +86,8 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
     private MainViewModel mViewModel;
 
     private Animation fab_open, fab_close, fab_rotate, fab_anti_rotate, fade_in, fade_out;
-    private Boolean isOpen = false;
+    //TODO:REMOVE INSERTINGTEMPLATE WHEN DONE TEMPLATES
+    private Boolean isOpen = false, insertingTemplate = false;
 
     List<ProjectWithDetails> mProjects;
 
@@ -118,6 +124,9 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
             case R.id.action_settings:
                 Objects.requireNonNull(getActivity()).startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
+            case R.id.action_reset_tutorial:
+                MaterialShowcaseView.resetAll(Objects.requireNonNull(getActivity()));
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -131,6 +140,12 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
                     mViewModel.resizeOptionValuesList(projectWithDetails);
                     new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
                 }
+                //TODO: FIX WHEN DONE TEMPLATES
+            } else if(resultCode == RESULT_TEMPLATE){
+                insertingTemplate = true;
+                ProjectWithDetails projectWithDetails = Objects.requireNonNull(data).getParcelableExtra(ExtraLabels.EXTRA_NEW_PROJECT);
+                mViewModel.resizeOptionValuesList(projectWithDetails);
+                new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
             }
             closeFabMenu();
         }
@@ -190,6 +205,44 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
                 NavHostFragment.findNavController(this).navigate(R.id.action_navigation_home_to_navigation_templates);
                 closeFabMenu();
         });
+
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity(), HOME_ID);
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem(   new MaterialShowcaseView.Builder(this.getActivity())
+                .setDismissOnTouch(true)
+                .setMaskColour(getResources().getColor(R.color.colorPrimaryDark))
+                .setShapePadding(128)
+                .setTitleText("New project")
+                .setTarget(mFab)
+                .setDismissText("Got it")
+                .setContentText("Add some projects using this button!")
+                .build());
+
+        sequence.addSequenceItem( new MaterialShowcaseView.Builder(this.getActivity())
+                .setDismissOnTouch(true)
+                .setMaskColour(getResources().getColor(R.color.colorPrimaryDark))
+                .setTarget(getActivity().findViewById(R.id.navigation_templates))
+                .setTitleText("Templates")
+                .setDismissText("Got it")
+                .setContentText("Check out some templates here!")
+                .setShapePadding(0)
+                .build());
+
+        sequence.addSequenceItem( new MaterialShowcaseView.Builder(this.getActivity())
+                .setDismissOnTouch(true)
+                .setMaskColour(getResources().getColor(R.color.colorPrimaryDark))
+                .setTarget(getActivity().findViewById(R.id.navigation_home))
+                .setTitleText("Home")
+                .setDismissText("Got it")
+                .setContentText("Projects you create will show up here!")
+                .build());
+
+        sequence.start();
 
         Timber.d("Number of projects: %d", ((mProjects != null) ? mProjects.size() : 0));
     }
@@ -268,8 +321,14 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
 
     @Override
     public void updateProjectAfterCalculatingRatings(ProjectWithDetails projectWithDetails) {
-        mViewModel.insertProjectWithDetails(projectWithDetails);
 
+        //TODO: FIX WHEN DONE TEMPLATES
+        if(insertingTemplate){
+            mViewModel.insertTemplate(projectWithDetails);
+            insertingTemplate = false;
+        } else {
+            mViewModel.insertProjectWithDetails(projectWithDetails);
+        }
         Timber.d("Project: %s inserted into the database", (projectWithDetails != null)
                 ? projectWithDetails.getProject().getName() : "NULL");
     }
