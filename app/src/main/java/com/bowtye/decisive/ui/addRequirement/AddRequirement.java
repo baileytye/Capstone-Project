@@ -18,7 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.models.Requirement;
-import com.bowtye.decisive.utils.RequestCode;
+import com.bowtye.decisive.utils.ViewUtils;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -34,13 +34,14 @@ import timber.log.Timber;
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_EDIT_REQUIREMENT;
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_REQUIREMENT;
 
-public class AddRequirement extends AppCompatActivity {
+public class AddRequirement extends AppCompatActivity implements ViewUtils.yesNoCallback {
 
     public static final int VALIDATION_OK = 1;
     public static final int VALIDATION_NAME_ERROR = -2;
     public static final int VALIDATION_WEIGHT_ERROR = -3;
 
     public static final int RESULT_REQ_DELETED = 2;
+    public static final int RESULT_KEEP_VALUES = 3;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -85,7 +86,8 @@ public class AddRequirement extends AppCompatActivity {
 
 
     private Requirement mRequirement;
-    private Boolean isEdit;
+    private Boolean mIsEdit;
+    private Requirement.Type mStartingType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,13 +99,14 @@ public class AddRequirement extends AppCompatActivity {
                 "", Requirement.Type.number, Requirement.Importance.normal,
                 0.0, "", 1.0, true, ""
         );
-        isEdit = false;
+        mIsEdit = false;
 
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.hasExtra(EXTRA_EDIT_REQUIREMENT)) {
                 mRequirement = intent.getParcelableExtra(EXTRA_EDIT_REQUIREMENT);
-                isEdit = true;
+                mIsEdit = true;
+                mStartingType = Objects.requireNonNull(mRequirement).getType();
             }
         }
 
@@ -127,23 +130,24 @@ public class AddRequirement extends AppCompatActivity {
                 switch (validateAndSave()) {
                     case VALIDATION_OK:
                         Timber.d("Result ok, adding requirement to intent out");
-                        Intent out = new Intent();
-                        out.putExtra(EXTRA_REQUIREMENT, mRequirement);
-                        setResult(RESULT_OK, out);
-                        finishAfterTransition();
+                        if(mStartingType == mRequirement.getType() && mStartingType == Requirement.Type.number){
+                            ViewUtils.showYesNoDialog(getString(R.string.dialog_keep_old_requirement_values), this, this);
+                        } else {
+                            yesNoResponse(false);
+                        }
                         break;
                     case VALIDATION_NAME_ERROR:
-                        etRequirementName.setError("Give this requirement a name");
+                        etRequirementName.setError(getString(R.string.error_empty_requirement_name));
                         etRequirementName.requestFocus();
                         break;
                     case VALIDATION_WEIGHT_ERROR:
-                        etWeight.setError("Enter a weight");
+                        etWeight.setError(getString(R.string.error_enter_weight));
                         etWeight.requestFocus();
                         break;
                 }
                 return true;
             case R.id.action_delete_requirement:
-                if (isEdit) {
+                if (mIsEdit) {
                     Intent out = new Intent();
                     out.putExtra(EXTRA_REQUIREMENT, mRequirement);
                     setResult(RESULT_REQ_DELETED, out);
@@ -161,7 +165,7 @@ public class AddRequirement extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        mToolbarLayout.setTitle((isEdit) ? "Edit requirement" : "Add requirement");
+        mToolbarLayout.setTitle((mIsEdit) ? getString(R.string.title_edit_requirement) : getString(R.string.title_add_requirement));
 
         setExpectedVisibility();
         setInitialValues(mRequirement);
@@ -206,7 +210,7 @@ public class AddRequirement extends AppCompatActivity {
     }
 
     private int validateAndSave() {
-        String name = Objects.requireNonNull(etRequirementName.getText()).toString();
+        String name = Objects.requireNonNull(etRequirementName.getText()).toString().trim();
 
         if (name.equals("")) {
             return VALIDATION_NAME_ERROR;
@@ -237,8 +241,9 @@ public class AddRequirement extends AppCompatActivity {
         Requirement.Type type = Requirement.getTypeFromString(spType.getSelectedItem().toString());
         mRequirement.setType(type);
         mRequirement.setExpected(getExpectedValue(type));
+
         if(type == Requirement.Type.number){
-            mRequirement.setUnit(Objects.requireNonNull(etUnit.getText()).toString());
+            mRequirement.setUnit(Objects.requireNonNull(etUnit.getText()).toString().trim());
             mRequirement.setMoreIsBetter(spMoreIsBetter.getSelectedItemPosition() == 0);
         }
     }
@@ -353,5 +358,13 @@ public class AddRequirement extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void yesNoResponse(boolean isYes) {
+        Intent out = new Intent();
+        out.putExtra(EXTRA_REQUIREMENT, mRequirement);
+        setResult(isYes ? RESULT_KEEP_VALUES : RESULT_OK, out);
+        finishAfterTransition();
     }
 }

@@ -10,79 +10,92 @@
     tools:context=".ui.optionDetails.OptionDetails"
     tools:showIn="@layout/activity_option_details">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/placeholder_price"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/iv_option_image"
+            android:layout_width="0dp"
+            android:layout_height="240dp"
+            android:layout_marginTop="16dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@+id/layout_rating_with_number"
+            app:layout_constraintStart_toStartOf="@+id/tv_price"
+            app:layout_constraintTop_toBottomOf="@+id/tv_price"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-    <include
-        android:id="@+id/layout_rating_with_number"
-        layout="@layout/layout_rating_with_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_price"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_price"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <ImageView
-        android:id="@+id/iv_option_image"
-        android:layout_width="0dp"
-        android:layout_height="240dp"
-        android:layout_marginTop="16dp"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="@+id/tv_price"
-        app:layout_constraintTop_toBottomOf="@+id/tv_price"
-        app:layout_constraintEnd_toEndOf="@+id/layout_rating_with_number"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_requirements"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:overScrollMode="never"
-        android:padding="@dimen/recycler_view_padding"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="@+id/tv_price"
-        app:layout_constraintTop_toBottomOf="@+id/iv_option_image"
-        app:layout_constraintEnd_toEndOf="@id/layout_rating_with_number"
-        tools:listitem="@layout/list_item_requirement">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_input_layout_notes"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bg_card"
-        android:padding="@dimen/card_notes_padding"
-        app:layout_constraintEnd_toEndOf="@+id/rv_requirements"
-        app:layout_constraintStart_toStartOf="@+id/tv_price"
-        app:layout_constraintTop_toBottomOf="@+id/rv_requirements">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_input_et_notes"
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:id="@+id/layout_rating_with_number"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@null"
-            android:hint="@string/hint_notes"
-            android:padding="@dimen/card_notes_padding" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_card_with_ripple"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="12dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_price"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_price">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <include
+                layout="@layout/layout_rating_with_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/placeholder_price"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_requirements"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:overScrollMode="never"
+            android:padding="@dimen/recycler_view_padding"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@id/layout_rating_with_number"
+            app:layout_constraintStart_toStartOf="@+id/tv_price"
+            app:layout_constraintTop_toBottomOf="@+id/iv_option_image"
+            tools:listitem="@layout/list_item_requirement">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_notes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card"
+            android:padding="@dimen/card_notes_padding"
+            app:layout_constraintEnd_toEndOf="@+id/rv_requirements"
+            app:layout_constraintStart_toStartOf="@+id/tv_price"
+            app:layout_constraintTop_toBottomOf="@+id/rv_requirements">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_input_et_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@null"
+                android:enabled="false"
+                android:hint="@string/hint_notes"
+                android:padding="@dimen/card_notes_padding" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

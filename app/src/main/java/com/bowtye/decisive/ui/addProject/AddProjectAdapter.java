@@ -23,7 +23,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
     private List<Requirement> mRequirements;
     private OnRequirementClickedCallback mCallback;
 
-    public AddProjectAdapter(OnRequirementClickedCallback callback, List<Requirement> requirements) {
+    AddProjectAdapter(OnRequirementClickedCallback callback, List<Requirement> requirements) {
         if (requirements == null) {
             mRequirements = new ArrayList<>();
         } else {

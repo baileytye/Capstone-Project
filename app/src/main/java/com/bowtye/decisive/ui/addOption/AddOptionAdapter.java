@@ -1,7 +1,6 @@
 package com.bowtye.decisive.ui.addOption;
 
 import android.text.Editable;
-import android.text.Selection;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +36,7 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
 
     private ItemChangedCallback mCallback;
 
-    public AddOptionAdapter(List<Requirement> requirements, Option option, Boolean isEdit, ItemChangedCallback callback) {
+    AddOptionAdapter(List<Requirement> requirements, Option option, Boolean isEdit, ItemChangedCallback callback) {
         mRequirements = requirements;
         mOption = option;
         mIsEdit = isEdit;
@@ -104,6 +103,7 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
                         mOption.getRequirementValues().set(getAdapterPosition(), (double) rating);
                         mCallback.requirementItemChanged();
                     });
+                    unitTextView.setVisibility(View.GONE);
                     break;
                 case checkbox:
                     cbValue.setChecked(value == 1);
@@ -112,6 +112,7 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
                         mOption.getRequirementValues().set(getAdapterPosition(), (b) ? 1.0 : 0.0);
                         mCallback.requirementItemChanged();
                     });
+                    unitTextView.setVisibility(View.GONE);
                     break;
                 case averaging:
                     spAverages.setSelection(Requirement.getAveragingIndex(value, itemView.getContext()), false);
@@ -129,6 +130,7 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
 
                         }
                     });
+                    unitTextView.setVisibility(View.GONE);
                     break;
                 case number:
                     if (mIsEdit || value != 0) {
@@ -155,7 +157,7 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
                         public void afterTextChanged(Editable editable) {
                         }
                     });
-                    if(requirement.getUnit().equals("")){
+                    if(requirement.getUnit() == null || requirement.getUnit().equals("")){
                         etValue.setPaddingRelative(etValue.getPaddingStart(), etValue.getPaddingTop(),
                                 (int)itemView.getResources().getDimension(R.dimen.text_input_edit_text_padding),
                                 etValue.getPaddingBottom());

@@ -4,19 +4,20 @@
     <item
         android:id="@+id/action_profile"
         android:orderInCategory="1"
-        android:title="Profile"
-        app:showAsAction="always" />
+        android:icon="@drawable/ic_account_circle_24dp"
+        android:title="@string/menu_profile"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_sign_out"
         android:orderInCategory="4"
-        android:title="Sign out"
+        android:title="@string/menu_sign_out"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/menu_settings"
         app:showAsAction="never"
         />
 

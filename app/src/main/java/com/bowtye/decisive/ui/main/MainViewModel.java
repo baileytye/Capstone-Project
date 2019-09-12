@@ -17,6 +17,7 @@ import com.bowtye.decisive.models.Requirement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
@@ -88,7 +89,7 @@ public class MainViewModel extends AndroidViewModel {
 
         List<Double> requirementValues = new ArrayList<>(Arrays.asList(1.0, 2.0, 0.0));
 
-        Option option1 = new Option("House 1", 100000, (float) 0, false, requirementValues, "First test house", "");
+        Option option1 = new Option("House 1", 100000, (float) 0, false, requirementValues, "First test house", "", new Date());
 
         option1.setRating(
                 RatingUtils.calculateOptionRating(

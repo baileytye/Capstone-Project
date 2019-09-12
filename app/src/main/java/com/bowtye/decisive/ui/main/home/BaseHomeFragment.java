@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -51,6 +52,7 @@ import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.bowtye.decisive.ui.addProject.AddProjectActivity.RESULT_TEMPLATE;
 
@@ -80,6 +82,10 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
     TextView mNewProjectLabel;
     @BindView(R.id.outside_layout)
     View mOutsideLayout;
+    @BindView(R.id.iv_empty_projects)
+    ImageView mEmptyProjectsImageView;
+    @BindView(R.id.tv_empty_projects)
+    TextView mEmptyProjectsTextView;
 
     private RecyclerView.LayoutManager mLayoutManager;
     private HomeAdapter mAdapter;
@@ -134,20 +140,18 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if ((requestCode == RequestCode.ADD_PROJECT_REQUEST_CODE)) {
-            if(resultCode == RESULT_OK) {
-                if (data != null && data.hasExtra(ExtraLabels.EXTRA_NEW_PROJECT)) {
-                    ProjectWithDetails projectWithDetails = data.getParcelableExtra(ExtraLabels.EXTRA_NEW_PROJECT);
-                    mViewModel.resizeOptionValuesList(projectWithDetails);
-                    new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
-                }
-                //TODO: FIX WHEN DONE TEMPLATES
-            } else if(resultCode == RESULT_TEMPLATE){
-                insertingTemplate = true;
-                ProjectWithDetails projectWithDetails = Objects.requireNonNull(data).getParcelableExtra(ExtraLabels.EXTRA_NEW_PROJECT);
-                mViewModel.resizeOptionValuesList(projectWithDetails);
+            if (data != null && data.hasExtra(ExtraLabels.EXTRA_NEW_PROJECT)) {
+                ProjectWithDetails projectWithDetails = data.getParcelableExtra(ExtraLabels.EXTRA_NEW_PROJECT);
+                        mViewModel.resizeOptionValuesList(projectWithDetails);
                 new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
             }
-            closeFabMenu();
+            if(resultCode == RESULT_OK || resultCode == RESULT_CANCELED) {
+                closeFabMenu();
+                //TODO: FIX WHEN DONE TEMPLATES, MERGE EDITED AND OK
+            } else if(resultCode == RESULT_TEMPLATE){
+                insertingTemplate = true;
+                closeFabMenu();
+            }
         }
     }
 
@@ -159,6 +163,17 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
         } else {
             mProgressBar.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void setEmptyMessageVisibility() {
+        if ((mProjects == null) || (mProjects.size() == 0)) {
+            mEmptyProjectsImageView.setVisibility(View.VISIBLE);
+            mEmptyProjectsTextView.setVisibility(View.VISIBLE);
+            setIsLoading(false);
+        } else {
+            mEmptyProjectsImageView.setVisibility(View.INVISIBLE);
+            mEmptyProjectsTextView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -282,6 +297,7 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
             Timber.d("Updating Livedata");
             mAdapter.setProjects(projects);
             mAdapter.notifyDataSetChanged();
+            setEmptyMessageVisibility();
             setIsLoading(false);
         });
     }

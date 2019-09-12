@@ -17,4 +17,6 @@ public class ExtraLabels {
     public static final String EXTRA_REQUIREMENT = "extra_requirement";
     public static final String EXTRA_EDIT_REQUIREMENT = "extra_edit_requirement";
 
+    public static final String EXTRA_IS_EDIT = "extra_is_edit";
+
 }

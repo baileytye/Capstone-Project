@@ -33,6 +33,17 @@ public class ViewUtils {
                 .show();
     }
 
+    public static void showYesNoDialog(String message, Context context, yesNoCallback callback){
+        new AlertDialog.Builder(context)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Yes",
+                        (dialog, id) -> callback.yesNoResponse(true))
+                .setNegativeButton("No",
+                        (dialog, id) -> callback.yesNoResponse(false))
+                .show();
+    }
+
     public static void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         Objects.requireNonNull(imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -40,5 +51,9 @@ public class ViewUtils {
 
     public interface warningCallback{
         public void warningClicked(int result);
+    }
+
+    public interface yesNoCallback{
+        public void yesNoResponse(boolean isYes);
     }
 }

@@ -15,8 +15,6 @@ import com.bowtye.decisive.models.Requirement;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.utils.StringUtils;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

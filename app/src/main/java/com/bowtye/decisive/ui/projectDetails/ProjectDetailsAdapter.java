@@ -10,13 +10,14 @@ import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -160,6 +161,8 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
         @BindView(R.id.iv_requirements_expand)
         ImageView mExpandRequirementsImageView;
 
+        private Animation rotate, antiRotate;
+
         int maxHeight;
         int recyclerHeight;
         boolean isExpanded;
@@ -172,6 +175,10 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
 
             Timber.d("Constructor called");
 
+            if(!mProject.getProject().getHasPrice()){
+                mItemPriceTextView.setVisibility(View.GONE);
+            }
+
             mRequirementsRecyclerView.setHasFixedSize(true);
             LinearLayoutManager layoutManager = new LinearLayoutManager(itemView.getContext());
             layoutManager.setInitialPrefetchItemCount(mProject.getRequirementList().size());
@@ -181,6 +188,8 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
             VerticalSpaceItemDecoration dividerItemDecoration = new VerticalSpaceItemDecoration(
                     (int) itemView.getContext().getResources().getDimension(R.dimen.requirement_item_separation));
             mRequirementsRecyclerView.addItemDecoration(dividerItemDecoration);
+            rotate =  AnimationUtils.loadAnimation(itemView.getContext(), R.anim.expand_rotate);
+            antiRotate = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.expand_anti_rotate);
             updateHeights();
         }
 
@@ -238,9 +247,7 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
             }
             mItemTitleTextView.setText(o.getName());
 
-            if (o.getPrice() == 0) {
-                mItemPriceTextView.setVisibility(View.GONE);
-            } else {
+            if (mProject.getProject().getHasPrice()) {
                 mItemPriceTextView.setVisibility(View.VISIBLE);
                 mItemPriceTextView.setText("$" + o.getPrice());
             }
@@ -266,17 +273,15 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
             if (!isExpanded) {
                 mRequirementsRecyclerView.setVisibility(View.VISIBLE);
                 Timber.d("Expanding, maxHeight: %d, rec height: %d", maxHeight, recyclerHeight);
+                mExpandRequirementsImageView.startAnimation(rotate);
                 expandView(maxHeight);
                 isExpanded = true;
-                mExpandRequirementsImageView.setImageResource(R.drawable.ic_keyboard_arrow_up_24dp);
-                mExpandRequirementsImageView.setColorFilter(ContextCompat.getColor(itemView.getContext(), R.color.grey500));
             } else {
                 Timber.d("Collapsing maxHeight: %d, rec height: %d", maxHeight, mRequirementsRecyclerView.getHeight());
                 mRequirementsRecyclerView.setVisibility(View.GONE);
+                mExpandRequirementsImageView.startAnimation(antiRotate);
                 collapseView();
                 isExpanded = false;
-                mExpandRequirementsImageView.setImageResource(R.drawable.ic_keyboard_arrow_down_24dp);
-                mExpandRequirementsImageView.setColorFilter(ContextCompat.getColor(itemView.getContext(), R.color.grey500));
             }
         }
 

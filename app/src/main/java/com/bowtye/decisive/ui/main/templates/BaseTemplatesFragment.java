@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -28,6 +29,7 @@ import com.bowtye.decisive.models.ProjectWithDetails;
 import com.bowtye.decisive.ui.main.MainAdapter;
 import com.bowtye.decisive.ui.main.MainViewModel;
 import com.bowtye.decisive.ui.projectDetails.ProjectDetailsActivity;
+import com.bowtye.decisive.ui.settings.SettingsActivity;
 import com.bowtye.decisive.utils.ExtraLabels;
 import com.bowtye.decisive.utils.RequestCode;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -81,6 +83,18 @@ public abstract class BaseTemplatesFragment extends Fragment implements MainAdap
     @Override
     public void onCreateOptionsMenu(@NotNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.templates, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_settings:
+                Objects.requireNonNull(getActivity()).startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

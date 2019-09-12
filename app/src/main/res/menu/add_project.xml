@@ -12,7 +12,7 @@
 
     <item
         android:id="@+id/action_save_as_template"
-        android:title="Save as template"
+        android:title="@string/menu_save_template"
         app:showAsAction="never"
         android:orderInCategory="100"/>
 </menu>

@@ -34,7 +34,7 @@ public class Option implements Parcelable {
 
     @Ignore
     public Option(String name, double price, Float rating, Boolean ruledOut,
-                  List<Double> requirementValues, String notes, String imagePath) {
+                  List<Double> requirementValues, String notes, String imagePath, Date dateCreated) {
         this.name = name;
         this.price = price;
         this.rating = rating;
@@ -42,6 +42,7 @@ public class Option implements Parcelable {
         this.requirementValues = requirementValues;
         this.notes = notes;
         this.imagePath = imagePath;
+        this.dateCreated = dateCreated;
     }
 
     public Option(int optionId, int projectId, String name, double price, Float rating, Boolean ruledOut,

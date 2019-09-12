@@ -15,10 +15,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bowtye.decisive.ui.addRequirement.AddRequirement;
+import com.bowtye.decisive.utils.ExtraLabels;
+import com.bowtye.decisive.utils.RequestCode;
 import com.bowtye.decisive.utils.ViewUtils;
 import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.Project;
@@ -40,6 +43,7 @@ import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
+import static com.bowtye.decisive.ui.addRequirement.AddRequirement.RESULT_KEEP_VALUES;
 import static com.bowtye.decisive.ui.addRequirement.AddRequirement.RESULT_REQ_DELETED;
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_EDIT_PROJECT;
 import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_EDIT_REQUIREMENT;
@@ -50,12 +54,11 @@ import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_REQUIREMENT;
 public class AddProjectActivity extends AppCompatActivity implements AddProjectAdapter.OnRequirementClickedCallback, ViewUtils.warningCallback {
 
     public static final int VALIDATION_OK = 1;
-    public static final int VALIDATION_SAVE_REQ_ERROR = -1;
     public static final int VALIDATION_NAME_ERROR = -2;
-    private static final int ADD_REQUIREMENT_REQUEST_CODE = 17;
-    private static final int EDIT_REQUIREMENT_REQUEST_CODE = 18;
+    public static final int VALIDATION_REQUIREMENTS_ERROR = -3;
 
     public static final int RESULT_TEMPLATE = 14;
+    public static final int RESULT_EDITED = 15;
 
     private static final String ADD_PROJECT_ID = "addProject";
 
@@ -73,12 +76,14 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
     EditText mProjectNameEditText;
     @BindView(R.id.sw_has_price)
     Switch mHasPriceSwitch;
+    @BindView(R.id.iv_empty_requirements)
+    ImageView mEmptyRequirementsImageView;
 
     private RecyclerView.LayoutManager mLayoutManager;
     private AddProjectAdapter mAdapter;
     private ProjectWithDetails mProject;
     private int mPositionClicked;
-    private Boolean itemChanged;
+    private Boolean itemChanged, mIsEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,16 +95,21 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
         Intent intent = getIntent();
 
         itemChanged = false;
+        mIsEdit = false;
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(EXTRA_PROJECT)) {
                 mProject = savedInstanceState.getParcelable(EXTRA_PROJECT);
+            }
+            if(savedInstanceState.containsKey(ExtraLabels.EXTRA_IS_EDIT)){
+                mIsEdit = savedInstanceState.getBoolean(ExtraLabels.EXTRA_IS_EDIT);
             }
         }
 
         if (intent != null) {
             if (intent.hasExtra(EXTRA_EDIT_PROJECT)) {
                 mProject = intent.getParcelableExtra(EXTRA_EDIT_PROJECT);
+                mIsEdit = true;
             }
         }
         prepareViews();
@@ -117,6 +127,7 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
         Timber.d("Saved project with %d requirements", (mAdapter.getRequirements() == null) ? 0 : mAdapter.getRequirements().size());
         mProject.setRequirementList(mAdapter.getRequirements());
         outState.putParcelable(EXTRA_PROJECT, mProject);
+        outState.putBoolean(ExtraLabels.EXTRA_IS_EDIT, mIsEdit);
     }
 
     @Override
@@ -131,7 +142,7 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ADD_REQUIREMENT_REQUEST_CODE && data != null) {
+        if (requestCode == RequestCode.ADD_REQUIREMENT_REQUEST_CODE && data != null) {
             if (data.hasExtra(EXTRA_REQUIREMENT) && resultCode == RESULT_OK) {
                 Requirement requirement = data.getParcelableExtra(EXTRA_REQUIREMENT);
                 mAdapter.addRequirement(requirement);
@@ -139,7 +150,7 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
                 checkIfEmpty();
                 itemChanged = true;
             }
-        } else if (requestCode == EDIT_REQUIREMENT_REQUEST_CODE && data != null) {
+        } else if (requestCode == RequestCode.EDIT_REQUIREMENT_REQUEST_CODE && data != null) {
             if (data.hasExtra(EXTRA_REQUIREMENT)) {
 
                 Requirement requirement = data.getParcelableExtra(EXTRA_REQUIREMENT);
@@ -149,6 +160,9 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
                         for (Option option : mProject.getOptionList()) {
                             option.getRequirementValues().set(mPositionClicked, (double) 0);
                         }
+                        mAdapter.overideRequirement(requirement, mPositionClicked);
+                        break;
+                    case RESULT_KEEP_VALUES:
                         mAdapter.overideRequirement(requirement, mPositionClicked);
                         break;
                     case RESULT_REQ_DELETED:
@@ -181,16 +195,21 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
                     case VALIDATION_OK:
                         Intent out = new Intent();
                         out.putExtra(EXTRA_NEW_PROJECT, mProject);
-                        setResult(RESULT_OK, out);
+
+                        if(mIsEdit){
+                            setResult(RESULT_EDITED, out);
+                        } else {
+                            setResult(RESULT_OK, out);
+                        }
+
                         finishAfterTransition();
                         break;
                     case VALIDATION_NAME_ERROR:
-                        ViewUtils.showErrorDialog("Save Project",
-                                "Please give this project a name", this);
+                        ViewUtils.showErrorDialog(getString(R.string.dialog_save_project),
+                                getString(R.string.dialog_give_project_a_name), this);
                         break;
-                    case VALIDATION_SAVE_REQ_ERROR:
-                        ViewUtils.showErrorDialog("Save Project",
-                                "Please save all requirements", this);
+                    case VALIDATION_REQUIREMENTS_ERROR:
+                        ViewUtils.showErrorDialog(getString(R.string.dialog_save_project), getString(R.string.dialog_add_a_requirement), this);
                         break;
                 }
                 return true;
@@ -204,12 +223,11 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
                         finishAfterTransition();
                         break;
                     case VALIDATION_NAME_ERROR:
-                        ViewUtils.showErrorDialog("Save Project",
-                                "Please give this project a name", this);
+                        ViewUtils.showErrorDialog(getString(R.string.dialog_save_project),
+                                getString(R.string.dialog_give_project_a_name), this);
                         break;
-                    case VALIDATION_SAVE_REQ_ERROR:
-                        ViewUtils.showErrorDialog("Save Project",
-                                "Please save all requirements", this);
+                    case VALIDATION_REQUIREMENTS_ERROR:
+                        ViewUtils.showErrorDialog(getString(R.string.dialog_save_project), getString(R.string.dialog_add_a_requirement), this);
                         break;
                 }
                 return true;
@@ -230,8 +248,10 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
         if (!mProject.getProject().getName().equals("")) {
             mProjectNameEditText.setText(mProject.getProject().getName());
             mToolbarLayout.setTitle("Edit project");
+            mHasPriceSwitch.setChecked(mProject.getProject().getHasPrice());
         } else {
             mToolbarLayout.setTitle("Add project");
+            mHasPriceSwitch.setChecked(true);
         }
 
         mProjectNameEditText.addTextChangedListener(new TextWatcher() {
@@ -261,7 +281,7 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
 
         mFab.setOnClickListener(view -> {
             Intent intent = new Intent(this, AddRequirement.class);
-            startActivityForResult(intent, ADD_REQUIREMENT_REQUEST_CODE,
+            startActivityForResult(intent, RequestCode.ADD_REQUIREMENT_REQUEST_CODE,
                     ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
         });
 
@@ -290,9 +310,11 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
         if (mAdapter.getItemCount() == 0) {
             mRecyclerView.setVisibility(View.INVISIBLE);
             mEmptyRequirementsLabel.setVisibility(View.VISIBLE);
+            mEmptyRequirementsImageView.setVisibility(View.VISIBLE);
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmptyRequirementsLabel.setVisibility(View.INVISIBLE);
+            mEmptyRequirementsImageView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -310,6 +332,11 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
 
         mProject.getProject().setName(name);
         mProject.setRequirementList(mAdapter.getRequirements());
+
+        if(mProject.getRequirementList().size() == 0){
+            return VALIDATION_REQUIREMENTS_ERROR;
+        }
+
         mProject.getProject().setHasPrice(mHasPriceSwitch.isChecked());
 
         return VALIDATION_OK;
@@ -320,7 +347,7 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
         mPositionClicked = position;
         Intent intent = new Intent(this, AddRequirement.class);
         intent.putExtra(EXTRA_EDIT_REQUIREMENT, requirement);
-        startActivityForResult(intent, EDIT_REQUIREMENT_REQUEST_CODE,
+        startActivityForResult(intent, RequestCode.EDIT_REQUIREMENT_REQUEST_CODE,
                 ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 

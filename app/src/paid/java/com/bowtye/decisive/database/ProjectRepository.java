@@ -94,6 +94,8 @@ public class ProjectRepository extends BaseRepository {
             super.insertOption(option, projectId);
         } else {
 
+            option.setDateCreated(new Date());
+
             Timber.d("Inserting option into firebase");
             ProjectWithDetails projectWithDetails = selectedProject.getValue();
             if (projectWithDetails != null) {
@@ -354,7 +356,7 @@ public class ProjectRepository extends BaseRepository {
 
                     StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images/users/" +
                             Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()
-                            + "/" + option.getName() + ".jpg");
+                            + "/" + option.getName() + "/" + option.getDateCreated() + ".jpg");
 
                     if (!option.getImagePath().substring(0, 4).equals("http")) {
                         FileUtils.rotateFile(null, Uri.parse(option.getImagePath()));

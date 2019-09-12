@@ -8,13 +8,13 @@
     tools:context=".ui.addProject.AddProjectActivity"
     tools:menu="@menu/add_project">
 
-    <include layout="@layout/toolbar" />
-
     <include layout="@layout/content_add_project" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         style="@style/MyFabStyle"
         app:srcCompat="@drawable/ic_add_24dp" />
+
+    <include layout="@layout/toolbar" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

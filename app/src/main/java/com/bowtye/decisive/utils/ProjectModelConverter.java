@@ -75,7 +75,8 @@ public class ProjectModelConverter {
                         optionFirebase.getRuledOut(),
                         new ArrayList<>(optionFirebase.getRequirementValues()),
                         optionFirebase.getNotes(),
-                        optionFirebase.getImagePath());
+                        optionFirebase.getImagePath(),
+                        optionFirebase.getDateCreated());
                 optionList.add(o);
             }
             return optionList;
@@ -96,7 +97,7 @@ public class ProjectModelConverter {
                                 option.getNotes(),
                                 option.getImagePath(),
                                 option.getPrice(),
-                                new Date(),     //TODO: add date to option model
+                                option.getDateCreated(),
                                 option.getRating(),
                                 option.getRuledOut(),
                                 new ArrayList<>(option.getRequirementValues())

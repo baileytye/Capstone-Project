@@ -10,6 +10,8 @@ import android.os.Bundle;
 
 import com.bowtye.decisive.BuildConfig;
 import com.bowtye.decisive.ui.common.BottomSheetFragment;
+import com.bowtye.decisive.utils.ExtraLabels;
+import com.bowtye.decisive.utils.RequestCode;
 import com.bowtye.decisive.utils.ViewUtils;
 import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.ProjectWithDetails;
@@ -60,16 +62,14 @@ import timber.log.Timber;
 import static com.bowtye.decisive.ui.addProject.AddProjectActivity.RESULT_TEMPLATE;
 import static com.bowtye.decisive.ui.common.BottomSheetFragment.CHOOSE_IMAGE;
 import static com.bowtye.decisive.ui.common.BottomSheetFragment.TAKE_PHOTO;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_OPTION;
-import static com.bowtye.decisive.utils.ExtraLabels.EXTRA_PROJECT;
 
 public class AddOption extends AppCompatActivity implements BottomSheetFragment.OnBottomSheetClickCallback, ViewUtils.warningCallback, AddOptionAdapter.ItemChangedCallback {
 
     public static final int VALIDATION_OK = 55;
     public static final int VALIDATION_NAME_ERROR = -2;
+    public static final int VALIDATION_NAME_EXISTS = -3;
 
-    public static final int GALLERY_REQUEST_CODE = 2553;
-    public static final int CAMERA_REQUEST_CODE = 1234;
+
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private static final String KEY_PHOTO_PATH = "key_photo_path";
     private static final String KEY_OPTION = "key_option";
@@ -93,6 +93,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
     AddOptionAdapter mAdapter;
     List<Requirement> mRequirements;
     Option mOption;
+    ProjectWithDetails mProject;
 
     String currentPhotoPath;
 
@@ -106,22 +107,22 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
 
         ButterKnife.bind(this);
 
-        mOption = new Option("", 0, (float) 0, false, null, "", "");
+        mOption = new Option("", 0, (float) 0, false, null, "", "", null);
         isEdit = false;
         itemChanged = false;
 
         Intent intent = getIntent();
         if (intent != null) {
-            if (intent.hasExtra(EXTRA_PROJECT)) {
-                ProjectWithDetails p = intent.getParcelableExtra(EXTRA_PROJECT);
-                if (p != null) {
-                    mRequirements = p.getRequirementList();
+            if (intent.hasExtra(ExtraLabels.EXTRA_PROJECT)) {
+                mProject= intent.getParcelableExtra(ExtraLabels.EXTRA_PROJECT);
+                if (mProject != null) {
+                    mRequirements = mProject.getRequirementList();
                     mOption.setRequirementValues(new ArrayList<>(Collections.nCopies(mRequirements.size(), 0.0)));
-                    mHasPrice = p.getProject().getHasPrice();
+                    mHasPrice = mProject.getProject().getHasPrice();
                 }
             }
-            if (intent.hasExtra(EXTRA_OPTION)) {
-                mOption = intent.getParcelableExtra(EXTRA_OPTION);
+            if (intent.hasExtra(ExtraLabels.EXTRA_OPTION)) {
+                mOption = intent.getParcelableExtra(ExtraLabels.EXTRA_OPTION);
                 isEdit = true;
             }
         }
@@ -163,9 +164,12 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                         ViewUtils.showErrorDialog(getString(R.string.dialog_title_save_option),
                                 getString(R.string.dialog_give_option_a_name), this);
                         break;
+                    case VALIDATION_NAME_EXISTS:
+                        ViewUtils.showErrorDialog(getString(R.string.dialog_title_save_option), getString(R.string.dialog_name_exists), this);
+                        break;
                     case VALIDATION_OK:
                         Intent out = new Intent();
-                        out.putExtra(EXTRA_OPTION, mOption);
+                        out.putExtra(ExtraLabels.EXTRA_OPTION, mOption);
                         setResult(RESULT_OK, out);
                         finishAfterTransition();
                         return true;
@@ -179,7 +183,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                         break;
                     case VALIDATION_OK:
                         Intent out = new Intent();
-                        out.putExtra(EXTRA_OPTION, mOption);
+                        out.putExtra(ExtraLabels.EXTRA_OPTION, mOption);
                         setResult(RESULT_TEMPLATE, out);
                         finishAfterTransition();
                         return true;
@@ -206,7 +210,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         // Result code is RESULT_OK only if the user selects an Image
         if (resultCode == Activity.RESULT_OK)
             switch (requestCode) {
-                case GALLERY_REQUEST_CODE:
+                case RequestCode.GALLERY_REQUEST_CODE:
                     //data.getData returns the content URI for the selected Image
                     Uri selectedImage = data.getData();
                     if (selectedImage != null) {
@@ -225,7 +229,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                     }
                     saveImageAndSetHeaderImage();
                     break;
-                case CAMERA_REQUEST_CODE:
+                case RequestCode.CAMERA_REQUEST_CODE:
                     saveImageAndSetHeaderImage();
                     break;
             }
@@ -325,11 +329,15 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
 
         mOption = mAdapter.getOption();
 
-        String name = Objects.requireNonNull(mOptionNameEditText.getText()).toString();
+        String name = Objects.requireNonNull(mOptionNameEditText.getText()).toString().trim();
         if (name.equals("")) {
             return VALIDATION_NAME_ERROR;
         } else {
             mOption.setName(name);
+        }
+
+        if(nameExists() && !isEdit){
+            return VALIDATION_NAME_EXISTS;
         }
 
         double price;
@@ -348,6 +356,15 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         return VALIDATION_OK;
     }
 
+    private boolean nameExists(){
+        for(Option option : mProject.getOptionList()){
+            if(option.getName().equals(mOption.getName())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void pickFromGallery() {
         //Create an Intent with action as ACTION_PICK
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -357,7 +374,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         String[] mimeTypes = {"image/jpeg", "image/png"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         // Launching the Intent
-        startActivityForResult(intent, GALLERY_REQUEST_CODE);
+        startActivityForResult(intent, RequestCode.GALLERY_REQUEST_CODE);
     }
 
     private void captureFromCamera() {
@@ -402,7 +419,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 
                 Timber.d("Launching Camera");
-                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+                startActivityForResult(takePictureIntent, RequestCode.CAMERA_REQUEST_CODE);
             }
         }
     }

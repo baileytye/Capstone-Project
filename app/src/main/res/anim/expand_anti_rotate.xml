@@ -2,8 +2,8 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:fillAfter="true">
     <rotate xmlns:android="http://schemas.android.com/apk/res/android"
-        android:duration="300"
-        android:fromDegrees="135"
+        android:duration="200"
+        android:fromDegrees="180"
         android:interpolator="@android:anim/linear_interpolator"
         android:pivotX="50%"
         android:pivotY="50%"

@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -30,7 +31,6 @@ import com.bowtye.decisive.ui.addOption.AddOption;
 import com.bowtye.decisive.utils.RequestCode;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -41,6 +41,7 @@ import butterknife.ButterKnife;
 import ru.dimorinny.floatingtextbutton.FloatingTextButton;
 import timber.log.Timber;
 
+import static com.bowtye.decisive.ui.addProject.AddProjectActivity.RESULT_EDITED;
 import static com.bowtye.decisive.ui.addProject.AddProjectActivity.RESULT_TEMPLATE;
 
 public abstract class BaseProjectDetailsActivity extends AppCompatActivity implements
@@ -64,6 +65,8 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
     TextView mEmptyOptionsTextView;
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
+    @BindView(R.id.iv_empty_options)
+    ImageView mEmptyOptionsImageView;
 
     protected RecyclerView.LayoutManager mLayoutManager;
     protected ProjectDetailsAdapter mAdapter;
@@ -167,7 +170,7 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
                 }
             }
         } else if (requestCode == RequestCode.EDIT_PROJECT_REQUEST_CODE) {
-            if(resultCode == RESULT_OK) {
+            if(resultCode == RESULT_EDITED) {
                 if (data != null && data.hasExtra(ExtraLabels.EXTRA_NEW_PROJECT)) {
                     ProjectWithDetails projectWithDetails = data.getParcelableExtra(ExtraLabels.EXTRA_NEW_PROJECT);
                     mViewModel.resizeOptionValuesList(projectWithDetails);
@@ -250,8 +253,10 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
     protected void setEmptyMessageVisibility() {
         if ((mProject == null) || (mProject.getOptionList().size() == 0)) {
             mEmptyOptionsTextView.setVisibility(View.VISIBLE);
+            mEmptyOptionsImageView.setVisibility(View.VISIBLE);
             setIsLoading(false);
         } else {
+            mEmptyOptionsImageView.setVisibility(View.INVISIBLE);
             mEmptyOptionsTextView.setVisibility(View.INVISIBLE);
         }
     }

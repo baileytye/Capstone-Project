@@ -1,97 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:paddingBottom="24dp"
     android:background="@color/white"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.addProject.AddProjectActivity"
     tools:showIn="@layout/activity_add_project">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_project_name"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        app:boxStrokeColor="@color/colorPrimary"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_project_name"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/iv_empty_requirements"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Project name"
-            android:inputType="textPersonName"
-            android:singleLine="true" />
-    </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            android:layout_marginTop="60dp"
+            app:srcCompat="@drawable/ic_empty_requirements_120dp" />
 
-    <TextView
-        android:id="@+id/label_empty_requirements"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_empty_requirements"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <Switch
+            android:id="@+id/sw_has_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="@+id/til_project_name"
+            app:layout_constraintTop_toBottomOf="@+id/til_project_name" />
 
-    <TextView
-        android:id="@+id/label_requirements"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="16dp"
-        android:text="Requirements"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        <TextView
+            android:id="@+id/label_requirements"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="20dp"
+            android:text="@string/label_requirements"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey200"
-        app:layout_constraintBottom_toTopOf="@id/rv_requirements"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        />
+        <TextView
+            android:id="@+id/label_empty_requirements"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/label_empty_requirements"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/grey300"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/iv_empty_requirements"
+            app:layout_constraintStart_toStartOf="@id/iv_empty_requirements"
+            app:layout_constraintTop_toBottomOf="@id/iv_empty_requirements" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_requirements"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bg_card"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/label_requirements"
-        tools:listitem="@layout/card_requirement_preview" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_has_price"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintBottom_toBottomOf="@+id/sw_has_price"
+            app:layout_constraintStart_toStartOf="@+id/til_project_name"
+            app:layout_constraintTop_toTopOf="@+id/sw_has_price" />
 
-    <Switch
-        android:id="@+id/sw_has_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/til_project_name"
-        app:layout_constraintTop_toBottomOf="@+id/til_project_name" />
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey200"
+            app:layout_constraintBottom_toTopOf="@id/rv_requirements"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_has_price"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintBottom_toBottomOf="@+id/sw_has_price"
-        app:layout_constraintStart_toStartOf="@+id/til_project_name"
-        app:layout_constraintTop_toTopOf="@+id/sw_has_price" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_requirements"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:paddingBottom="@dimen/recycler_view_fab_bottom_padding"
+            android:clipToPadding="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_requirements"
+            tools:listitem="@layout/card_requirement_preview" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_project_name"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            app:boxStrokeColor="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_project_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Project name"
+                android:inputType="textPersonName"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
