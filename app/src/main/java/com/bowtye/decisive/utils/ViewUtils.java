@@ -50,10 +50,10 @@ public class ViewUtils {
     }
 
     public interface warningCallback{
-        public void warningClicked(int result);
+        void warningClicked(int result);
     }
 
     public interface yesNoCallback{
-        public void yesNoResponse(boolean isYes);
+        void yesNoResponse(boolean isYes);
     }
 }

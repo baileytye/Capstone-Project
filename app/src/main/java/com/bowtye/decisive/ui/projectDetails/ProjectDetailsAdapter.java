@@ -26,6 +26,7 @@ import com.bowtye.decisive.models.ProjectWithDetails;
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.ui.common.VerticalSpaceItemDecoration;
 import com.bowtye.decisive.ui.common.RequirementsAdapter;
+import com.bowtye.decisive.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
@@ -249,7 +250,7 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
 
             if (mProject.getProject().getHasPrice()) {
                 mItemPriceTextView.setVisibility(View.VISIBLE);
-                mItemPriceTextView.setText("$" + o.getPrice());
+                mItemPriceTextView.setText(itemView.getResources().getString(R.string.concatenation_price_value, StringUtils.convertToTwoDecimals(o.getPrice())));
             }
 
 

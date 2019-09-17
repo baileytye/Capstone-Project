@@ -25,7 +25,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider"
             android:layout_marginTop="60dp"
-            app:srcCompat="@drawable/ic_empty_requirements_120dp" />
+            app:srcCompat="@drawable/ic_empty_requirements_120dp"
+            android:contentDescription="@string/content_description_empty_requirements" />
 
         <Switch
             android:id="@+id/sw_has_price"
@@ -108,7 +109,7 @@
                 android:id="@+id/et_project_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Project name"
+                android:hint="@string/hint_project_name"
                 android:inputType="textPersonName"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>

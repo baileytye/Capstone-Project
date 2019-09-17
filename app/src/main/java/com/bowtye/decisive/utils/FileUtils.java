@@ -58,9 +58,9 @@ public class FileUtils {
 
     /**
      * reduces the size of the image
-     * @param image
-     * @param maxSize
-     * @return
+     * @param image image to resize
+     * @param maxSize max size of result
+     * @return resized image
      */
     public static Bitmap getResizedBitmap(Bitmap image, int maxSize) {
         int width = image.getWidth();

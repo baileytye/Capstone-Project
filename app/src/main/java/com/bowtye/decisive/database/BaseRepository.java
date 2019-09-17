@@ -167,10 +167,6 @@ public class BaseRepository {
         new DeleteOptionAsyncTask().execute(option);
     }
 
-    public void deleteRequirement(final Requirement requirement){
-
-    }
-
     private static class InsertProjectWithDetailsAsyncTask extends AsyncTask<ProjectWithDetails,Void,Void> {
 
         @Override
@@ -266,9 +262,7 @@ public class BaseRepository {
                             e -> Timber.d("Failed to add %s to firebase error: %s",
                                     projectFirebase.getName(), e.getMessage()))
                     .addOnSuccessListener(
-                            documentReference -> {
-                                Timber.d("Successfully added %s to firebase", projectFirebase.getName());
-                            });
+                            documentReference -> Timber.d("Successfully added %s to firebase", projectFirebase.getName()));
             return null;
         }
     }

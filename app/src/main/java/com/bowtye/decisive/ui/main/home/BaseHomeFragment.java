@@ -42,6 +42,8 @@ import com.bowtye.decisive.utils.RequestCode;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -87,7 +89,6 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
     @BindView(R.id.tv_empty_projects)
     TextView mEmptyProjectsTextView;
 
-    private RecyclerView.LayoutManager mLayoutManager;
     private HomeAdapter mAdapter;
     private MainViewModel mViewModel;
 
@@ -115,7 +116,7 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
     }
 
@@ -186,7 +187,7 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
         mToolbarLayout.setTitle(getString(R.string.title_projects));
 
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new HomeAdapter(null, this, this);
         mRecyclerView.setAdapter(mAdapter);

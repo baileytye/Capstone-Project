@@ -59,7 +59,7 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
     RecyclerView mRecyclerView;
     @BindView(R.id.fab)
     FloatingActionButton mFab;
-    @BindView(R.id.floatin_button)
+    @BindView(R.id.floating_button)
     FloatingTextButton mFloatingButton;
     @BindView(R.id.tv_empty_options)
     TextView mEmptyOptionsTextView;
@@ -158,15 +158,13 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
             }
         } else if (requestCode == RequestCode.EDIT_OPTION_REQUEST_CODE) {
             if (data != null && data.hasExtra(ExtraLabels.EXTRA_DELETE_OPTION)) {
-                switch (resultCode) {
-                    case RESULT_DELETED:
-                        //TODO:REMOVE WHEN TEMPLATES DONE
-                        if(mIsTemplate){
-                            mViewModel.deleteOptionTemplate(mProject.getOptionList().get(mItemSelected), mItemSelected);
-                        } else {
-                            mViewModel.deleteOption(mProject.getOptionList().get(mItemSelected));
-                        }
-                        mItemDeleted = true;
+                if (resultCode == RESULT_DELETED) {//TODO:REMOVE WHEN TEMPLATES DONE
+                    if (mIsTemplate) {
+                        mViewModel.deleteOptionTemplate(mProject.getOptionList().get(mItemSelected), mItemSelected);
+                    } else {
+                        mViewModel.deleteOption(mProject.getOptionList().get(mItemSelected));
+                    }
+                    mItemDeleted = true;
                 }
             }
         } else if (requestCode == RequestCode.EDIT_PROJECT_REQUEST_CODE) {

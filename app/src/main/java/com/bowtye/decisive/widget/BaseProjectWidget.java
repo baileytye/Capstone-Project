@@ -58,6 +58,7 @@ public abstract class BaseProjectWidget extends AppWidgetProvider {
             Option option = project.getOptionList().get(i);
             if(option.getRating() > highest){
                 index = i;
+                highest = option.getRating();
             }
         }
         return index;
@@ -70,6 +71,7 @@ public abstract class BaseProjectWidget extends AppWidgetProvider {
             Option option = project.getOptionList().get(i);
             if(option.getRating() < lowest){
                 index = i;
+                lowest = option.getRating();
             }
         }
         return index;

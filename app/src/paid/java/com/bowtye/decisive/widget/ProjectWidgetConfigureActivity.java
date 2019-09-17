@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import com.bowtye.decisive.R;
+import com.bowtye.decisive.models.ProjectWithDetails;
 
 public class ProjectWidgetConfigureActivity extends BaseProjectWidgetConfigureActivity{
 
     @Override
-    public void onProjectClicked(int position) {
+    public void onProjectClicked(ProjectWithDetails project) {
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -24,9 +25,9 @@ public class ProjectWidgetConfigureActivity extends BaseProjectWidgetConfigureAc
             RemoteViews views = new RemoteViews(getPackageName(), R.layout.project_widget);
 
             appWidgetManager.updateAppWidget(appWidgetId, views);
-            ProjectWidget.updateAppWidgetPaid(this, appWidgetManager, appWidgetId, mProjects.get(position));
+            ProjectWidget.updateAppWidgetPaid(this, appWidgetManager, appWidgetId, project);
 
-            saveProjectToPref(this, appWidgetId, mProjects.get(position));
+            saveProjectToPref(this, appWidgetId, project);
 
             Intent resultValue = new Intent();
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);

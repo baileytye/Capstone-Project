@@ -5,13 +5,8 @@
 
     <dimen name="app_bar_height">120dp</dimen>
 
-    <dimen name="nav_header_vertical_spacing">8dp</dimen>
-    <dimen name="nav_header_height">145dp</dimen>
-
     <dimen name="card_padding">16dp</dimen>
     <dimen name="card_notes_padding">8dp</dimen>
-    <dimen name="card_heading_separation">28dp</dimen>
-    <dimen name="card_margin_edges">4dp</dimen>
     <dimen name="card_corner_radius">5dp</dimen>
     <dimen name="card_border_stroke_width" format="float">0.75dp</dimen>
 
@@ -26,7 +21,6 @@
     <dimen name="bottom_sheet_corner_radius">5dp</dimen>
     <dimen name="bottom_sheet_top_padding">8dp</dimen>
 
-    <dimen name="text_input_layer_padding">8dp</dimen>
     <dimen name="text_input_edit_text_padding">4dp</dimen>
     <dimen name="recycler_view_padding">8dp</dimen>
 
@@ -34,10 +28,5 @@
 
     <!--Floating action button-->
     <dimen name="design_fab_image_size" tools:override="true">36dp</dimen>
-
-    <dimen name="widget_margin">8dp</dimen>
-
-    <dimen name="standard_55">55dp</dimen>
-    <dimen name="standard_105">105dp</dimen>
 
 </resources>

@@ -79,7 +79,6 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
     @BindView(R.id.iv_empty_requirements)
     ImageView mEmptyRequirementsImageView;
 
-    private RecyclerView.LayoutManager mLayoutManager;
     private AddProjectAdapter mAdapter;
     private ProjectWithDetails mProject;
     private int mPositionClicked;
@@ -122,7 +121,7 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         Timber.d("Saved project with %d requirements", (mAdapter.getRequirements() == null) ? 0 : mAdapter.getRequirements().size());
         mProject.setRequirementList(mAdapter.getRequirements());
@@ -160,10 +159,10 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
                         for (Option option : mProject.getOptionList()) {
                             option.getRequirementValues().set(mPositionClicked, (double) 0);
                         }
-                        mAdapter.overideRequirement(requirement, mPositionClicked);
+                        mAdapter.overrideRequirement(requirement, mPositionClicked);
                         break;
                     case RESULT_KEEP_VALUES:
-                        mAdapter.overideRequirement(requirement, mPositionClicked);
+                        mAdapter.overrideRequirement(requirement, mPositionClicked);
                         break;
                     case RESULT_REQ_DELETED:
                         mAdapter.removeAt(mPositionClicked);
@@ -272,7 +271,7 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
         });
 
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new AddProjectAdapter(this, (mProject == null) ? null : mProject.getRequirementList());
         mRecyclerView.setAdapter(mAdapter);

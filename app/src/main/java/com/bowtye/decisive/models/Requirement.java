@@ -138,8 +138,6 @@ public class Requirement implements Parcelable {
                 return 0;
             case (int) ABOVE_AVERAGE:
                 return 1;
-            case (int) AVERAGE:
-                return 2;
             case (int) BELOW_AVERAGE:
                 return 3;
             case (int) FAR_BELOW_AVERAGE:

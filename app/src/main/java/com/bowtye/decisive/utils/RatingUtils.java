@@ -6,8 +6,6 @@ import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.ProjectWithDetails;
 import com.bowtye.decisive.models.Requirement;
 
-import org.jetbrains.annotations.Async;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

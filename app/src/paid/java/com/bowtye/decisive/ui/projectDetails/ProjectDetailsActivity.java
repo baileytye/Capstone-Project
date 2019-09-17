@@ -29,10 +29,9 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity {
 
         if (requestCode == RequestCode.EDIT_OPTION_REQUEST_CODE) {
             if (data != null && data.hasExtra(ExtraLabels.EXTRA_DELETE_OPTION)) {
-                switch (resultCode) {
-                    case RESULT_DELETED:
-                        mViewModel.deleteOptionFirebase(mProject.getOptionList().get(mItemSelected), mItemSelected);
-                        mItemDeleted = true;
+                if (resultCode == RESULT_DELETED) {
+                    mViewModel.deleteOptionFirebase(mProject.getOptionList().get(mItemSelected), mItemSelected);
+                    mItemDeleted = true;
                 }
             }
         } else {

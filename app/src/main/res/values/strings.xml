@@ -1,7 +1,6 @@
 <resources>
     <!--Activity/App Titles-->
     <string name="title_activity_add_option">Add Option</string>
-    <string name="title_activity_main">MainActivity</string>
     <string name="title_home">Home</string>
     <string name="title_templates">Templates</string>
     <string name="title_activity_settings">Settings</string>
@@ -15,14 +14,7 @@
     <string name="preference_file_key">com.bowtye.decisive.PREFERENCE_FILE_KEY</string>
 
     <!--Menu Strings-->
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
     <string name="menu_settings">Settings</string>
-    <string name="menu_help_and_feedback">Help and feedback</string>
     <string name="menu_delete_project">Delete project</string>
     <string name="menu_save_title">Save</string>
     <string name="menu_reset_title">Reset</string>
@@ -40,37 +32,39 @@
 
     <!--Labels-->
     <string name="label_choices">Choices:</string>
-    <string name="label_type">Type:</string>
-    <string name="label_importance">Importance:</string>
+    <string name="label_type">Type</string>
+    <string name="label_importance">Importance</string>
     <string name="label_expected">Expected:</string>
     <string name="label_has_price">Has price</string>
     <string name="label_empty_requirements">No requirements yet.</string>
-    <string name="label_current_rating">Current Rating:</string>
     <string name="label_weight">Weight:</string>
-    <string name="label_saved">Saved</string>
     <string name="label_empty_options">No options in this project yet!</string>
     <string name="label_select_a_project">Select a project</string>
-    <string name="label_widget_warning">Note: projects require atleast two options to be used as a widget.</string>
+    <string name="label_widget_warning">Note: projects require at least two options to be used as a widget.</string>
     <string name="label_lowest">Lowest</string>
     <string name="label_highest">Highest</string>
     <string name="label_summary">Summary</string>
     <string name="label_requirements">Requirements</string>
+    <string name="label_actual">Actual:</string>
+    <string name="label_priority">Priority:</string>
+    <string name="label_points_toward_total">Points toward total:</string>
+    <string name="label_more_or_less_is_better">More or less is better</string>
+    <string name="label_you_have_no_projects_yet">You have no projects yet!</string>
+    <string name="label_expected_no_colon">Expected</string>
+    <string name="label_requirement">Requirement</string>
 
     <!--Hints-->
     <string name="hint_requirement_name">Requirement name</string>
     <string name="hint_notes">Notes</string>
-    <string name="hint_expected">Expected</string>
-    <string name="hint_project_name">Enter name</string>
+    <string name="hint_expected">Expected value</string>
+    <string name="hint_project_name">Project name</string>
     <string name="hint_value">Value</string>
-    <string name="hint_option_name">Name</string>
+    <string name="hint_option_name">Option name</string>
     <string name="hint_price">Price</string>
     <string name="hint_weight">Weight</string>
+    <string name="hint_unit">Unit</string>
 
     <!--Button Labels-->
-    <string name="button_advanced">Advanced</string>
-    <string name="button_remove">Remove</string>
-    <string name="button_rule_out">Rule Out</string>
-    <string name="button_details">Details</string>
     <string name="button_take_photo">Take Photo</string>
     <string name="button_choose_image">Choose Image</string>
 
@@ -84,12 +78,27 @@
     <string name="placeholder_project_card_heading">Heading</string>
     <string name="placeholder_date">Date</string>
     <string name="placeholder_option_count">5</string>
+    <string name="placeholder_requirement">Requirement</string>
+    <string name="placeholder_high">High</string>
+    <string name="placeholder_units">lbs</string>
 
     <!--Content Descriptions-->
     <string name="content_description_option_images">Option images</string>
-    <string name="content_description_delete_requirement">Delete requirement</string>
-    <string name="content_description_save_or_edit">save or edit</string>
     <string name="content_description_thumbs_up_or_down">Thumbs up or down</string>
+    <string name="content_description_see_option_details_button">See option details button</string>
+    <string name="content_description_expand_requirements_button">Expand requirements button</string>
+    <string name="content_description_see_project_details_button">See project details button</string>
+    <string name="content_description_project_picture">Project picture</string>
+    <string name="content_description_requirement_expected_value_checkbox">Requirement expected value checkbox</string>
+    <string name="content_description_requirement_good_or_bad_rating_arrow">Requirement good or bad rating arrow</string>
+    <string name="content_description_requirement_details_arrow">Requirement details arrow</string>
+    <string name="content_description_empty_requirements">Empty requirements</string>
+    <string name="content_description_empty_projects">Empty projects</string>
+    <string name="content_description_option_image_header">Option image header</string>
+    <string name="content_description_empty_options">Empty options</string>
+    <string name="content_description_email_and_password_background">Email and password background</string>
+    <string name="content_description_rating_star">Rating star</string>
+    <string name="content_description_requirement_checkmark">Requirement checkmark</string>
 
     <!--Dialog Messages-->
     <string name="dialog_leave_without_saving">Leave without saving?</string>
@@ -103,10 +112,12 @@
 
     <!--Concatenations-->
     <string name="concatenation_value_unit">%s %s</string>
+    <string name="concatenation_price_value">$%s</string>
+    <string name="concatenation_name_colon">%s:</string>
 
     <!--Error Messages-->
     <string name="error_enter_weight">Enter a weight</string>
     <string name="error_empty_requirement_name">Give this requirement a name</string>
-
+    <string name="error_unknown_date">Unknown date</string>
 
 </resources>

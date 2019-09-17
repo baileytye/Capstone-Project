@@ -32,6 +32,7 @@ import com.bowtye.decisive.R;
 import com.bowtye.decisive.ui.common.VerticalSpaceItemDecoration;
 import com.bowtye.decisive.ui.addOption.AddOption;
 import com.bowtye.decisive.utils.RequestCode;
+import com.bowtye.decisive.utils.StringUtils;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.squareup.picasso.Picasso;
 
@@ -155,12 +156,10 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
 
         if (requestCode == RequestCode.EDIT_OPTION_REQUEST_CODE) {
             if (data != null && data.hasExtra(ExtraLabels.EXTRA_OPTION)) {
-                switch (resultCode) {
-                    case RESULT_OK:
-                        Timber.d("Received option from add ");
-                        mOption = data.getParcelableExtra(ExtraLabels.EXTRA_OPTION);
-                        new RatingUtils.CalculateRatingOfOptionAsyncTask(this, mRequirements).execute(mOption);
-                        break;
+                if (resultCode == RESULT_OK) {
+                    Timber.d("Received option from add ");
+                    mOption = data.getParcelableExtra(ExtraLabels.EXTRA_OPTION);
+                    new RatingUtils.CalculateRatingOfOptionAsyncTask(this, mRequirements).execute(mOption);
                 }
             }
         }
@@ -212,7 +211,7 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
         mToolbarLayout.setTitle(mOption.getName());
 
         if(mProject.getProject().getHasPrice()) {
-            mPriceTextView.setText("$" + mOption.getPrice());
+            mPriceTextView.setText(getResources().getString(R.string.concatenation_price_value, StringUtils.convertToTwoDecimals(mOption.getPrice())));
         } else {
             mPriceTextView.setVisibility(View.INVISIBLE);
         }

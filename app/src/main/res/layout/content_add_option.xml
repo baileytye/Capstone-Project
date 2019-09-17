@@ -31,7 +31,7 @@
                 android:id="@+id/et_option_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Option name"
+                android:hint="@string/hint_option_name"
                 android:inputType="textPersonName"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -65,7 +65,7 @@
                 android:id="@+id/et_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Price"
+                android:hint="@string/hint_price"
                 android:inputType="numberDecimal"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Requirements"
+            android:text="@string/label_requirements"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toStartOf="@id/iv_pictures"
             app:layout_constraintTop_toBottomOf="@id/til_price" />
@@ -116,7 +116,6 @@
             app:layout_constraintTop_toBottomOf="@id/rv_requirement_values" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_notes"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -130,7 +129,7 @@
                 android:id="@+id/et_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Notes"
+                android:hint="@string/hint_notes"
                 android:inputType="textImeMultiLine" />
         </com.google.android.material.textfield.TextInputLayout>
 

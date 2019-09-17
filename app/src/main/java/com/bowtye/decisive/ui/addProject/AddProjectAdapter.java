@@ -50,7 +50,7 @@ public class AddProjectAdapter extends RecyclerView.Adapter<AddProjectAdapter.Ad
                 mRequirements.get(mRequirements.size() - 1).getName());
     }
 
-    public void overideRequirement(Requirement requirement, int position) {
+    public void overrideRequirement(Requirement requirement, int position) {
         mRequirements.set(position, requirement);
         notifyItemChanged(position);
     }

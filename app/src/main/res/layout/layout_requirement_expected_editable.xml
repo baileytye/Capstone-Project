@@ -2,7 +2,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frame_expected"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:showIn="@layout/content_add_requirement">
@@ -39,7 +38,7 @@
             android:background="@color/white"
             android:paddingStart="2dp"
             android:paddingEnd="2dp"
-            android:text="Expected"
+            android:text="@string/label_expected_no_colon"
             android:textSize="12sp" />
     </FrameLayout>
 
@@ -48,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text="Expected" />
+        android:text="@string/label_expected_no_colon" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_expected"
@@ -62,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
-            android:hint="Expected value"
+            android:hint="@string/hint_expected"
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -98,7 +97,7 @@
             android:background="@color/white"
             android:paddingStart="2dp"
             android:paddingEnd="2dp"
-            android:text="Expected"
+            android:text="@string/label_expected_no_colon"
             android:textSize="12sp" />
     </FrameLayout>
 

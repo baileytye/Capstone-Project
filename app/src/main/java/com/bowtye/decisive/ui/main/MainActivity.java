@@ -23,12 +23,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(FirebaseAuth.getInstance().getCurrentUser() == null){
             FirebaseAuth.getInstance().signInAnonymously().addOnSuccessListener(
-                    authResult -> {
-                        Timber.d("Signed in anonymously");
-                    }
-            ).addOnFailureListener(e -> {
-                Timber.d("Failed to sign in anonymously");
-            });
+                    authResult -> Timber.d("Signed in anonymously")
+            ).addOnFailureListener(e -> Timber.d("Failed to sign in anonymously"));
         }
 
         BottomNavigationView navView = findViewById(R.id.nav_view);

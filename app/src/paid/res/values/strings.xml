@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name_without_plus">Decisive.</string>
-
-    <string name="menu_logout_title">Logout</string>
-    <string name="menu_sign_in_title">Sign in</string>
-
+    <string name="pref_use_offline_key">use_offline</string>
     <string name="default_web_client_id">78569816095-aak428906s8r9ld6d3jj3gd9bsc2n8ip.apps.googleusercontent.com</string>
+
+    <string name="menu_sign_in_title">Sign in</string>
 
     <string name="hint_email_address">Email address</string>
     <string name="hint_password">Password</string>
@@ -17,10 +16,11 @@
     <string name="button_continue_offline">Continue offline</string>
     <string name="button_already_have_an_account">Already have an account?</string>
     <string name="button_sign_up">Sign up</string>
+    <string name="button_reset_password">Reset password</string>
 
+    <!--Content Descriptions-->
     <string name="content_description_login_background">login background</string>
-
-    <string name="pref_use_offline_key">use_offline</string>
+    <string name="content_description_email_address">Email address</string>
 
     <!--Dialog messages-->
     <string name="dialog_enter_email_address">Enter email address!</string>
@@ -28,5 +28,8 @@
     <string name="dialog_sign_in_failed">Sign in failed</string>
     <string name="dialog_password_minimum_length_error">Password must be 6 characters long</string>
     <string name="dialog_sign_in_failed_with_message">Sign in failed:</string>
+    <string name="dialog_email_sent">Email sent</string>
+    <string name="dialog_reset_password_failed">Reset password failed</string>
+    <string name="dialog_enter_email">Enter an email</string>
 
 </resources>

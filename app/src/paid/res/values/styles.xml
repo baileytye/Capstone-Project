@@ -11,4 +11,8 @@
         <item name="android:taskOpenEnterAnimation">@anim/anim_replace</item>
         <item name="android:taskOpenExitAnimation">@anim/anim_replace</item>
     </style>
+
+    <style name="noAnimTheme" parent="AppTheme">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
 </resources>

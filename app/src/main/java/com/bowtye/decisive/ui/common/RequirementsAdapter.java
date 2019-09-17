@@ -71,7 +71,7 @@ public class RequirementsAdapter extends RecyclerView.Adapter<RequirementsAdapte
         }
 
         void bind(Requirement requirement, Double value) {
-            mRequirementNameTextView.setText(requirement.getName() + ':');
+            mRequirementNameTextView.setText(itemView.getResources().getString(R.string.concatenation_name_colon, requirement.getName()));
             setRequirementVisibilityAndValues(requirement, value);
         }
 

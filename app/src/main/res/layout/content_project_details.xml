@@ -53,7 +53,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="invisible"
         app:layout_constraintVertical_bias="0.35"
-        app:srcCompat="@drawable/ic_empty_options_120dp" />
+        app:srcCompat="@drawable/ic_empty_options_120dp"
+        android:contentDescription="@string/content_description_empty_options" />
 
     <ProgressBar
         android:id="@+id/progressBar"

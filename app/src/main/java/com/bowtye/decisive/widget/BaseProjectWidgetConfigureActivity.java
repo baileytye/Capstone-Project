@@ -113,7 +113,7 @@ public abstract class BaseProjectWidgetConfigureActivity extends AppCompatActivi
     }
 
     @Override
-    public void onProjectClicked(int position) {
+    public void onProjectClicked(ProjectWithDetails project) {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         int appWidgetId;
@@ -126,9 +126,9 @@ public abstract class BaseProjectWidgetConfigureActivity extends AppCompatActivi
             RemoteViews views = new RemoteViews(getPackageName(), R.layout.project_widget);
 
             appWidgetManager.updateAppWidget(appWidgetId, views);
-            ProjectWidget.updateAppWidget(this, appWidgetManager, appWidgetId, mProjects.get(position));
+            ProjectWidget.updateAppWidget(this, appWidgetManager, appWidgetId, project);
 
-            saveProjectToPref(this, appWidgetId, mProjects.get(position));
+            saveProjectToPref(this, appWidgetId,project);
 
             Intent resultValue = new Intent();
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);

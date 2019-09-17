@@ -3,17 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.bowtye.decisive.ui.signUp.SignUpActivity">
+        <activity android:name="com.bowtye.decisive.ui.login.ForgotPasswordActivity"
+            android:theme="@style/noAnimTheme">
         </activity>
-        <activity android:name="com.bowtye.decisive.ui.login.LoginActivity" android:theme="@style/LoginTheme">
+        <activity android:name="com.bowtye.decisive.ui.signUp.SignUpActivity"
+            android:theme="@style/noAnimTheme">
+
+        </activity>
+        <activity
+            android:name="com.bowtye.decisive.ui.login.LoginActivity"
+            android:theme="@style/LoginTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="com.bowtye.decisive.ui.main.MainActivity"/>
+        <activity android:name="com.bowtye.decisive.ui.main.MainActivity" />
     </application>
 
 </manifest>

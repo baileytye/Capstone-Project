@@ -361,12 +361,10 @@ public class ProjectRepository extends BaseRepository {
                     if (!option.getImagePath().substring(0, 4).equals("http")) {
                         FileUtils.rotateFile(null, Uri.parse(option.getImagePath()));
 
-                        uploadTasks.add(imageReference.putFile(Uri.parse(option.getImagePath())).addOnSuccessListener(taskSnapshot -> {
-                            tasks.add(imageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                                option.setImagePath(uri.toString());
-                                Timber.d("Set firebase image url to %s", uri.toString());
-                            }));
-                        }));
+                        uploadTasks.add(imageReference.putFile(Uri.parse(option.getImagePath())).addOnSuccessListener(taskSnapshot -> tasks.add(imageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                            option.setImagePath(uri.toString());
+                            Timber.d("Set firebase image url to %s", uri.toString());
+                        }))));
                     }
                 }
             }
@@ -440,9 +438,7 @@ public class ProjectRepository extends BaseRepository {
                             e -> Timber.d("Failed to add %s to firebase error: %s",
                                     projectFirebase.getName(), e.getMessage()))
                     .addOnSuccessListener(
-                            documentReference -> {
-                                Timber.d("Successfully added %s to firebase", projectFirebase.getName());
-                            });
+                            documentReference -> Timber.d("Successfully added %s to firebase", projectFirebase.getName()));
             return null;
         }
     }

@@ -8,11 +8,6 @@
         app:showAsAction="ifRoom"
         />
     <item
-        android:id="@+id/action_reset"
-        android:title="@string/menu_reset_title"
-        app:showAsAction="never"
-        />
-    <item
         android:id="@+id/action_save_template"
         android:title="@string/menu_save_template"
         app:showAsAction="never"

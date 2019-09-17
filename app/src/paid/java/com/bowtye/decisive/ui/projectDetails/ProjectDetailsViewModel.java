@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.bowtye.decisive.utils.ProjectModelConverter;
 import com.bowtye.decisive.models.Option;
-import com.bowtye.decisive.models.ProjectFirebase;
 import com.bowtye.decisive.models.ProjectWithDetails;
 
 public class ProjectDetailsViewModel extends BaseProjectDetailsViewModel {
@@ -19,7 +18,7 @@ public class ProjectDetailsViewModel extends BaseProjectDetailsViewModel {
 
     public LiveData<ProjectWithDetails> getProjectFirebase(int id, String firebaseId, boolean isTemplate){
         if(isTemplate){
-            return getProject(id, firebaseId, isTemplate);
+            return getProject(id, firebaseId, true);
         }
         if(mProject == null){
             mProject = new MutableLiveData<>();

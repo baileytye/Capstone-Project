@@ -63,7 +63,6 @@ public abstract class BaseTemplatesFragment extends Fragment implements MainAdap
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
 
-    private RecyclerView.LayoutManager mLayoutManager;
     private MainAdapter mAdapter;
     private MainViewModel mViewModel;
 
@@ -89,10 +88,9 @@ public abstract class BaseTemplatesFragment extends Fragment implements MainAdap
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id) {
-            case R.id.action_settings:
-                Objects.requireNonNull(getActivity()).startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
+        if (id == R.id.action_settings) {
+            Objects.requireNonNull(getActivity()).startActivity(new Intent(getActivity(), SettingsActivity.class));
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -130,7 +128,7 @@ public abstract class BaseTemplatesFragment extends Fragment implements MainAdap
         mToolbarLayout.setTitle(getString(R.string.title_templates));
 
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MainAdapter(mTemplates, this);
         mRecyclerView.setAdapter(mAdapter);

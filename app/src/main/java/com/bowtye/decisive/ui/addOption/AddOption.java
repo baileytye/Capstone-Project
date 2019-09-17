@@ -42,6 +42,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -193,7 +195,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         if(currentPhotoPath != null){
@@ -246,17 +248,14 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Timber.d("Permission granted, launching camera");
-                    captureFromCamera();
-                } else {
-                    mSheetDialog.dismiss();
-                }
+                                           @NotNull String[] permissions, @NotNull int[] grantResults) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Timber.d("Permission granted, launching camera");
+                captureFromCamera();
+            } else {
+                mSheetDialog.dismiss();
             }
         }
     }

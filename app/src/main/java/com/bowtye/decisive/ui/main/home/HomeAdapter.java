@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -17,8 +16,6 @@ import com.bowtye.decisive.ui.main.MainViewHolder;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-
-import butterknife.BindView;
 
 public class HomeAdapter extends MainAdapter{
 
@@ -52,7 +49,7 @@ public class HomeAdapter extends MainAdapter{
                 String date = new SimpleDateFormat("E, dd MMM yyyy", Locale.ENGLISH).format(p.getProject().getDateCreated());
                 mDateTextView.setText(date);
             } else {
-                mDateTextView.setText("Unknown date");
+                mDateTextView.setText(R.string.error_unknown_date);
             }
 
         }

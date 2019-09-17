@@ -10,6 +10,8 @@
         <item name="android:actionMenuTextAppearance">@style/ActionMenuTextStyle</item>
 
         <item name="android:windowActivityTransitions">true</item>
+
+        <item name="android:background">@null</item>
     </style>
 
     <style name="AppTheme" parent="BaseTheme">
@@ -105,10 +107,6 @@
     </style>
 
     <!--Card Heading Text Style-->
-    <style name="CardHeadingTextStyle" parent="@style/TextAppearance.AppCompat.Display1">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
 
     <!--Card Item Heading-->
     <style name="CardItemHeadingTextStyle" parent="@style/TextAppearance.AppCompat.Medium">
@@ -116,15 +114,8 @@
     </style>
 
     <!--Card Sub Heading Text Style-->
-    <style name="CardSubHeadingTextStyle" parent="@style/TextAppearance.AppCompat.Subhead">
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textSize">16sp</item>
-    </style>
 
     <!--Divider Theme-->
-    <style name="DividerStyle">
-        <item name="android:height">1dp</item>
-    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

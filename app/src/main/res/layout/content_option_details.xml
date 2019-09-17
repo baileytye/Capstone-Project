@@ -13,6 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="16dp"
         android:orientation="vertical">
 
         <ImageView
@@ -24,7 +25,8 @@
             app:layout_constraintEnd_toEndOf="@+id/layout_rating_with_number"
             app:layout_constraintStart_toStartOf="@+id/tv_price"
             app:layout_constraintTop_toBottomOf="@+id/tv_price"
-            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+            tools:srcCompat="@tools:sample/backgrounds/scenic"
+            android:contentDescription="@string/content_description_option_image_header" />
 
         <FrameLayout
             android:id="@+id/layout_rating_with_number"
@@ -76,7 +78,6 @@
         </androidx.recyclerview.widget.RecyclerView>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_layout_notes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

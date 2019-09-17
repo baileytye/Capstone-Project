@@ -75,8 +75,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:$play_services_version"
     implementation 'com.google.firebase:firebase-auth:19.0.0'
     implementation 'com.google.firebase:firebase-core:17.2.0'
-    implementation 'com.google.firebase:firebase-firestore:21.0.0'
-    implementation 'com.google.firebase:firebase-storage:19.0.0'
+    implementation 'com.google.firebase:firebase-firestore:21.1.1'
+    implementation 'com.google.firebase:firebase-storage:19.0.1'
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
@@ -95,8 +95,3 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
-
-
-
-
-

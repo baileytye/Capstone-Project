@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -38,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Expected:"
+            android:text="@string/label_expected"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/tv_requirement_name"
@@ -49,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="3"
+            android:text="@string/placeholder_rating"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintBottom_toBottomOf="@+id/label_required"
             app:layout_constraintStart_toEndOf="@+id/label_required"
@@ -63,7 +62,8 @@
             android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/label_required"
             app:layout_constraintStart_toEndOf="@+id/label_required"
-            app:layout_constraintTop_toTopOf="@+id/label_required" />
+            app:layout_constraintTop_toTopOf="@+id/label_required"
+            android:contentDescription="@string/content_description_requirement_expected_value_checkbox" />
 
         <RatingBar
             android:id="@+id/rb_expected_value"
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="19dp"
             android:layout_marginTop="12dp"
-            android:text="Actual:"
+            android:text="@string/label_actual"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/label_required"
@@ -91,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="10"
+            android:text="@string/placeholder_rating"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintBottom_toBottomOf="@+id/label_actual"
             app:layout_constraintStart_toEndOf="@+id/label_actual"
@@ -105,7 +105,8 @@
             android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/label_actual"
             app:layout_constraintStart_toEndOf="@+id/label_actual"
-            app:layout_constraintTop_toTopOf="@+id/label_actual" />
+            app:layout_constraintTop_toTopOf="@+id/label_actual"
+            android:contentDescription="@string/content_description_requirement_expected_value_checkbox" />
 
         <RatingBar
             android:id="@+id/rb_requirement_value"
@@ -122,7 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Priority:"
+            android:text="@string/label_priority"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/label_actual"
@@ -133,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="High"
+            android:text="@string/placeholder_high"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintBottom_toBottomOf="@+id/label_priority"
             app:layout_constraintStart_toEndOf="@+id/label_priority"
@@ -144,7 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="3"
+            android:text="@string/placeholder_rating"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/label_weight"
@@ -156,7 +157,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Weight:"
+            android:text="@string/label_weight"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textStyle="bold"
             android:visibility="gone"
@@ -170,7 +171,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="16dp"
-            android:text="Points toward total:"
+            android:text="@string/label_points_toward_total"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -182,7 +183,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="30"
+            android:text="@string/placeholder_rating"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintBottom_toBottomOf="@+id/label_points_toward_total"
             app:layout_constraintStart_toEndOf="@+id/label_points_toward_total"
@@ -194,7 +195,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
-            android:text="4.7"
+            android:text="@string/placeholder_rating"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintBottom_toBottomOf="@+id/tv_requirement_name"
             app:layout_constraintEnd_toEndOf="parent"
@@ -209,7 +210,8 @@
             app:srcCompat="@drawable/ic_arrow_drop_down_24dp"
             app:layout_constraintRight_toLeftOf="@id/tv_requirement_rating"
             app:layout_constraintTop_toTopOf="@id/tv_requirement_rating"
-            app:layout_constraintBottom_toBottomOf="@id/tv_requirement_rating"/>
+            app:layout_constraintBottom_toBottomOf="@id/tv_requirement_rating"
+            android:contentDescription="@string/content_description_requirement_good_or_bad_rating_arrow" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

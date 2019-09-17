@@ -3,7 +3,6 @@ package com.bowtye.decisive.widget;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bowtye.decisive.R;
 import com.bowtye.decisive.models.ProjectWithDetails;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +19,6 @@ import butterknife.ButterKnife;
 
 public class WidgetConfigurationAdapter extends RecyclerView.Adapter<WidgetConfigurationAdapter.WidgetViewHolder> {
 
-    private List<ProjectWithDetails> mProjects;
     private List<ProjectWithDetails> mCompatibleProjects;
     private ProjectClickedInterfaceCallback mCallback;
 
@@ -50,10 +46,9 @@ public class WidgetConfigurationAdapter extends RecyclerView.Adapter<WidgetConfi
 
 
     public void setProjects(List<ProjectWithDetails> projects) {
-        mProjects = projects;
         mCompatibleProjects = new ArrayList<>();
 
-        for(ProjectWithDetails projectWithDetails: mProjects){
+        for(ProjectWithDetails projectWithDetails: projects){
             if(projectWithDetails.getOptionList().size() >= 2){
                 mCompatibleProjects.add(projectWithDetails);
             }
@@ -73,16 +68,16 @@ public class WidgetConfigurationAdapter extends RecyclerView.Adapter<WidgetConfi
         }
 
         public void bind(){
-            mProjectNameTextView.setText(mProjects.get(getAdapterPosition()).getProject().getName());
+            mProjectNameTextView.setText(mCompatibleProjects.get(getAdapterPosition()).getProject().getName());
         }
 
         @Override
         public void onClick(View view) {
-            mCallback.onProjectClicked(getAdapterPosition());
+            mCallback.onProjectClicked(mCompatibleProjects.get(getAdapterPosition()));
         }
     }
 
     interface ProjectClickedInterfaceCallback{
-        void onProjectClicked(int position);
+        void onProjectClicked(ProjectWithDetails project);
     }
 }
