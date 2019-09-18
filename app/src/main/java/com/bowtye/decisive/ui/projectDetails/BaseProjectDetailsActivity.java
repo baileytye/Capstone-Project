@@ -34,6 +34,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Date;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -42,7 +43,6 @@ import ru.dimorinny.floatingtextbutton.FloatingTextButton;
 import timber.log.Timber;
 
 import static com.bowtye.decisive.ui.addProject.AddProjectActivity.RESULT_EDITED;
-import static com.bowtye.decisive.ui.addProject.AddProjectActivity.RESULT_TEMPLATE;
 
 public abstract class BaseProjectDetailsActivity extends AppCompatActivity implements
         ProjectDetailsAdapter.OptionItemClickListener,
@@ -74,7 +74,6 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
     protected int mProjectId;
     protected ProjectDetailsViewModel mViewModel;
     protected String mFirebaseId;
-    protected boolean insertingTemplate = false;
 
     protected boolean mItemAdded = false;
     protected boolean mItemDeleted = false;
@@ -109,11 +108,10 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.project_details, menu);
 
-        //TODO: uncomment when templates finished
-//        if(mIsTemplate){
-//            menu.findItem(R.id.action_edit_project).setVisible(false);
-//            menu.findItem(R.id.action_delete_project).setVisible(false);
-//        }
+        if(mIsTemplate){
+            menu.findItem(R.id.action_edit_project).setVisible(false);
+            menu.findItem(R.id.action_delete_project).setVisible(false);
+        }
 
         return true;
     }
@@ -142,28 +140,16 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if ((requestCode == RequestCode.ADD_OPTION_REQUEST_CODE)) {
-            if(resultCode == RESULT_OK) {
-                if (data != null && data.hasExtra(ExtraLabels.EXTRA_OPTION)) {
-                    Option o = data.getParcelableExtra(ExtraLabels.EXTRA_OPTION);
-
-                    new RatingUtils.CalculateRatingOfOptionAsyncTask(this, mProject.getRequirementList()).execute(o);
-                }
-                //TODO: REMOVE WHEN TEMPLATES DONE
-            } else if (resultCode == RESULT_TEMPLATE) {
-                insertingTemplate = true;
-                Option o = Objects.requireNonNull(data).getParcelableExtra(ExtraLabels.EXTRA_OPTION);
+        if ((requestCode == RequestCode.ADD_OPTION_REQUEST_CODE) && resultCode == RESULT_OK) {
+            if (data != null && data.hasExtra(ExtraLabels.EXTRA_OPTION)) {
+                Option o = data.getParcelableExtra(ExtraLabels.EXTRA_OPTION);
 
                 new RatingUtils.CalculateRatingOfOptionAsyncTask(this, mProject.getRequirementList()).execute(o);
             }
         } else if (requestCode == RequestCode.EDIT_OPTION_REQUEST_CODE) {
             if (data != null && data.hasExtra(ExtraLabels.EXTRA_DELETE_OPTION)) {
-                if (resultCode == RESULT_DELETED) {//TODO:REMOVE WHEN TEMPLATES DONE
-                    if (mIsTemplate) {
-                        mViewModel.deleteOptionTemplate(mProject.getOptionList().get(mItemSelected), mItemSelected);
-                    } else {
-                        mViewModel.deleteOption(mProject.getOptionList().get(mItemSelected));
-                    }
+                if (resultCode == RESULT_DELETED) {
+                    mViewModel.deleteOption(mProject.getOptionList().get(mItemSelected));
                     mItemDeleted = true;
                 }
             }
@@ -174,12 +160,6 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
                     mViewModel.resizeOptionValuesList(projectWithDetails);
                     new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
                 }
-                //TODO:DELETE WHEN TEMPLATES DONE
-            }else if (resultCode == RESULT_TEMPLATE) {
-                insertingTemplate = true;
-                ProjectWithDetails projectWithDetails = Objects.requireNonNull(data).getParcelableExtra(ExtraLabels.EXTRA_NEW_PROJECT);
-                mViewModel.resizeOptionValuesList(projectWithDetails);
-                new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
             }
         }
     }
@@ -187,6 +167,9 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
     private void addTemplate(){
         Intent out = new Intent();
         out.putExtra(ExtraLabels.EXTRA_NEW_PROJECT, mProject);
+        for(Option option : mProject.getOptionList()){
+            option.setDateCreated(new Date());
+        }
         setResult(RESULT_OK, out);
         finish();
     }
@@ -221,18 +204,7 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
 
         if(mIsTemplate) {
             mFloatingButton.setOnClickListener(view -> addTemplate());
-//            mFab.hide();
-            //TODO: FIX AFTER TEMPLATES DONE
-            mFab.setOnClickListener(view -> {
-                Intent intent = new Intent(getApplicationContext(), AddOption.class);
-                intent.putExtra(ExtraLabels.EXTRA_PROJECT, mProject);
-
-                Transition transition = new Slide(Gravity.TOP);
-
-                getWindow().setExitTransition(transition);
-                startActivityForResult(intent, RequestCode.ADD_OPTION_REQUEST_CODE,
-                        ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-            });
+            mFab.hide();
         } else {
             mFloatingButton.setVisibility(View.INVISIBLE);
             mFab.setOnClickListener(view -> {
@@ -291,13 +263,8 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
 
     @Override
     public void updateProjectAfterCalculatingRatings(ProjectWithDetails projectWithDetails) {
-        //TODO: FIX AFTER TEMPLATES DONE
-        if(insertingTemplate){
-            mViewModel.insertTemplate(projectWithDetails);
-            insertingTemplate = false;
-        } else {
-            mViewModel.insertProjectWithDetails(projectWithDetails);
-        }
+
+        mViewModel.insertProjectWithDetails(projectWithDetails);
         Timber.d("Project: %s updated in database", (projectWithDetails != null)
                 ? projectWithDetails.getProject().getName() : "NULL");
     }
@@ -306,13 +273,7 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
     @Override
     public void updateOptionAfterCalculatingRatings(Option option) {
         mItemAdded = true;
+        mViewModel.insertOption(option, mProjectId);
 
-        //TODO: FIX AFTER TEMPLATES DONE
-        if(insertingTemplate){
-            insertingTemplate = false;
-            mViewModel.insertOptionTemplate(option, mProjectId);
-        } else {
-            mViewModel.insertOption(option, mProjectId);
-        }
     }
 }

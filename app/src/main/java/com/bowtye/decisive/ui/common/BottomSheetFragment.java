@@ -21,6 +21,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
 
     public static final int TAKE_PHOTO = 1;
     public static final int CHOOSE_IMAGE = 2;
+    public static final int REMOVE_IMAGE = 3;
 
     private OnBottomSheetClickCallback callback;
 
@@ -28,9 +29,14 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
     Button mTakePhotoButton;
     @BindView(R.id.bt_choose_image)
     Button mChooseImageButton;
+    @BindView(R.id.bt_remove_image)
+    Button mRemoveImageButton;
 
-    public BottomSheetFragment(OnBottomSheetClickCallback onClickCallback) {
+    private boolean mImagePresent;
+
+    public BottomSheetFragment(OnBottomSheetClickCallback onClickCallback, boolean imagePresent) {
         callback = onClickCallback;
+        mImagePresent = imagePresent;
     }
 
     @Override
@@ -54,6 +60,11 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bottom_sheet_image_select, container, false);
         ButterKnife.bind(this, view);
+
+        if(!mImagePresent){
+            mRemoveImageButton.setVisibility(View.GONE);
+        }
+
         return view;
     }
 
@@ -66,6 +77,9 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
     void chooseImage() {
         callback.onBottomSheetClicked(CHOOSE_IMAGE);
     }
+
+    @OnClick(R.id.bt_remove_image)
+    void removeImage() { callback.onBottomSheetClicked(REMOVE_IMAGE); }
 
     public interface OnBottomSheetClickCallback {
         void onBottomSheetClicked(int id);

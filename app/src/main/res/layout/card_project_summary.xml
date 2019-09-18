@@ -32,7 +32,7 @@
             app:layout_constraintLeft_toLeftOf="@id/label_summary_title"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textStyle="bold"
-            android:text="Best value for money"
+            android:text="@string/label_best_value_for_money"
             />
 
         <TextView
@@ -43,7 +43,7 @@
             android:layout_marginEnd="16dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="Best value"
+            android:text="@string/placeholder_best_value"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintEnd_toStartOf="@+id/tv_value_for_money"
             app:layout_constraintStart_toStartOf="@id/label_best_value_for_money"
@@ -53,7 +53,7 @@
             android:id="@+id/tv_value_for_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="$340/"
+            android:text="@string/placeholder_best_value_number"
             app:layout_constraintBottom_toBottomOf="@id/tv_best_value_for_money"
             app:layout_constraintRight_toLeftOf="@id/iv_value_for_money_star"
             app:layout_constraintTop_toTopOf="@id/tv_best_value_for_money" />

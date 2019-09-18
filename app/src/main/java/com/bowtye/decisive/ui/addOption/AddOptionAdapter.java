@@ -47,7 +47,7 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
     @Override
     public AddOptionRequirementViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_requirement_value_editable, parent, false);
-        return new AddOptionRequirementViewHolder(v, mIsEdit);
+        return new AddOptionRequirementViewHolder(v);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
         @BindView(R.id.tv_unit)
         TextView unitTextView;
 
-        AddOptionRequirementViewHolder(@NonNull View itemView, Boolean isEdit) {
+        AddOptionRequirementViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

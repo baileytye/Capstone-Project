@@ -27,7 +27,6 @@ import com.bowtye.decisive.R;
 import com.bowtye.decisive.ui.common.VerticalSpaceItemDecoration;
 import com.bowtye.decisive.ui.common.RequirementsAdapter;
 import com.bowtye.decisive.utils.StringUtils;
-import com.bowtye.decisive.utils.ViewUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;

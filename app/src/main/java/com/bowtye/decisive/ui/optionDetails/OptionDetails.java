@@ -112,10 +112,9 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.option_details, menu);
 
-        //TODO: FIX AFTER TEMPLATES DONE
         if (mIsTemplate) {
             menu.findItem(R.id.action_edit).setVisible(false);
-//            menu.findItem(R.id.action_delete).setVisible(false);
+            menu.findItem(R.id.action_delete).setVisible(false);
         }
 
         return true;
@@ -158,7 +157,19 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
             if (data != null && data.hasExtra(ExtraLabels.EXTRA_OPTION)) {
                 if (resultCode == RESULT_OK) {
                     Timber.d("Received option from add ");
+                    Timber.d("Option edited: image path was: %s", mOption.getImagePath());
+                    String imagePath = mOption.getImagePath();
+                    String name = mOption.getName();
+
                     mOption = data.getParcelableExtra(ExtraLabels.EXTRA_OPTION);
+
+                    if (mOption != null) {
+                        if(!mOption.getImagePath().equals(imagePath)){
+                            Timber.d("Path: %s, Date: %s", imagePath, mOption.getDateCreated());
+                            mViewModel.deleteImage(name, mOption.getDateCreated());
+                        }
+                        Timber.d("and is now %s", mOption.getImagePath());
+                    }
                     new RatingUtils.CalculateRatingOfOptionAsyncTask(this, mRequirements).execute(mOption);
                 }
             }

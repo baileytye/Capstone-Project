@@ -10,6 +10,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.bowtye.decisive.database.ProjectRepository;
 import com.bowtye.decisive.models.Option;
 
+import java.util.Date;
+
 public class OptionDetailsViewModel extends AndroidViewModel {
 
     private ProjectRepository mRepo;
@@ -42,6 +44,10 @@ public class OptionDetailsViewModel extends AndroidViewModel {
 
     public void updateOption(Option option, int position){
         mRepo.updateOption(option, position);
+    }
+
+    public void deleteImage(String imageName, Date dateCreated){
+        ProjectRepository.deleteImage(imageName, dateCreated);
     }
 
 }

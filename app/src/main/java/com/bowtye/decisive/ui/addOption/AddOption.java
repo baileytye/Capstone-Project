@@ -61,8 +61,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-import static com.bowtye.decisive.ui.addProject.AddProjectActivity.RESULT_TEMPLATE;
 import static com.bowtye.decisive.ui.common.BottomSheetFragment.CHOOSE_IMAGE;
+import static com.bowtye.decisive.ui.common.BottomSheetFragment.REMOVE_IMAGE;
 import static com.bowtye.decisive.ui.common.BottomSheetFragment.TAKE_PHOTO;
 
 public class AddOption extends AppCompatActivity implements BottomSheetFragment.OnBottomSheetClickCallback, ViewUtils.warningCallback, AddOptionAdapter.ItemChangedCallback {
@@ -176,20 +176,6 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                         finishAfterTransition();
                         return true;
                 }
-                //TODO: REMOVE WHEN DONE TEMPLATES
-            case R.id.action_save_template:
-                switch (validateAndSave()) {
-                    case VALIDATION_NAME_ERROR:
-                        ViewUtils.showErrorDialog(getString(R.string.dialog_title_save_option),
-                                getString(R.string.dialog_give_option_a_name), this);
-                        break;
-                    case VALIDATION_OK:
-                        Intent out = new Intent();
-                        out.putExtra(ExtraLabels.EXTRA_OPTION, mOption);
-                        setResult(RESULT_TEMPLATE, out);
-                        finishAfterTransition();
-                        return true;
-                }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -300,7 +286,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         mAdapter = new AddOptionAdapter(mRequirements, mOption, isEdit, this);
 
         mPicturesImageView.setOnClickListener(view -> {
-            mSheetDialog = new BottomSheetFragment(this);
+            mSheetDialog = new BottomSheetFragment(this, (currentPhotoPath != null || !mOption.getImagePath().equals("")));
             FragmentManager fm = getSupportFragmentManager();
             mSheetDialog.show(fm, "modalSheetDialog");
         });
@@ -449,6 +435,12 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         }
     }
 
+    private void removeImage(){
+        currentPhotoPath = null;
+        mOption.setImagePath("");
+        setPlaceholderImage();
+    }
+
     @Override
     public void onBottomSheetClicked(int id) {
         switch (id) {
@@ -457,6 +449,9 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                 break;
             case CHOOSE_IMAGE:
                 pickFromGallery();
+                break;
+            case REMOVE_IMAGE:
+                removeImage();
                 break;
         }
         mSheetDialog.dismiss();

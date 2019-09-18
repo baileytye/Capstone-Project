@@ -4,33 +4,22 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.bowtye.decisive.models.Option;
-import com.bowtye.decisive.models.OptionFirebase;
 import com.bowtye.decisive.models.ProjectFirebase;
 import com.bowtye.decisive.models.ProjectWithDetails;
-import com.bowtye.decisive.models.Requirement;
 import com.bowtye.decisive.utils.ProjectModelConverter;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -234,102 +223,4 @@ public class BaseRepository {
         }
     }
 
-    //TODO: REMOVE EVERYTHING BELOW WHEN TEMPLATES DONE
-
-    private static class InsertTemplateAsyncTask extends AsyncTask<ProjectFirebase, Void, Void> {
-
-        @Override
-        protected Void doInBackground(ProjectFirebase... projectFirebases) {
-            ProjectFirebase projectFirebase = projectFirebases[0];
-
-            DocumentReference projectDocumentRef;
-
-            if (projectFirebase.getProjectId() == null) {
-                Timber.d("New project being inserted into firebase");
-                projectDocumentRef =
-                        FirebaseFirestore.getInstance().collection(TEMPLATES_COLLECTION).document();
-
-                projectFirebase.setProjectId(projectDocumentRef.getId());
-            } else {
-                Timber.d("Project being updated in firebase");
-                projectDocumentRef =
-                        FirebaseFirestore.getInstance().collection(TEMPLATES_COLLECTION)
-                                .document(projectFirebase.getProjectId());
-            }
-
-            projectDocumentRef.set(projectFirebase)
-                    .addOnFailureListener(
-                            e -> Timber.d("Failed to add %s to firebase error: %s",
-                                    projectFirebase.getName(), e.getMessage()))
-                    .addOnSuccessListener(
-                            documentReference -> Timber.d("Successfully added %s to firebase", projectFirebase.getName()));
-            return null;
-        }
-    }
-
-    public void insertTemplate(ProjectWithDetails projectWithDetails){
-        projectWithDetails.getProject().setDateCreated(new Date());
-
-        ProjectFirebase projectFirebase =
-                ProjectModelConverter.projectWithDetailsToProjectFirebase(projectWithDetails, "0");
-
-        new InsertTemplateAsyncTask().execute(projectFirebase);
-    }
-
-    public void insertTemplateOption(Option option, int projectId) {
-
-        Timber.d("Inserting option into firebase");
-        ProjectWithDetails projectWithDetails = selectedTemplate.getValue();
-        if (projectWithDetails != null) {
-            projectWithDetails.getOptionList().add(option);
-            ProjectFirebase projectFirebase = ProjectModelConverter
-                    .projectWithDetailsToProjectFirebase(projectWithDetails, "0");
-
-            new InsertTemplateAsyncTask().execute(projectFirebase);
-        } else {
-            Timber.e("Selected project is null");
-        }
-
-    }
-
-    public void deleteOptionTemplate(Option option, int position) {
-
-            Timber.d("Removing option in firebase");
-        if(selectedTemplate.getValue() != null) {
-
-            List<Option> options = new ArrayList<>(selectedTemplate.getValue().getOptionList());
-
-            options.remove(position);
-
-            if(!option.getImagePath().equals("")){
-                deleteImage(option.getName());
-            }
-
-            List<OptionFirebase> optionsFirebase = ProjectModelConverter.optionToOptionFirebaseList(
-                    options,
-                    selectedTemplate.getValue().getProject().getFirebaseId());
-
-            updateOptionList(optionsFirebase);
-        }
-    }
-
-    private static void deleteImage(String name){
-        StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images/users/0"
-                + "/" + name + ".jpg");
-
-        imageReference.delete();
-    }
-
-    private void updateOptionList(List<OptionFirebase> options){
-        DocumentReference projectDocumentRef;
-
-        Timber.d("Option list being updated");
-        projectDocumentRef =
-                FirebaseFirestore.getInstance().collection(TEMPLATES_COLLECTION).document(
-                        Objects.requireNonNull(selectedTemplate.getValue()).getProject().getFirebaseId());
-
-        projectDocumentRef.update("options", options)
-                .addOnSuccessListener(d -> Timber.d("Successfully updated options"))
-                .addOnFailureListener(e -> Timber.e("Failed to update options %s", e.getMessage()));
-    }
 }

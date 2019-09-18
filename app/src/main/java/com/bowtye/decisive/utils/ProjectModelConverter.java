@@ -9,7 +9,6 @@ import com.bowtye.decisive.models.Requirement;
 import com.bowtye.decisive.models.RequirementFirebase;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ProjectModelConverter {

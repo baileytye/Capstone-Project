@@ -56,7 +56,6 @@ import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static com.bowtye.decisive.ui.addProject.AddProjectActivity.RESULT_TEMPLATE;
 
 public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectItemClickCallback,
         HomeAdapter.ContextMenuClickCallback,
@@ -93,8 +92,7 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
     private MainViewModel mViewModel;
 
     private Animation fab_open, fab_close, fab_rotate, fab_anti_rotate, fade_in, fade_out;
-    //TODO:REMOVE INSERTINGTEMPLATE WHEN DONE TEMPLATES
-    private Boolean isOpen = false, insertingTemplate = false;
+    private Boolean isOpen = false;
 
     List<ProjectWithDetails> mProjects;
 
@@ -125,9 +123,6 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_insert_dummy:
-                mViewModel.insertDummyProject();
-                return true;
             case R.id.action_settings:
                 Objects.requireNonNull(getActivity()).startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
@@ -147,10 +142,6 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
                 new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
             }
             if(resultCode == RESULT_OK || resultCode == RESULT_CANCELED) {
-                closeFabMenu();
-                //TODO: FIX WHEN DONE TEMPLATES, MERGE EDITED AND OK
-            } else if(resultCode == RESULT_TEMPLATE){
-                insertingTemplate = true;
                 closeFabMenu();
             }
         }
@@ -339,13 +330,7 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
     @Override
     public void updateProjectAfterCalculatingRatings(ProjectWithDetails projectWithDetails) {
 
-        //TODO: FIX WHEN DONE TEMPLATES
-        if(insertingTemplate){
-            mViewModel.insertTemplate(projectWithDetails);
-            insertingTemplate = false;
-        } else {
-            mViewModel.insertProjectWithDetails(projectWithDetails);
-        }
+        mViewModel.insertProjectWithDetails(projectWithDetails);
         Timber.d("Project: %s inserted into the database", (projectWithDetails != null)
                 ? projectWithDetails.getProject().getName() : "NULL");
     }

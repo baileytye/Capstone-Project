@@ -19,12 +19,10 @@
     <string name="menu_save_title">Save</string>
     <string name="menu_reset_title">Reset</string>
     <string name="menu_delete_title">Delete</string>
-    <string name="menu_insert_dummy">Insert Dummy</string>
     <string name="menu_from_template">From template</string>
     <string name="menu_new_project">New project</string>
     <string name="menu_profile">Profile</string>
     <string name="menu_sign_out">Sign out</string>
-    <string name="menu_save_template">Save template</string>
     <string name="menu_delete_option">Delete</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_edit_project">Edit project</string>
@@ -52,6 +50,7 @@
     <string name="label_you_have_no_projects_yet">You have no projects yet!</string>
     <string name="label_expected_no_colon">Expected</string>
     <string name="label_requirement">Requirement</string>
+    <string name="label_best_value_for_money">Best value for money</string>
 
     <!--Hints-->
     <string name="hint_requirement_name">Requirement name</string>
@@ -67,6 +66,7 @@
     <!--Button Labels-->
     <string name="button_take_photo">Take Photo</string>
     <string name="button_choose_image">Choose Image</string>
+    <string name="button_remove_image">Remove Image</string>
 
     <!--Placeholders-->
     <string name="placeholder_item_name">Item Name</string>
@@ -81,6 +81,8 @@
     <string name="placeholder_requirement">Requirement</string>
     <string name="placeholder_high">High</string>
     <string name="placeholder_units">lbs</string>
+    <string name="placeholder_best_value">Best value</string>
+    <string name="placeholder_best_value_number">$340/</string>
 
     <!--Content Descriptions-->
     <string name="content_description_option_images">Option images</string>

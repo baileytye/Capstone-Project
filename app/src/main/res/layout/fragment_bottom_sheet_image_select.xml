@@ -27,4 +27,15 @@
         android:gravity="start|center_vertical"
         android:text="@string/button_choose_image"
         android:textAppearance="@style/CardItemHeadingTextStyle" />
+
+    <Button
+        android:id="@+id/bt_remove_image"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_clear_24dp"
+        android:drawablePadding="16dp"
+        android:gravity="start|center_vertical"
+        android:text="@string/button_remove_image"
+        android:textAppearance="@style/CardItemHeadingTextStyle" />
 </LinearLayout>

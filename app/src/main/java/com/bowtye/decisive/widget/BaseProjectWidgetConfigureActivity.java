@@ -17,7 +17,6 @@ import com.bowtye.decisive.R;
 import com.bowtye.decisive.models.ProjectWithDetails;
 import com.bowtye.decisive.ui.main.MainViewModel;
 
-import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -36,7 +35,6 @@ public abstract class BaseProjectWidgetConfigureActivity extends AppCompatActivi
     @BindView(R.id.rv_select_project)
     RecyclerView mRecyclerView;
 
-    List<ProjectWithDetails> mProjects;
     WidgetConfigurationAdapter mAdapter;
 
     public BaseProjectWidgetConfigureActivity() {
@@ -105,7 +103,6 @@ public abstract class BaseProjectWidgetConfigureActivity extends AppCompatActivi
     void prepareViewModel() {
         MainViewModel mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         mViewModel.getProjects().observe(this, projectsWithDetails -> {
-            mProjects = projectsWithDetails;
             Timber.d("Updating Livedata For Widget");
             mAdapter.setProjects(projectsWithDetails);
             mAdapter.notifyDataSetChanged();

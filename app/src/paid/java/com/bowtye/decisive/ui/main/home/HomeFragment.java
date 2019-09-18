@@ -18,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 import timber.log.Timber;
@@ -33,13 +35,12 @@ public class HomeFragment extends BaseHomeFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         super.onCreateOptionsMenu(menu, inflater);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        //TODO: fix bug where picture does not load sometimes
         if (user != null && !user.isAnonymous()) {
             Timber.d("Setting user image");
             PicassoMenuLoader menuLoader = new PicassoMenuLoader(menu.getItem(0), getActivity());

@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_insert_dummy"
-        android:orderInCategory="3"
-        android:title="@string/menu_insert_dummy"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/menu_settings"

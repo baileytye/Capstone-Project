@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.bowtye.decisive.models.Project;
 import com.bowtye.decisive.utils.FileUtils;
 import com.bowtye.decisive.utils.ProjectModelConverter;
 import com.bowtye.decisive.models.Option;
@@ -25,7 +24,6 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
@@ -128,7 +126,7 @@ public class ProjectRepository extends BaseRepository {
                 options.remove(position);
 
                 if(!option.getImagePath().equals("")){
-                    deleteImage(option.getName());
+                    deleteImage(option.getName(), option.getDateCreated());
                 }
 
                 List<OptionFirebase> optionsFirebase = ProjectModelConverter.optionToOptionFirebaseList(
@@ -324,12 +322,13 @@ public class ProjectRepository extends BaseRepository {
                 .addOnFailureListener(e -> Timber.e("Failed to update options %s", e.getMessage()));
     }
 
-    private static void deleteImage(String name){
+    public static void deleteImage(String name, Date dateCreated){
         StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images/users/" +
                 Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()
-                + "/" + name + ".jpg");
+                + "/" + name + "/" + dateCreated +".jpg");
 
-        imageReference.delete();
+        imageReference.delete().addOnFailureListener(e -> Timber.d("Failed to delete: %s", e.getLocalizedMessage()))
+                .addOnSuccessListener(aVoid -> Timber.d("Photo uploaded: %s", name));
     }
 
     public void uploadImagesToFirebase(ProjectFirebase projectFirebase){
@@ -359,7 +358,7 @@ public class ProjectRepository extends BaseRepository {
                             + "/" + option.getName() + "/" + option.getDateCreated() + ".jpg");
 
                     if (!option.getImagePath().substring(0, 4).equals("http")) {
-                        FileUtils.rotateFile(null, Uri.parse(option.getImagePath()));
+                        FileUtils.rotateFile(Uri.parse(option.getImagePath()));
 
                         uploadTasks.add(imageReference.putFile(Uri.parse(option.getImagePath())).addOnSuccessListener(taskSnapshot -> tasks.add(imageReference.getDownloadUrl().addOnSuccessListener(uri -> {
                             option.setImagePath(uri.toString());
@@ -405,7 +404,7 @@ public class ProjectRepository extends BaseRepository {
             for(OptionFirebase option : projectFirebase.getOptions()){
 
                 if(!option.getImagePath().equals("")) {
-                    deleteImage(option.getName());
+                    deleteImage(option.getName(), option.getDateCreated());
                 }
             }
             return null;

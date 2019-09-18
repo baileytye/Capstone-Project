@@ -57,7 +57,6 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
     public static final int VALIDATION_NAME_ERROR = -2;
     public static final int VALIDATION_REQUIREMENTS_ERROR = -3;
 
-    public static final int RESULT_TEMPLATE = 14;
     public static final int RESULT_EDITED = 15;
 
     private static final String ADD_PROJECT_ID = "addProject";
@@ -201,24 +200,6 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
                             setResult(RESULT_OK, out);
                         }
 
-                        finishAfterTransition();
-                        break;
-                    case VALIDATION_NAME_ERROR:
-                        ViewUtils.showErrorDialog(getString(R.string.dialog_save_project),
-                                getString(R.string.dialog_give_project_a_name), this);
-                        break;
-                    case VALIDATION_REQUIREMENTS_ERROR:
-                        ViewUtils.showErrorDialog(getString(R.string.dialog_save_project), getString(R.string.dialog_add_a_requirement), this);
-                        break;
-                }
-                return true;
-                //TODO: REMOVE WHEN DONE TEMPLATES
-            case R.id.action_save_as_template:
-                switch (validateEntries()) {
-                    case VALIDATION_OK:
-                        Intent out = new Intent();
-                        out.putExtra(EXTRA_NEW_PROJECT, mProject);
-                        setResult(RESULT_TEMPLATE, out);
                         finishAfterTransition();
                         break;
                     case VALIDATION_NAME_ERROR:

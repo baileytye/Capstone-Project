@@ -1,6 +1,5 @@
 package com.bowtye.decisive.utils;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -19,7 +18,7 @@ public class FileUtils {
 
     private static final int MAX_FILE_SIZE = 1920;
 
-    public static void rotateFile(Context context, Uri imageUri){
+    public static void rotateFile(Uri imageUri){
         int rotate = 0;
         try {
             //context.getContentResolver().notifyChange(imageUri, null);
