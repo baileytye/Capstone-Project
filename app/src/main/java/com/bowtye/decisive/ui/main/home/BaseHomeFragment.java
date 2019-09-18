@@ -305,7 +305,7 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
 
     @Override
     public void onProjectDeleteMenuClicked(int position) {
-        mViewModel.deleteProject(mProjects.get(position));
+        mViewModel.deleteProject(mProjects.get(position), getContext());
     }
 
     @Override

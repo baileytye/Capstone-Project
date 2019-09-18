@@ -1,6 +1,7 @@
 package com.bowtye.decisive.ui.optionDetails;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -12,12 +13,12 @@ import com.bowtye.decisive.models.Option;
 
 import java.util.Date;
 
-public class OptionDetailsViewModel extends AndroidViewModel {
+public abstract class BaseOptionDetailsViewModel extends AndroidViewModel {
 
-    private ProjectRepository mRepo;
+    protected ProjectRepository mRepo;
     private LiveData<Option> mOption;
 
-    public OptionDetailsViewModel(@NonNull Application application) {
+    public BaseOptionDetailsViewModel(@NonNull Application application) {
         super(application);
         mRepo = ProjectRepository.getInstance(application);
     }
@@ -34,20 +35,9 @@ public class OptionDetailsViewModel extends AndroidViewModel {
         mOption = mRepo.getSelectedOption(id);
     }
 
-    public void insertOption(Option option, int projectId){
-        mRepo.insertOption(option, projectId);
-    }
-
-    public void deleteOption(Option option){
-        mRepo.deleteOption(option);
-    }
-
     public void updateOption(Option option, int position){
         mRepo.updateOption(option, position);
     }
 
-    public void deleteImage(String imageName, Date dateCreated){
-        ProjectRepository.deleteImage(imageName, dateCreated);
-    }
-
+    public abstract void deleteImage(Option option, Context context);
 }

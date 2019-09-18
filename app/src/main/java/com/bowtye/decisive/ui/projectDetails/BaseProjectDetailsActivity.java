@@ -128,7 +128,7 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
                 return true;
             case R.id.action_delete_project:
                 mViewModel.getProject(mProjectId, null, false).removeObservers(this);
-                mViewModel.deleteProject(mProject);
+                mViewModel.deleteProject(mProject, this);
                 finishAfterTransition();
                 return true;
         }
@@ -149,7 +149,7 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
         } else if (requestCode == RequestCode.EDIT_OPTION_REQUEST_CODE) {
             if (data != null && data.hasExtra(ExtraLabels.EXTRA_DELETE_OPTION)) {
                 if (resultCode == RESULT_DELETED) {
-                    mViewModel.deleteOption(mProject.getOptionList().get(mItemSelected));
+                    mViewModel.deleteOption(mProject.getOptionList().get(mItemSelected), this);
                     mItemDeleted = true;
                 }
             }

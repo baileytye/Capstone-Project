@@ -196,7 +196,7 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result code is RESULT_OK only if the user selects an Image
-        if (resultCode == Activity.RESULT_OK)
+        if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case RequestCode.GALLERY_REQUEST_CODE:
                     //data.getData returns the content URI for the selected Image
@@ -221,7 +221,28 @@ public class AddOption extends AppCompatActivity implements BottomSheetFragment.
                     saveImageAndSetHeaderImage();
                     break;
             }
-        itemChanged = true;
+            itemChanged = true;
+        } else if(resultCode == RESULT_CANCELED) {
+            deleteTempImageFile();
+        }
+    }
+
+    private void deleteTempImageFile(){
+        if(currentPhotoPath != null){
+            File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            File file = new File(dir, new File(currentPhotoPath).getName());
+            Timber.d("File name: %s", file.toString());
+            if(file.exists()) {
+                if (file.delete()) {
+                    Timber.d("Temporary file deleted");
+                } else {
+                    Timber.d("Failed to delete temporary file");
+                }
+            } else {
+                Timber.d("File does not exist");
+            }
+        }
+        currentPhotoPath = null;
     }
 
     private void saveImageAndSetHeaderImage() {

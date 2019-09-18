@@ -21,16 +21,10 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        //TODO: REMOVE WHEN TEMPLATES DONE
-        if(mIsTemplate){
-            super.onActivityResult(requestCode, resultCode, data);
-            return;
-        }
-
         if (requestCode == RequestCode.EDIT_OPTION_REQUEST_CODE) {
             if (data != null && data.hasExtra(ExtraLabels.EXTRA_DELETE_OPTION)) {
                 if (resultCode == RESULT_DELETED) {
-                    mViewModel.deleteOptionFirebase(mProject.getOptionList().get(mItemSelected), mItemSelected);
+                    mViewModel.deleteOptionFirebase(mProject.getOptionList().get(mItemSelected), mItemSelected, this);
                     mItemDeleted = true;
                 }
             }
@@ -43,7 +37,7 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity {
     protected void onStop() {
         super.onStop();
         if (FirebaseAuth.getInstance().getCurrentUser() != null && !mIsTemplate && !FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
-            mViewModel.uploadImagesToFirebase(mProject);
+            mViewModel.uploadImagesToFirebase(mProject, this);
         }
     }
 

@@ -1,8 +1,12 @@
 package com.bowtye.decisive.database;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -17,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -152,8 +157,25 @@ public class BaseRepository {
         new DeleteProjectWithDetailsAsyncTask().execute(project);
     }
 
-    public void deleteOption(final Option option){
+    public void deleteOption(final Option option, Context context){
+        deleteImage(option, context);
         new DeleteOptionAsyncTask().execute(option);
+    }
+
+    public static void deleteImage(Option option, Context context){
+        if(!option.getImagePath().equals("")) {
+            File dir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            File file = new File(dir, new File(option.getImagePath()).getName());
+            if (file.exists()) {
+                if (file.delete()) {
+                    Timber.d("File deleted: %s", option.getName());
+                } else {
+                    Timber.d("File FAILED to delete: %s", option.getName());
+                }
+            } else {
+                Timber.d("File does not exist");
+            }
+        }
     }
 
     private static class InsertProjectWithDetailsAsyncTask extends AsyncTask<ProjectWithDetails,Void,Void> {

@@ -1,15 +1,19 @@
 package com.bowtye.decisive.ui.projectDetails;
 
 import android.app.Application;
+import android.content.Context;
+import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.bowtye.decisive.database.BaseRepository;
 import com.bowtye.decisive.database.ProjectRepository;
 import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.ProjectWithDetails;
+import com.bowtye.decisive.ui.main.MainViewModel;
 
 public class BaseProjectDetailsViewModel extends AndroidViewModel {
     LiveData<ProjectWithDetails> mProject;
@@ -58,12 +62,29 @@ public class BaseProjectDetailsViewModel extends AndroidViewModel {
         }
     }
 
-    public void deleteOption(Option option){
-        mRepo.deleteOption(option);
+    public void deleteOption(Option option, Context context){
+        mRepo.deleteOption(option, context);
     }
 
-    public void deleteProject(ProjectWithDetails p) {
+    public void deleteProject(ProjectWithDetails p, Context context) {
         mRepo.deleteProjectWithDetails(p);
+        new DeleteImagesAsyncTask(p).execute(context);
     }
 
+    public static class DeleteImagesAsyncTask extends AsyncTask<Context, Void, Void> {
+
+        ProjectWithDetails mProjectWithDetails;
+
+        DeleteImagesAsyncTask(ProjectWithDetails projectWithDetails){
+            mProjectWithDetails = projectWithDetails;
+        }
+
+        @Override
+        protected Void doInBackground(Context... contexts) {
+            for (Option option : mProjectWithDetails.getOptionList()) {
+                BaseRepository.deleteImage(option, contexts[0]);
+            }
+            return null;
+        }
+    }
 }

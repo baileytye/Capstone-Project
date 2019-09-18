@@ -158,15 +158,14 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
                 if (resultCode == RESULT_OK) {
                     Timber.d("Received option from add ");
                     Timber.d("Option edited: image path was: %s", mOption.getImagePath());
-                    String imagePath = mOption.getImagePath();
-                    String name = mOption.getName();
+                    Option prevOption = mOption;
 
                     mOption = data.getParcelableExtra(ExtraLabels.EXTRA_OPTION);
 
                     if (mOption != null) {
-                        if(!mOption.getImagePath().equals(imagePath)){
-                            Timber.d("Path: %s, Date: %s", imagePath, mOption.getDateCreated());
-                            mViewModel.deleteImage(name, mOption.getDateCreated());
+                        if(!mOption.getImagePath().equals(prevOption.getImagePath())){
+                            Timber.d("Path: %s, Date: %s", prevOption.getImagePath(), mOption.getDateCreated());
+                            mViewModel.deleteImage(prevOption, this);
                         }
                         Timber.d("and is now %s", mOption.getImagePath());
                     }

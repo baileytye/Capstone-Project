@@ -1,6 +1,7 @@
 package com.bowtye.decisive.database;
 
 import android.app.Application;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 
@@ -13,6 +14,7 @@ import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.OptionFirebase;
 import com.bowtye.decisive.models.ProjectFirebase;
 import com.bowtye.decisive.models.ProjectWithDetails;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -109,12 +111,12 @@ public class ProjectRepository extends BaseRepository {
     }
 
 
-    public void deleteOptionFirebase(Option option, int position) {
+    public void deleteOptionFirebase(Option option, int position, Context context) {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user == null || user.isAnonymous()) {
-            super.deleteOption(option);
+        if(user == null || user.isAnonymous() || !option.getImagePath().substring(0, 4).equals("http")) {
+            super.deleteOption(option, context);
         } else {
             Timber.d("Removing option in firebase");
             if(selectedProject.getValue() != null) {
@@ -126,7 +128,7 @@ public class ProjectRepository extends BaseRepository {
                 options.remove(position);
 
                 if(!option.getImagePath().equals("")){
-                    deleteImage(option.getName(), option.getDateCreated());
+                    deleteImage(option);
                 }
 
                 List<OptionFirebase> optionsFirebase = ProjectModelConverter.optionToOptionFirebaseList(
@@ -322,29 +324,105 @@ public class ProjectRepository extends BaseRepository {
                 .addOnFailureListener(e -> Timber.e("Failed to update options %s", e.getMessage()));
     }
 
-    public static void deleteImage(String name, Date dateCreated){
+    public void deleteImageWithContext(Option option, Context context){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(user == null || user.isAnonymous()){
+            Timber.d("Deleting image from local storage");
+            BaseRepository.deleteImage(option, context);
+        } else {
+            Timber.d("Deleting image from firebase");
+            deleteImage(option);
+        }
+    }
+
+    private static void deleteImage(Option option){
         StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images/users/" +
                 Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()
-                + "/" + name + "/" + dateCreated +".jpg");
+                + "/" + option.getName() + "/" + option.getDateCreated() + ".jpg");
 
         imageReference.delete().addOnFailureListener(e -> Timber.d("Failed to delete: %s", e.getLocalizedMessage()))
-                .addOnSuccessListener(aVoid -> Timber.d("Photo uploaded: %s", name));
+                .addOnSuccessListener(aVoid -> Timber.d("Photo uploaded: %s", option.getName()));
     }
 
-    public void uploadImagesToFirebase(ProjectFirebase projectFirebase){
-        new UploadImageUrlsAsyncTask().execute(projectFirebase);
+    public void uploadImagesToFirebase(ProjectFirebase projectFirebase, Context context){
+        new UploadImageUrlsAsyncTask(projectFirebase).execute(context);
     }
 
-    private static class UploadImageUrlsAsyncTask extends AsyncTask<ProjectFirebase, Void, Void>{
+    public void uploadImageToFirebase(int position, ProjectFirebase projectFirebase, Context context, DoneUploadingImageCallback callback){
+        new UploadImageUrlAsyncTask(position, projectFirebase, callback).execute(context);
+    }
+
+    private static class UploadImageUrlAsyncTask extends AsyncTask<Context, Void, Void>{
+        int optionIndex;
+        ProjectFirebase project;
+        DoneUploadingImageCallback callback;
+
+        UploadImageUrlAsyncTask(int optionIndex, ProjectFirebase project, DoneUploadingImageCallback callback){
+            this.optionIndex = optionIndex;
+            this.project = project;
+            this.callback = callback;
+        }
 
         @Override
-        protected Void doInBackground(ProjectFirebase... projectFirebases) {
+        protected Void doInBackground(Context... contexts) {
+
+            OptionFirebase option = project.getOptions().get(optionIndex);
+
+            Timber.d("Uploading image to firebase");
+
+            if (!option.getImagePath().equals("")) {
+
+                StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images/users/" +
+                        Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()
+                        + "/" + option.getName() + "/" + option.getDateCreated() + ".jpg");
+
+                if (!option.getImagePath().substring(0, 4).equals("http")) {
+                    FileUtils.rotateFile(Uri.parse(option.getImagePath()));
+
+                    imageReference.putFile(Uri.parse(option.getImagePath())).addOnSuccessListener(taskSnapshot -> {
+                        imageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                            option.setImagePath(uri.toString());
+
+                            DocumentReference projectDocumentRef;
+
+                            projectDocumentRef =
+                                    FirebaseFirestore.getInstance().collection(PROJECT_COLLECTION).document(
+                                            project.getProjectId());
+
+                            projectDocumentRef.update("options", project.getOptions())
+                                    .addOnSuccessListener(d -> Timber.d("Successfully updated options"))
+                                    .addOnFailureListener(e -> Timber.e("Failed to update options %s", e.getMessage()));
+                        });
+                    });
+                }
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            callback.doneUploadingImage();
+        }
+    }
+
+    private static class UploadImageUrlsAsyncTask extends AsyncTask<Context, Void, Void>{
+
+        ProjectFirebase project;
+
+        UploadImageUrlsAsyncTask(ProjectFirebase projectFirebase){
+            project = projectFirebase;
+        }
+
+        @Override
+        protected Void doInBackground(Context... contexts) {
 
             Timber.d("Uploading images to firebase");
 
-            ProjectFirebase projectFirebase = projectFirebases[0];
-
-            List<OptionFirebase> tempOptions = new ArrayList<>(projectFirebase.getOptions());
+            List<OptionFirebase> tempOptions = new ArrayList<>(project.getOptions());
 
             List<Task<Uri>> tasks = new ArrayList<>();
             List<StorageTask<UploadTask.TaskSnapshot>> uploadTasks = new ArrayList<>();
@@ -361,6 +439,7 @@ public class ProjectRepository extends BaseRepository {
                         FileUtils.rotateFile(Uri.parse(option.getImagePath()));
 
                         uploadTasks.add(imageReference.putFile(Uri.parse(option.getImagePath())).addOnSuccessListener(taskSnapshot -> tasks.add(imageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                            BaseRepository.deleteImage(ProjectModelConverter.optionFirebaseToOption(option), contexts[0]);
                             option.setImagePath(uri.toString());
                             Timber.d("Set firebase image url to %s", uri.toString());
                         }))));
@@ -374,7 +453,7 @@ public class ProjectRepository extends BaseRepository {
 
                 projectDocumentRef =
                         FirebaseFirestore.getInstance().collection(PROJECT_COLLECTION).document(
-                                projectFirebase.getProjectId());
+                                project.getProjectId());
 
                 projectDocumentRef.update("options", tempOptions)
                         .addOnSuccessListener(d -> Timber.d("Successfully updated options"))
@@ -404,7 +483,7 @@ public class ProjectRepository extends BaseRepository {
             for(OptionFirebase option : projectFirebase.getOptions()){
 
                 if(!option.getImagePath().equals("")) {
-                    deleteImage(option.getName(), option.getDateCreated());
+                    deleteImage(ProjectModelConverter.optionFirebaseToOption(option));
                 }
             }
             return null;
@@ -440,6 +519,10 @@ public class ProjectRepository extends BaseRepository {
                             documentReference -> Timber.d("Successfully added %s to firebase", projectFirebase.getName()));
             return null;
         }
+    }
+
+    public interface DoneUploadingImageCallback{
+        void doneUploadingImage();
     }
 
 }

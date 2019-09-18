@@ -1,11 +1,13 @@
 package com.bowtye.decisive.ui.projectDetails;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.bowtye.decisive.database.ProjectRepository;
 import com.bowtye.decisive.utils.ProjectModelConverter;
 import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.ProjectWithDetails;
@@ -31,12 +33,18 @@ public class ProjectDetailsViewModel extends BaseProjectDetailsViewModel {
         mProject = mRepo.getSelectedProjectFirebase(id, firebaseId);
     }
 
-    public void deleteOptionFirebase(Option option,int position){
-        mRepo.deleteOptionFirebase(option, position);
+    public void deleteOptionFirebase(Option option, int position, Context context){
+        mRepo.deleteOptionFirebase(option, position, context);
     }
 
-    public void uploadImagesToFirebase(ProjectWithDetails projectWithDetails){
+    public void uploadImageToFirebase(int index, ProjectWithDetails projectWithDetails, Context context, ProjectRepository.DoneUploadingImageCallback callback){
+        mRepo.uploadImageToFirebase(index,
+                ProjectModelConverter.projectWithDetailsToProjectFirebase(projectWithDetails, projectWithDetails.getProject().getFirebaseId()),
+                context, callback);
+    }
+
+    public void uploadImagesToFirebase(ProjectWithDetails projectWithDetails, Context context){
         mRepo.uploadImagesToFirebase(ProjectModelConverter.projectWithDetailsToProjectFirebase(projectWithDetails,
-                projectWithDetails.getProject().getFirebaseId()));
+                projectWithDetails.getProject().getFirebaseId()), context);
     }
 }

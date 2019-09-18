@@ -84,6 +84,18 @@ public class ProjectModelConverter {
         }
     }
 
+    public static Option optionFirebaseToOption(OptionFirebase optionFirebase){
+        return (optionFirebase == null) ? null :
+                new Option(optionFirebase.getName(),
+                optionFirebase.getPrice(),
+                optionFirebase.getRating(),
+                optionFirebase.getRuledOut(),
+                new ArrayList<>(optionFirebase.getRequirementValues()),
+                optionFirebase.getNotes(),
+                optionFirebase.getImagePath(),
+                optionFirebase.getDateCreated());
+    }
+
     public static List<OptionFirebase> optionToOptionFirebaseList(List<Option> optionList, String projectId) {
 
         if (optionList != null) {
