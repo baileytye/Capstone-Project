@@ -24,6 +24,55 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/label_best_value_for_money"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/label_summary_title"
+            app:layout_constraintLeft_toLeftOf="@id/label_summary_title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textStyle="bold"
+            android:text="Best value for money"
+            />
+
+        <TextView
+            android:id="@+id/tv_best_value_for_money"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="Best value"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:layout_constraintEnd_toStartOf="@+id/tv_value_for_money"
+            app:layout_constraintStart_toStartOf="@id/label_best_value_for_money"
+            app:layout_constraintTop_toBottomOf="@id/label_best_value_for_money" />
+
+        <TextView
+            android:id="@+id/tv_value_for_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$340/"
+            app:layout_constraintBottom_toBottomOf="@id/tv_best_value_for_money"
+            app:layout_constraintRight_toLeftOf="@id/iv_value_for_money_star"
+            app:layout_constraintTop_toTopOf="@id/tv_best_value_for_money" />
+
+        <ImageView
+            android:id="@+id/iv_value_for_money_star"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/content_description_rating_star"
+            android:src="@drawable/ic_star_24dp"
+            android:tint="@color/colorPrimaryDark"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/tv_value_for_money"
+            app:layout_constraintEnd_toEndOf="@+id/include_highest_rating"
+            app:layout_constraintLeft_toRightOf="@id/tv_value_for_money"
+            app:layout_constraintTop_toTopOf="@id/tv_value_for_money" />
+
+        <TextView
             android:id="@+id/tv_highest_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -78,12 +127,12 @@
             android:id="@+id/label_highest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:text="@string/label_highest"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/label_summary_title"
-            app:layout_constraintTop_toBottomOf="@+id/label_summary_title" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_best_value_for_money" />
 
         <TextView
             android:id="@+id/label_lowest"

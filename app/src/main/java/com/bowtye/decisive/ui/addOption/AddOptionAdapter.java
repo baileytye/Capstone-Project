@@ -117,12 +117,17 @@ public class AddOptionAdapter extends RecyclerView.Adapter<AddOptionAdapter.AddO
                 case averaging:
                     spAverages.setSelection(Requirement.getAveragingIndex(value, itemView.getContext()), false);
                     tvAveragesRequirementName.setText(requirement.getName());
+                    final boolean[] check = {false};
                     spAverages.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                             mOption.getRequirementValues().set(getAdapterPosition(),
                                     Requirement.getAveragingValue(adapterView.getSelectedItem().toString(), itemView.getContext()));
-                            mCallback.requirementItemChanged();
+                            if(check[0]) {
+                                mCallback.requirementItemChanged();
+                            } else {
+                                check[0] = true;
+                            }
                         }
 
                         @Override

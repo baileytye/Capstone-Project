@@ -27,6 +27,7 @@ import com.bowtye.decisive.R;
 import com.bowtye.decisive.ui.common.VerticalSpaceItemDecoration;
 import com.bowtye.decisive.ui.common.RequirementsAdapter;
 import com.bowtye.decisive.utils.StringUtils;
+import com.bowtye.decisive.utils.ViewUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
@@ -128,6 +129,19 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
             Option option = mProject.getOptionList().get(i);
             if (option.getRating() < lowest) {
                 lowest = option.getRating();
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    private int getBestValueIndex(){
+        int index = 0;
+        double value = Double.MAX_VALUE;
+        for(int i = 0; i < mProject.getOptionList().size(); i ++){
+            Option option = mProject.getOptionList().get(i);
+            if(option.getPrice() / option.getRating() < value){
+                value = option.getPrice() / option.getRating();
                 index = i;
             }
         }
@@ -337,6 +351,14 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
         View mHighestRatedInclude;
         @BindView(R.id.include_lowest_rating)
         View mLowestRatedInclude;
+        @BindView(R.id.label_best_value_for_money)
+        TextView mBestValueForMoneyLabel;
+        @BindView(R.id.tv_best_value_for_money)
+        TextView mBestValueForMoneyNameTextView;
+        @BindView(R.id.tv_value_for_money)
+        TextView mValueForMoneyTextView;
+        @BindView(R.id.iv_value_for_money_star)
+        ImageView mValueForMoneyStar;
 
         TextView mHighestRatingTextView;
         RatingBar mHighestOptionRatingBar;
@@ -356,17 +378,32 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
         public void bind() {
             int highestIndex = getHighestRatedIndex();
             int lowestIndex = getLowestRatedIndex();
+
+            if(mProject.getProject().getHasPrice()){
+                int bestValueIndex = getBestValueIndex();
+                Option bestValueOption = mProject.getOptionList().get(bestValueIndex);
+
+                mBestValueForMoneyNameTextView.setText(bestValueOption.getName());
+                mValueForMoneyTextView.setText(itemView.getResources().getString(
+                        R.string.concatenation_value_for_money,
+                StringUtils.convertToTwoDecimals(bestValueOption.getPrice() / bestValueOption.getRating())));
+            } else {
+                mBestValueForMoneyNameTextView.setVisibility(View.GONE);
+                mValueForMoneyTextView.setVisibility(View.GONE);
+                mBestValueForMoneyLabel.setVisibility(View.GONE);
+                mValueForMoneyStar.setVisibility(View.GONE);
+            }
+
             Option highestOption = mProject.getOptionList().get(highestIndex);
             Option lowestOption = mProject.getOptionList().get(lowestIndex);
 
             mHighestNameTextView.setText(highestOption.getName());
-            mHighestRatingTextView.setText(String.format(Locale.getDefault(), "%.2f", highestOption.getRating()));
+            mHighestRatingTextView.setText(StringUtils.convertToTwoDecimals(highestOption.getRating().doubleValue()));
             mHighestOptionRatingBar.setRating(highestOption.getRating());
 
             mLowestNameTextView.setText(lowestOption.getName());
-            mLowestRatingTextView.setText(String.format(Locale.getDefault(), "%.2f", lowestOption.getRating()));
+            mLowestRatingTextView.setText(StringUtils.convertToTwoDecimals(lowestOption.getRating().doubleValue()));
             mLowestOptionRatingBar.setRating(lowestOption.getRating());
-
         }
     }
 

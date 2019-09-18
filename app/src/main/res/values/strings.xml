@@ -114,6 +114,7 @@
     <string name="concatenation_value_unit">%s %s</string>
     <string name="concatenation_price_value">$%s</string>
     <string name="concatenation_name_colon">%s:</string>
+    <string name="concatenation_value_for_money">$%s/</string>
 
     <!--Error Messages-->
     <string name="error_enter_weight">Enter a weight</string>

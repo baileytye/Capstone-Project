@@ -187,8 +187,8 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
         mToolbarLayout.setTitle(getString(R.string.title_projects));
 
         mRecyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new HomeAdapter(null, this, this);
         mRecyclerView.setAdapter(mAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
