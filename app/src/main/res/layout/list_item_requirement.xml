@@ -24,7 +24,6 @@
         android:layout_height="wrap_content"
         android:text="@string/placeholder_requirement_label"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tv_requirement_value"

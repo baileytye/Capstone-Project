@@ -9,10 +9,10 @@
         android:id="@+id/appwidget_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:paddingStart="@dimen/card_edge_margin"
+        android:paddingEnd="@dimen/card_edge_margin"
+        android:paddingTop="@dimen/card_heading_separation"
+        android:paddingBottom="@dimen/card_heading_separation"
         android:singleLine="true"
         android:ellipsize="end"
         android:text="@string/placeholder_item_name"
@@ -30,9 +30,9 @@
         android:id="@+id/label_highest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="8dp"
+        android:paddingStart="@dimen/card_edge_margin"
+        android:paddingEnd="@dimen/card_edge_margin"
+        android:paddingTop="@dimen/card_heading_separation"
         android:text="@string/label_highest"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textStyle="bold" />
@@ -41,10 +41,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp">
+        android:paddingStart="@dimen/card_edge_margin"
+        android:paddingEnd="@dimen/card_edge_margin"
+        android:paddingTop="@dimen/card_heading_separation"
+        android:paddingBottom="@dimen/card_heading_separation">
 
         <TextView
             android:id="@+id/appwidget_tv_highest_name"
@@ -70,9 +70,9 @@
         android:id="@+id/label_lowest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="8dp"
+        android:paddingStart="@dimen/card_edge_margin"
+        android:paddingEnd="@dimen/card_edge_margin"
+        android:paddingTop="@dimen/card_heading_separation"
         android:text="@string/label_lowest"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textStyle="bold" />
@@ -81,10 +81,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp">
+        android:paddingStart="@dimen/card_edge_margin"
+        android:paddingEnd="@dimen/card_edge_margin"
+        android:paddingTop="@dimen/card_heading_separation"
+        android:paddingBottom="@dimen/card_heading_separation">
 
         <TextView
             android:id="@+id/appwidget_tv_lowest_name"

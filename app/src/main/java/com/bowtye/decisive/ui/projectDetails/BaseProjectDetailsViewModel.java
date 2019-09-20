@@ -13,7 +13,6 @@ import com.bowtye.decisive.database.BaseRepository;
 import com.bowtye.decisive.database.ProjectRepository;
 import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.ProjectWithDetails;
-import com.bowtye.decisive.ui.main.MainViewModel;
 
 public class BaseProjectDetailsViewModel extends AndroidViewModel {
     LiveData<ProjectWithDetails> mProject;

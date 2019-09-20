@@ -23,6 +23,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -78,10 +79,14 @@ public class SignUpActivity extends AppCompatActivity {
                     // the auth state listener will be notified and logic to handle the
                     // signed in user can be handled in the listener.
                     if (!task.isSuccessful()) {
-                        Timber.d("Authentication failed!");
+                        Timber.d("Creating user failed!");
+                        if(task.getException() != null) {
+                            Toast.makeText(this, "User creation failed: " + task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Timber.d("Creating user with email: %s", Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getAdditionalUserInfo()).getUsername());
                         startActivity(new Intent(this, MainActivity.class));
+                        MaterialShowcaseView.resetAll(Objects.requireNonNull(this));
                         finish();
                     }
                 });

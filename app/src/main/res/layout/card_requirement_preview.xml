@@ -14,30 +14,25 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="16dp"
-        android:paddingTop="12dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="12dp">
+        android:paddingStart="@dimen/flat_card_edge_margin"
+        android:paddingTop="@dimen/card_heading_separation_one_and_half"
+        android:paddingEnd="@dimen/flat_card_edge_margin"
+        android:paddingBottom="@dimen/card_heading_separation_one_and_half">
 
         <TextView
             android:id="@+id/tv_requirement_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:text="@string/placeholder_requirement"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            style="@style/MyArrowButtonStyle"
             app:layout_constraintBottom_toBottomOf="@+id/tv_requirement_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_requirement_name"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_24dp"
-            android:tint="@color/grey600"
             android:contentDescription="@string/content_description_requirement_details_arrow" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -12,7 +12,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_top_margin"
+        >
 
         <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
@@ -39,12 +42,11 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <FrameLayout
+            style="@style/FrameSpinnerStyle"
             android:id="@+id/frame_type"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:paddingStart="0.5dp"
-            android:paddingEnd="0.5dp"
+            android:layout_marginTop="@dimen/activity_item_separation"
             app:layout_constraintEnd_toEndOf="@+id/til_requirement_name"
             app:layout_constraintStart_toStartOf="@+id/til_requirement_name"
             app:layout_constraintTop_toBottomOf="@id/til_requirement_name">
@@ -56,35 +58,21 @@
                 android:background="@drawable/bg_spinner">
 
                 <Spinner
+                    style="@style/SpinnerStyle"
                     android:id="@+id/sp_type"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:entries="@array/type_array"
-                    android:paddingStart="4dp"
-                    android:spinnerMode="dropdown"
-                    android:textSize="12sp" />
+                    android:entries="@array/type_array" />
             </FrameLayout>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="15dp"
-                android:background="@color/white"
-                android:paddingStart="2dp"
-                android:paddingEnd="2dp"
-                android:text="@string/label_type"
-                android:textSize="12sp" />
+                style="@style/FrameSpinnerTitleStyle"
+                android:text="@string/label_type"/>
         </FrameLayout>
 
         <FrameLayout
+            style="@style/FrameSpinnerStyle"
             android:id="@+id/frame_importance"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:paddingStart="0.5dp"
-            android:paddingEnd="0.5dp"
+            android:layout_marginTop="@dimen/activity_item_separation"
             app:layout_constraintEnd_toEndOf="@+id/til_requirement_name"
             app:layout_constraintStart_toStartOf="@+id/til_requirement_name"
             app:layout_constraintTop_toBottomOf="@id/frame_type">
@@ -96,26 +84,16 @@
                 android:background="@drawable/bg_spinner">
 
                 <Spinner
+                    style="@style/SpinnerStyle"
                     android:id="@+id/sp_importance"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:entries="@array/importance_array"
-                    android:paddingStart="4dp"
-                    android:spinnerMode="dropdown"
-                    android:textSize="12sp" />
+                    android:entries="@array/importance_array" />
             </FrameLayout>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="15dp"
-                android:background="@color/white"
-                android:paddingStart="2dp"
-                android:paddingEnd="2dp"
-                android:text="@string/label_importance"
-                android:textSize="12sp" />
+                style="@style/FrameSpinnerTitleStyle"
+                android:text="@string/label_importance"/>
+
         </FrameLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -123,7 +101,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/activity_item_separation"
             app:boxStrokeColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="@id/frame_importance"
             app:layout_constraintStart_toStartOf="@id/frame_importance"
@@ -143,7 +121,7 @@
             layout="@layout/layout_requirement_expected_editable"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/activity_item_separation"
             app:layout_constraintEnd_toEndOf="@+id/frame_importance"
             app:layout_constraintStart_toStartOf="@+id/frame_importance"
             app:layout_constraintTop_toBottomOf="@+id/til_weight"/>
@@ -153,12 +131,12 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="1dp"
             android:layout_marginEnd="4dp"
             app:boxStrokeColor="@color/colorPrimary"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/include_expected">
+            app:layout_constraintTop_toTopOf="@+id/frame_more_is_better">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_unit"
@@ -177,12 +155,9 @@
             app:layout_constraintGuide_percent="0.5" />
 
         <FrameLayout
+            style="@style/FrameSpinnerStyle"
             android:id="@+id/frame_more_is_better"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingStart="0.5dp"
-            android:paddingEnd="0.5dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="@dimen/activity_item_separation"
             android:layout_marginStart="6dp"
             app:layout_constraintTop_toBottomOf="@id/include_expected"
             app:layout_constraintEnd_toEndOf="parent"
@@ -195,26 +170,15 @@
                 android:background="@drawable/bg_spinner">
 
                 <Spinner
+                    style="@style/SpinnerStyle"
                     android:id="@+id/sp_more_is_better"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:entries="@array/More_less"
-                    android:paddingStart="4dp"
-                    android:spinnerMode="dropdown"
-                    android:textSize="12sp" />
+                    android:entries="@array/More_less" />
             </FrameLayout>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="15dp"
-                android:background="@color/white"
-                android:paddingStart="2dp"
-                android:paddingEnd="2dp"
-                android:text="@string/label_more_or_less_is_better"
-                android:textSize="12sp" />
+                style="@style/FrameSpinnerTitleStyle"
+                android:text="@string/label_more_or_less_is_better"/>
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

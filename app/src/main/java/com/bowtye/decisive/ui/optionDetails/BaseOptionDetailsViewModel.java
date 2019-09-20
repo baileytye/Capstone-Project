@@ -11,8 +11,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.bowtye.decisive.database.ProjectRepository;
 import com.bowtye.decisive.models.Option;
 
-import java.util.Date;
-
 public abstract class BaseOptionDetailsViewModel extends AndroidViewModel {
 
     protected ProjectRepository mRepo;

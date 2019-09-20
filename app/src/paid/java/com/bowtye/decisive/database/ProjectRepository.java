@@ -14,7 +14,6 @@ import com.bowtye.decisive.models.Option;
 import com.bowtye.decisive.models.OptionFirebase;
 import com.bowtye.decisive.models.ProjectFirebase;
 import com.bowtye.decisive.models.ProjectWithDetails;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;

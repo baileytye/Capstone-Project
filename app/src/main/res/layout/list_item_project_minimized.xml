@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp">
+    android:paddingStart="@dimen/card_edge_margin"
+    android:paddingEnd="@dimen/card_edge_margin"
+    android:paddingTop="@dimen/card_edge_margin"
+    android:paddingBottom="@dimen/card_edge_margin">
 
     <TextView
         android:id="@+id/tv_project_name"

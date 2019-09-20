@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Logo-->
+    <dimen name="logo_background_edge_padding">20dp</dimen>
+    <dimen name="logo_margin_top">150dp</dimen>
+
+</resources>

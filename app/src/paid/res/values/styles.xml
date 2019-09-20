@@ -15,4 +15,15 @@
     <style name="noAnimTheme" parent="AppTheme">
         <item name="android:windowAnimationStyle">@null</item>
     </style>
+
+    <style name="AppLogoStyle">
+        <item name="android:background">@drawable/bg_card</item>
+        <item name="android:backgroundTint">@color/transparentWhite</item>
+        <item name="android:text">@string/app_name_without_plus</item>
+        <item name="android:textSize">60sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:paddingStart">@dimen/logo_background_edge_padding</item>
+        <item name="android:paddingEnd">@dimen/logo_background_edge_padding</item>
+    </style>
 </resources>

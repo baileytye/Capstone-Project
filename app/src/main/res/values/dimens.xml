@@ -1,20 +1,35 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Default screen margins, per the Android Design guidelines. -->
+
     <dimen name="activity_horizontal_margin">20dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_item_separation">16dp</dimen>
+    <dimen name="activity_item_separation_half">8dp</dimen>
+    <dimen name="activity_top_margin">4dp</dimen>
 
     <dimen name="app_bar_height">120dp</dimen>
+
+    <!--Cards-->
+    <dimen name="flat_card_edge_margin">24dp</dimen>
+    <dimen name="card_option_header_image_height">160dp</dimen>
+    <dimen name="card_project_header_height">200dp</dimen>
+    <dimen name="card_edge_margin">16dp</dimen>
+    <dimen name="card_top_margin">16dp</dimen>
+    <dimen name="card_bottom_margin">16dp</dimen>
+    <dimen name="card_heading_separation">8dp</dimen>
+    <dimen name="card_heading_separation_one_and_half">12dp</dimen>
+    <dimen name="card_heading_separation_double">16dp</dimen>
+    <dimen name="card_summary_label_value_separation">16dp</dimen>
+    <dimen name="card_label_value_separation">8dp</dimen>
 
     <dimen name="card_padding">16dp</dimen>
     <dimen name="card_notes_padding">8dp</dimen>
     <dimen name="card_corner_radius">5dp</dimen>
     <dimen name="card_border_stroke_width" format="float">0.75dp</dimen>
 
-    <dimen name="fab_margin">16dp</dimen>
-
     <dimen name="recycler_margin">4dp</dimen>
     <dimen name="recycler_view_fab_bottom_padding">80dp</dimen>
     <dimen name="recycler_item_separation">12dp</dimen>
+    <dimen name="recycler_view_padding">8dp</dimen>
 
     <dimen name="requirement_item_separation">8dp</dimen>
 
@@ -22,11 +37,11 @@
     <dimen name="bottom_sheet_top_padding">8dp</dimen>
 
     <dimen name="text_input_edit_text_padding">4dp</dimen>
-    <dimen name="recycler_view_padding">8dp</dimen>
 
     <dimen name="toolbar_elevation_pinned">4dp</dimen>
 
     <!--Floating action button-->
     <dimen name="design_fab_image_size" tools:override="true">36dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

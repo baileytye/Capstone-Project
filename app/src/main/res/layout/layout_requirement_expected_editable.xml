@@ -7,11 +7,10 @@
     tools:showIn="@layout/content_add_requirement">
 
     <FrameLayout
+        style="@style/FrameSpinnerStyle"
         android:id="@+id/frame_expected_averages"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="0.5dp"
-        android:paddingEnd="0.5dp">
+        android:layout_height="wrap_content">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -20,26 +19,15 @@
             android:background="@drawable/bg_spinner">
 
             <Spinner
+                style="@style/SpinnerStyle"
                 android:id="@+id/sp_expected_averages"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="5dp"
-                android:entries="@array/averages"
-                android:paddingStart="4dp"
-                android:spinnerMode="dropdown"
-                android:textSize="12sp" />
+                android:entries="@array/averages"/>
         </FrameLayout>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="15dp"
-            android:background="@color/white"
-            android:paddingStart="2dp"
-            android:paddingEnd="2dp"
-            android:text="@string/label_expected_no_colon"
-            android:textSize="12sp" />
+            style="@style/FrameSpinnerTitleStyle"
+            android:text="@string/label_expected_no_colon"/>
     </FrameLayout>
 
     <CheckBox
@@ -66,11 +54,10 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <FrameLayout
+        style="@style/FrameSpinnerStyle"
         android:id="@+id/frame_expected_star_rating"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="0.5dp"
-        android:paddingEnd="0.5dp">
+        android:layout_height="wrap_content">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -90,15 +77,8 @@
         </FrameLayout>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="15dp"
-            android:background="@color/white"
-            android:paddingStart="2dp"
-            android:paddingEnd="2dp"
-            android:text="@string/label_expected_no_colon"
-            android:textSize="12sp" />
+            style="@style/FrameSpinnerTitleStyle"
+            android:text="@string/label_expected_no_colon"/>
     </FrameLayout>
 
 

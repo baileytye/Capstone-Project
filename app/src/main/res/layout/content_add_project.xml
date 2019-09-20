@@ -32,7 +32,7 @@
             android:id="@+id/sw_has_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/activity_item_separation"
             app:layout_constraintEnd_toEndOf="@+id/til_project_name"
             app:layout_constraintTop_toBottomOf="@+id/til_project_name" />
 
@@ -41,28 +41,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/activity_item_separation"
             android:text="@string/label_requirements"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/label_has_price" />
 
         <TextView
+            style="@style/EmptyMessageTextStyle"
             android:id="@+id/label_empty_requirements"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/activity_item_separation"
             android:text="@string/label_empty_requirements"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/grey300"
-            android:textSize="18sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@id/iv_empty_requirements"
             app:layout_constraintStart_toStartOf="@id/iv_empty_requirements"
             app:layout_constraintTop_toBottomOf="@id/iv_empty_requirements" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/label_has_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_has_price"
@@ -72,10 +69,9 @@
             app:layout_constraintTop_toTopOf="@+id/sw_has_price" />
 
         <View
+            style="@style/MyDividerStyle"
             android:id="@+id/divider"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey200"
             app:layout_constraintBottom_toTopOf="@id/rv_requirements"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
@@ -84,7 +80,7 @@
             android:id="@+id/rv_requirements"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/activity_item_separation"
             android:paddingBottom="@dimen/recycler_view_fab_bottom_padding"
             android:clipToPadding="false"
             app:layout_constraintEnd_toEndOf="parent"
@@ -98,7 +94,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/activity_top_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             app:boxStrokeColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"

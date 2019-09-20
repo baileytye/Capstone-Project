@@ -14,13 +14,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_card"
-        android:orientation="vertical">
+        android:background="@drawable/bg_card">
 
         <ImageView
             android:id="@+id/iv_item_card_header"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="@dimen/card_option_header_image_height"
             android:contentDescription="@string/content_description_option_images"
             android:scaleType="centerCrop"
             android:visibility="visible"
@@ -32,22 +31,19 @@
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <ImageView
+            style="@style/MyArrowButtonStyle"
             android:id="@+id/iv_option_details_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:tint="@color/grey500"
+            android:layout_marginEnd="@dimen/card_edge_margin"
             app:layout_constraintBottom_toBottomOf="@+id/label_requirements"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_item_card_header"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_24dp"
             android:contentDescription="@string/content_description_see_option_details_button" />
 
         <TextView
             android:id="@+id/tv_item_card_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/card_heading_separation"
             android:maxEms="15"
             android:singleLine="true"
             android:text="@string/placeholder_price"
@@ -59,8 +55,8 @@
             android:id="@+id/tv_item_card_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="@dimen/card_edge_margin"
+            android:layout_marginTop="@dimen/card_top_margin"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="2"
@@ -74,9 +70,9 @@
             android:id="@+id/rv_requirements"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/card_padding"
-            android:layout_marginEnd="@dimen/card_padding"
-            android:layout_marginBottom="8dp"
+            android:layout_marginStart="@dimen/card_edge_margin"
+            android:layout_marginEnd="@dimen/card_edge_margin"
+            android:layout_marginBottom="@dimen/card_bottom_margin"
             android:clickable="false"
             android:nestedScrollingEnabled="false"
             android:padding="@dimen/recycler_view_padding"
@@ -91,7 +87,7 @@
             layout="@layout/layout_rating_with_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/card_heading_separation"
             app:layout_constraintStart_toStartOf="@+id/tv_item_card_price"
             app:layout_constraintTop_toBottomOf="@+id/tv_item_card_price" />
 
@@ -99,7 +95,7 @@
             android:id="@+id/label_requirements"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/card_heading_separation"
             android:text="@string/label_requirements"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textStyle="bold"
@@ -112,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:tint="@color/grey500"
+            android:tint="@color/grey600"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/label_requirements"
             app:layout_constraintEnd_toEndOf="@+id/iv_option_details_button"

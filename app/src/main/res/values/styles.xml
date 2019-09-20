@@ -17,10 +17,16 @@
     <style name="AppTheme" parent="BaseTheme">
     </style>
 
-    <!--License Activity Theme    -->
+    <!--License Activity Theme-->
     <style name="LicenseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorPrimary">@color/colorPrimary</item>
+    </style>
+
+    <!--Divider Style-->
+    <style name="MyDividerStyle">
+        <item name="android:background">@color/grey200</item>
+        <item name="android:layout_height">1dp</item>
     </style>
 
     <!--AppbarLayout Style-->
@@ -33,6 +39,33 @@
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
+    </style>
+
+    <!--Frame Spinner Style-->
+    <style name="FrameSpinnerStyle">
+        <item name="android:paddingEnd">0.5dp</item>
+        <item name="android:paddingStart">0.5dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="FrameSpinnerTitleStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_marginBottom">15dp</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:paddingStart">2dp</item>
+        <item name="android:paddingEnd">2dp</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="SpinnerStyle">
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <!--Floating Action Button Style-->
@@ -69,15 +102,29 @@
     <style name="MyButtonStyle" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:textAppearance">@style/ButtonTextStyle</item>
         <item name="android:background">@drawable/bg_button_with_ripple</item>
+        <item name="android:backgroundTint">@color/grey400</item>
         <item name="android:clickable">true</item>
     </style>
 
-    <!-- set the rounded drawable as background to your bottom sheet -->
+    <style name="MyBorderlessButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textAppearance">@style/ButtonTextStyle</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@null</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="MyArrowButtonStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="srcCompat">@drawable/ic_keyboard_arrow_right_24dp</item>
+        <item name="android:tint">@color/grey600</item>
+    </style>
+
+    <!--Bottom Sheet Style-->
     <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_bottom_sheet_dialog_fragment</item>
     </style>
 
-    <!--Bottom Sheet Style-->
     <style name="BottomSheetDialogTheme" parent="@style/Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="bottomSheetStyle">@style/BottomSheet</item>
@@ -106,20 +153,15 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <!--Card Heading Text Style-->
-
-    <!--Card Item Heading-->
-    <style name="CardItemHeadingTextStyle" parent="@style/TextAppearance.AppCompat.Medium">
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <!--Card Sub Heading Text Style-->
-
-    <!--Divider Theme-->
-
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="EmptyMessageTextStyle" parent="@style/TextAppearance.AppCompat.Large">
+        <item name="android:textColor">@color/grey300</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

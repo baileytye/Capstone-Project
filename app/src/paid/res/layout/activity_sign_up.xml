@@ -18,23 +18,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="64dp"
-            android:backgroundTint="@color/grey400"
             android:text="@string/button_sign_up"
             app:layout_constraintEnd_toEndOf="@+id/email_and_password"
             app:layout_constraintStart_toStartOf="@+id/email_and_password"
-            app:layout_constraintTop_toBottomOf="@+id/guideline60" />
+            app:layout_constraintTop_toBottomOf="@+id/email_and_password" />
 
         <Button
             android:id="@+id/bt_already_have_account"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/MyBorderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@null"
-            android:elevation="0dp"
             android:text="@string/button_already_have_an_account"
-            android:textAppearance="@style/ButtonTextStyle"
-            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@id/email_and_password"
             app:layout_constraintStart_toStartOf="@id/email_and_password"
             app:layout_constraintTop_toBottomOf="@+id/bt_sign_up" />
@@ -52,41 +47,14 @@
             app:srcCompat="@drawable/bg_login" />
 
         <TextView
+            style="@style/AppLogoStyle"
             android:id="@+id/label_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="150dp"
-            android:background="@drawable/bg_card"
-            android:backgroundTint="@color/transparentWhite"
-            android:fontFamily="sans-serif-light"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:text="@string/app_name_without_plus"
-            android:textColor="@color/white"
-            android:textSize="60sp"
+            android:layout_marginTop="@dimen/logo_margin_top"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/background"/>
-
-
-        <androidx.constraintlayout.widget.Guideline
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.2" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.4" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline60"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.6" />
 
         <include
             android:id="@+id/email_and_password"
