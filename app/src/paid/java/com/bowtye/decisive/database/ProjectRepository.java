@@ -114,7 +114,8 @@ public class ProjectRepository extends BaseRepository {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user == null || user.isAnonymous() || !option.getImagePath().substring(0, 4).equals("http")) {
+        if(user == null || user.isAnonymous() ||
+                (!option.getImagePath().equals("") && !option.getImagePath().substring(0, 4).equals("http"))) {
             super.deleteOption(option, context);
         } else {
             Timber.d("Removing option in firebase");

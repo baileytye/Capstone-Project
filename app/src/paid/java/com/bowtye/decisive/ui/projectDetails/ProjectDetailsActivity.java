@@ -60,15 +60,8 @@ public class ProjectDetailsActivity extends BaseProjectDetailsActivity {
 
             mProject = projectWithDetails;
 
-//            if (mItemAdded) {
-//                mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
-//                mItemAdded = false;
-//            } else if (mItemDeleted) {
-//                mAdapter.notifyItemRemoved(mItemSelected);
-//                mItemDeleted = false;
-//            } else {
+            //TODO: make more efficient
             mAdapter.notifyDataSetChanged();
-//            }
 
             setEmptyMessageVisibility();
 
