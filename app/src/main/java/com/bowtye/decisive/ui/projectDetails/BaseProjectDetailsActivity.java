@@ -41,6 +41,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.dimorinny.floatingtextbutton.FloatingTextButton;
 import timber.log.Timber;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 import static com.bowtye.decisive.ui.addProject.AddProjectActivity.RESULT_EDITED;
 
@@ -50,6 +53,8 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
         RatingUtils.CalculateRatingOfOptionAsyncTask.OptionResultAsyncCallback {
 
     public static final int RESULT_DELETED = 10;
+
+    public static final String PROJECT_DETAILS_ID = "project_details";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -218,6 +223,31 @@ public abstract class BaseProjectDetailsActivity extends AppCompatActivity imple
                         ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
             });
         }
+
+        if(!mIsTemplate) {
+            showTutorial();
+        }
+    }
+
+    private void showTutorial(){
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, PROJECT_DETAILS_ID);
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem(   new MaterialShowcaseView.Builder(this)
+                .setDismissOnTouch(true)
+                .setMaskColour(getResources().getColor(R.color.colorPrimaryDark))
+                .setShapePadding(128)
+                .setTitleText(R.string.showcase_title_add_option)
+                .setTarget(mFab)
+                .setDismissText(R.string.showcase_got_it)
+                .setContentText(R.string.showcase_message_add_option)
+                .build());
+
+        sequence.start();
     }
 
     protected void setEmptyMessageVisibility() {

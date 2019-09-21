@@ -3,6 +3,7 @@ package com.bowtye.decisive.ui.settings;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -62,12 +64,19 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
-            Preference license = findPreference("license");
+            Preference license = findPreference(getString(R.string.pref_key_open_source_license));
+            Preference resetTutorials = findPreference(getString(R.string.pref_key_reset_tutorials));
             Objects.requireNonNull(license).setOnPreferenceClickListener(preference -> {
                 startActivity(new Intent(getActivity(), OssLicensesMenuActivity.class));
                 OssLicensesMenuActivity.setActivityTitle(getString(R.string.title_activity_license));
                 return true;
             });
+            Objects.requireNonNull(resetTutorials).setOnPreferenceClickListener(preference -> {
+                Toast.makeText(getContext(), getString(R.string.dialog_reset_tutorials), Toast.LENGTH_SHORT).show();
+                MaterialShowcaseView.resetAll(Objects.requireNonNull(getActivity()));
+                return true;
+            });
+            
         }
     }
 }

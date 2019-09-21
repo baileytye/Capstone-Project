@@ -17,6 +17,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,6 +42,7 @@ import com.bowtye.decisive.ui.projectDetails.ProjectDetailsActivity;
 import com.bowtye.decisive.utils.RequestCode;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +63,7 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
         HomeAdapter.ContextMenuClickCallback,
         RatingUtils.CalculateRatingsOfProjectAsyncTask.ProjectResultAsyncCallback {
 
-    public static final String HOME_ID = "home";
+    private static final String HOME_ID = "home";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -121,14 +123,16 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        String userName;
 
-        switch (id) {
-            case R.id.action_settings:
-                Objects.requireNonNull(getActivity()).startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
-            case R.id.action_reset_tutorial:
-                MaterialShowcaseView.resetAll(Objects.requireNonNull(getActivity()));
-                return true;
+        if (id == R.id.action_settings) {
+            Objects.requireNonNull(getActivity()).startActivity(new Intent(getActivity(), SettingsActivity.class));
+            return true;
+        } else if (id == R.id.action_profile) {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null && !FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
+                userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                Toast.makeText(this.getContext(), getString(R.string.concatenation_username, userName), Toast.LENGTH_SHORT).show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -138,11 +142,13 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
         if ((requestCode == RequestCode.ADD_PROJECT_REQUEST_CODE)) {
             if (data != null && data.hasExtra(ExtraLabels.EXTRA_NEW_PROJECT)) {
                 ProjectWithDetails projectWithDetails = data.getParcelableExtra(ExtraLabels.EXTRA_NEW_PROJECT);
-                        mViewModel.resizeOptionValuesList(projectWithDetails);
+                mViewModel.resizeOptionValuesList(projectWithDetails);
                 new RatingUtils.CalculateRatingsOfProjectAsyncTask(this).execute(projectWithDetails);
             }
-            if(resultCode == RESULT_OK || resultCode == RESULT_CANCELED) {
-                closeFabMenu();
+            if (resultCode == RESULT_OK || resultCode == RESULT_CANCELED) {
+                if (isOpen) {
+                    closeFabMenu();
+                }
             }
         }
     }
@@ -158,7 +164,7 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
         }
     }
 
-    protected void setEmptyMessageVisibility() {
+    private void setEmptyMessageVisibility() {
         if ((mProjects == null) || (mProjects.size() == 0)) {
             mEmptyProjectsImageView.setVisibility(View.VISIBLE);
             mEmptyProjectsTextView.setVisibility(View.VISIBLE);
@@ -209,10 +215,16 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
         mFabNewProject.setOnClickListener(view -> startAddProjectActivity(-1));
 
         mFabFromTemplate.setOnClickListener(view -> {
-                NavHostFragment.findNavController(this).navigate(R.id.action_navigation_home_to_navigation_templates);
-                closeFabMenu();
+            NavHostFragment.findNavController(this).navigate(R.id.action_navigation_home_to_navigation_templates);
+            closeFabMenu();
         });
 
+        showTutorial();
+
+        Timber.d("Number of projects: %d", ((mProjects != null) ? mProjects.size() : 0));
+    }
+
+    private void showTutorial() {
         ShowcaseConfig config = new ShowcaseConfig();
         config.setDelay(500); // half second between each showcase view
 
@@ -220,41 +232,39 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
 
         sequence.setConfig(config);
 
-        sequence.addSequenceItem(   new MaterialShowcaseView.Builder(this.getActivity())
+        sequence.addSequenceItem(new MaterialShowcaseView.Builder(this.getActivity())
                 .setDismissOnTouch(true)
                 .setMaskColour(getResources().getColor(R.color.colorPrimaryDark))
                 .setShapePadding(128)
-                .setTitleText("New project")
+                .setTitleText(R.string.showcase_title_new_project)
                 .setTarget(mFab)
-                .setDismissText("Got it")
-                .setContentText("Add some projects using this button!")
+                .setDismissText(R.string.showcase_got_it)
+                .setContentText(R.string.showcase_message_add_projects)
                 .build());
 
-        sequence.addSequenceItem( new MaterialShowcaseView.Builder(this.getActivity())
+        sequence.addSequenceItem(new MaterialShowcaseView.Builder(this.getActivity())
                 .setDismissOnTouch(true)
                 .setMaskColour(getResources().getColor(R.color.colorPrimaryDark))
-                .setTarget(getActivity().findViewById(R.id.navigation_templates))
-                .setTitleText("Templates")
-                .setDismissText("Got it")
-                .setContentText("Check out some templates here!")
+                .setTarget(Objects.requireNonNull(getActivity()).findViewById(R.id.navigation_templates))
+                .setTitleText(R.string.showcase_title_templates)
+                .setDismissText(R.string.showcase_got_it)
+                .setContentText(R.string.showcase_message_templates)
                 .setShapePadding(0)
                 .build());
 
-        sequence.addSequenceItem( new MaterialShowcaseView.Builder(this.getActivity())
+        sequence.addSequenceItem(new MaterialShowcaseView.Builder(this.getActivity())
                 .setDismissOnTouch(true)
                 .setMaskColour(getResources().getColor(R.color.colorPrimaryDark))
                 .setTarget(getActivity().findViewById(R.id.navigation_home))
-                .setTitleText("Home")
-                .setDismissText("Got it")
-                .setContentText("Projects you create will show up here!")
+                .setTitleText(R.string.showcase_title_home)
+                .setDismissText(R.string.showcase_got_it)
+                .setContentText(R.string.showcase_message_home)
                 .build());
 
         sequence.start();
-
-        Timber.d("Number of projects: %d", ((mProjects != null) ? mProjects.size() : 0));
     }
 
-    private void closeFabMenu(){
+    private void closeFabMenu() {
         mOutsideLayout.startAnimation(fade_out);
         mOutsideLayout.setClickable(false);
         mFromTemplateLabel.startAnimation(fade_out);
@@ -268,7 +278,7 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
         isOpen = false;
     }
 
-    private void openFabMenu(){
+    private void openFabMenu() {
         mOutsideLayout.startAnimation(fade_in);
         mOutsideLayout.setClickable(true);
         mFromTemplateLabel.startAnimation(fade_in);
@@ -282,7 +292,7 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
         isOpen = true;
     }
 
-    void prepareViewModel() {
+    private void prepareViewModel() {
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         mViewModel.getProjects().observe(this, projects -> {
             mProjects = projects;
@@ -314,7 +324,7 @@ public class BaseHomeFragment extends Fragment implements MainAdapter.ProjectIte
     }
 
 
-    void startAddProjectActivity(int position) {
+    private void startAddProjectActivity(int position) {
         Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), AddProjectActivity.class);
         if (position >= 0) {
             intent.putExtra(ExtraLabels.EXTRA_EDIT_PROJECT, mProjects.get(position));

@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -68,7 +69,6 @@ public abstract class BaseTemplatesFragment extends Fragment implements MainAdap
 
     private List<ProjectWithDetails> mTemplates;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_templates, container, false);
@@ -87,10 +87,16 @@ public abstract class BaseTemplatesFragment extends Fragment implements MainAdap
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        String userName;
 
         if (id == R.id.action_settings) {
             Objects.requireNonNull(getActivity()).startActivity(new Intent(getActivity(), SettingsActivity.class));
             return true;
+        } else if (id == R.id.action_profile) {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null && !FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
+                userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                Toast.makeText(this.getContext(), getString(R.string.concatenation_username, userName), Toast.LENGTH_SHORT).show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -136,7 +142,9 @@ public abstract class BaseTemplatesFragment extends Fragment implements MainAdap
                 LinearLayoutManager.VERTICAL);
         dividerItemDecoration.setDrawable(Objects.requireNonNull(activity.getDrawable(R.drawable.divider)));
         mRecyclerView.addItemDecoration(dividerItemDecoration);
+    }
 
+    private void showTutorial() {
         ShowcaseConfig config = new ShowcaseConfig();
         config.setDelay(500); // half second between each showcase view
 
@@ -149,11 +157,10 @@ public abstract class BaseTemplatesFragment extends Fragment implements MainAdap
                 .setMaskColour(getResources().getColor(R.color.colorPrimaryDark))
                 .setShapePadding(128)
                 .setTarget(this.getView())
-                .setTitleText("Templates")
+                .setTitleText(R.string.showcase_title_templates)
                 .withoutShape()
-                .setDismissText("Got it")
-                .setContentText("Templates are pre-made projects to give you some ideas on how to structure your own. " +
-                        "You can also add these to your projects and customize them to your liking!")
+                .setDismissText(R.string.showcase_got_it)
+                .setContentText(R.string.showcase_message_templates_description)
                 .build());
 
         sequence.start();

@@ -6,6 +6,8 @@
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_license">Open Source Libraries</string>
     <string name="title_projects">Projects</string>
+    <string name="title_edit_project">Edit project</string>
+    <string name="title_add_project">Add project</string>
     <string name="title_edit_option">Edit option</string>
     <string name="title_add_option">Add option</string>
     <string name="title_edit_requirement">Edit requirement</string>
@@ -111,16 +113,40 @@
     <string name="dialog_give_project_a_name">Please give this project a name</string>
     <string name="dialog_add_a_requirement">Please add at least one requirement</string>
     <string name="dialog_keep_old_requirement_values">Keep already entered requirement values?</string>
+    <string name="dialog_reset_tutorials">Tutorial messages reset</string>
 
     <!--Concatenations-->
     <string name="concatenation_value_unit">%s %s</string>
     <string name="concatenation_price_value">$%s</string>
     <string name="concatenation_name_colon">%s:</string>
     <string name="concatenation_value_for_money">$%s/</string>
+    <string name="concatenation_username">Current user: %s</string>
 
     <!--Error Messages-->
     <string name="error_enter_weight">Enter a weight</string>
     <string name="error_empty_requirement_name">Give this requirement a name</string>
     <string name="error_unknown_date">Unknown date</string>
+
+    <!--Preferences-->
+    <string name="pref_open_source_libraries">Open Source Libraries</string>
+    <string name="pref_reset_tutorials">Reset Tutorials</string>
+    <string name="pref_key_open_source_license">license</string>
+    <string name="pref_key_reset_tutorials">reset_tutorials</string>
+
+    <!--Tutorial Messages-->
+    <string name="showcase_title_new_project">New project</string>
+    <string name="showcase_got_it">Got it</string>
+    <string name="showcase_message_add_projects">Start by adding some projects!</string>
+    <string name="showcase_title_templates">Templates</string>
+    <string name="showcase_message_templates">Check out some templates here!</string>
+    <string name="showcase_message_home">Projects you create will show up here!</string>
+    <string name="showcase_title_home">Home</string>
+    <string name="showcase_title_add_option">Add option</string>
+    <string name="showcase_message_add_option">Add some options to this project here</string>
+    <string name="showcase_title_detailed_ratings">Detailed Ratings</string>
+    <string name="showcase_message_detailed_ratings">Click here to see a detailed rating breakdown!</string>
+    <string name="showcase_message_templates_description">Templates are pre-made projects to give you some ideas on how to structure your own. You can also add these to your projects and customize them to your liking!</string>
+    <string name="showcase_title_requirements">Requirements</string>
+    <string name="showcase_message_requirements">Give this project some requirements. These will be used to calculate ratings for each option you add.</string>
 
 </resources>

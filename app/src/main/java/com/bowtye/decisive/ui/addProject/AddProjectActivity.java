@@ -227,12 +227,14 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
 
         if (!mProject.getProject().getName().equals("")) {
             mProjectNameEditText.setText(mProject.getProject().getName());
-            mToolbarLayout.setTitle("Edit project");
+            mToolbarLayout.setTitle(getString(R.string.title_edit_project));
             mHasPriceSwitch.setChecked(mProject.getProject().getHasPrice());
         } else {
-            mToolbarLayout.setTitle("Add project");
+            mToolbarLayout.setTitle(getString(R.string.title_add_project));
             mHasPriceSwitch.setChecked(true);
         }
+
+        mHasPriceSwitch.setOnClickListener(view -> itemChanged = true);
 
         mProjectNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -277,10 +279,9 @@ public class AddProjectActivity extends AppCompatActivity implements AddProjectA
                 .setMaskColour(getResources().getColor(R.color.colorPrimaryDark))
                 .setShapePadding(128)
                 .setTarget(mFab)
-                .setTitleText("Requirements")
-                .setDismissText("Got it")
-                .setContentText("Give this project some requirements. " +
-                        "These will be used to calculate ratings for each option you add.")
+                .setTitleText(R.string.showcase_title_requirements)
+                .setDismissText(R.string.showcase_got_it)
+                .setContentText(R.string.showcase_message_requirements)
                 .build());
 
         sequence.start();

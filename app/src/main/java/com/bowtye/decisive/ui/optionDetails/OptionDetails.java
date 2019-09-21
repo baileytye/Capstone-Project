@@ -156,18 +156,14 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
         if (requestCode == RequestCode.EDIT_OPTION_REQUEST_CODE) {
             if (data != null && data.hasExtra(ExtraLabels.EXTRA_OPTION)) {
                 if (resultCode == RESULT_OK) {
-                    Timber.d("Received option from add ");
-                    Timber.d("Option edited: image path was: %s", mOption.getImagePath());
                     Option prevOption = mOption;
 
                     mOption = data.getParcelableExtra(ExtraLabels.EXTRA_OPTION);
 
                     if (mOption != null) {
                         if(!mOption.getImagePath().equals(prevOption.getImagePath())){
-                            Timber.d("Path: %s, Date: %s", prevOption.getImagePath(), mOption.getDateCreated());
                             mViewModel.deleteImage(prevOption, this);
                         }
-                        Timber.d("and is now %s", mOption.getImagePath());
                     }
                     new RatingUtils.CalculateRatingOfOptionAsyncTask(this, mRequirements).execute(mOption);
                 }
@@ -208,10 +204,10 @@ public class OptionDetails extends AppCompatActivity implements RatingUtils.Calc
                 .setDismissOnTouch(true)
                 .setMaskColour(getResources().getColor(R.color.colorPrimaryDark))
                 .setShapePadding(32)
-                .setTitleText("Detailed Ratings")
+                .setTitleText(R.string.showcase_title_detailed_ratings)
                 .setTarget(mRatingWithNumberView)
-                .setDismissText("Got it")
-                .setContentText("Click here to see a detailed rating breakdown!")
+                .setDismissText(R.string.showcase_got_it)
+                .setContentText(R.string.showcase_message_detailed_ratings)
                 .build());
 
         sequence.start();

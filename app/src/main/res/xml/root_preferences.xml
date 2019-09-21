@@ -19,8 +19,13 @@
     <PreferenceCategory app:title="Help">
 
     <Preference
-        app:key="license"
-        app:title="Open Source Libraries"
+        app:key="@string/pref_key_open_source_license"
+        app:title="@string/pref_open_source_libraries"
+        />
+
+    <Preference
+        app:key="@string/pref_key_reset_tutorials"
+        app:title="@string/pref_reset_tutorials"
         />
     </PreferenceCategory>
 
