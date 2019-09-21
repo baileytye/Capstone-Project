@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.bowtye.decisive.ui.login.LoginActivity;
 import com.bowtye.decisive.ui.projectDetails.ProjectDetailsActivity;
@@ -59,12 +60,19 @@ public class HomeFragment extends BaseHomeFragment {
 
         int id = item.getItemId();
 
+        String userName;
+
         if (id == R.id.action_sign_out) {
             Intent intent = new Intent(this.getActivity(), LoginActivity.class);
             intent.putExtra(EXTRA_SIGN_OUT, true);
             Objects.requireNonNull(getActivity()).startActivity(intent);
             getActivity().finish();
             return true;
+        } else if (id == R.id.action_profile) {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null && !FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
+                userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                Toast.makeText(this.getContext(), getString(R.string.concatenation_username, userName), Toast.LENGTH_SHORT).show();
+            }
         }
 
         return super.onOptionsItemSelected(item);

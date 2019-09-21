@@ -87,17 +87,12 @@ public abstract class BaseTemplatesFragment extends Fragment implements MainAdap
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        String userName;
 
         if (id == R.id.action_settings) {
             Objects.requireNonNull(getActivity()).startActivity(new Intent(getActivity(), SettingsActivity.class));
             return true;
-        } else if (id == R.id.action_profile) {
-            if (FirebaseAuth.getInstance().getCurrentUser() != null && !FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
-                userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-                Toast.makeText(this.getContext(), getString(R.string.concatenation_username, userName), Toast.LENGTH_SHORT).show();
-            }
         }
+
         return super.onOptionsItemSelected(item);
     }
 
