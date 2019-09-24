@@ -12,7 +12,7 @@ Decisive lets you monitor and weigh options when making a significant purchase. 
 ## Final GIFs of App
 | Creating project from template: | Project view: | Detailed ratings: |
 | --- | --- | --- |
-|![capstonegif1](https://user-images.githubusercontent.com/14279722/65378455-d25b6480-dc75-11e9-9139-09729f8bd406.gif)|![capstonegif2](https://user-images.githubusercontent.com/14279722/65378472-f9b23180-dc75-11e9-9fe3-2f043fb43245.gif)|![capstonegif3](https://user-images.githubusercontent.com/14279722/65378473-09ca1100-dc76-11e9-81f1-d582f4fbe47c.gif)|
+|![capstonegif1](https://user-images.githubusercontent.com/14279722/65534748-3a4fbc00-debd-11e9-8760-bf02c0051823.gif)|![capstonegif2](https://user-images.githubusercontent.com/14279722/65534786-4f2c4f80-debd-11e9-8937-0918ffdfeb00.gif)|![capstonegif3](https://user-images.githubusercontent.com/14279722/65534843-69662d80-debd-11e9-9cb8-a612e9eca2d1.gif)|
 
 | Final sign in screen: |
 | --- |
